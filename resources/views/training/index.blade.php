@@ -47,7 +47,6 @@
         </div>
     </div>
 </section>
-
 <div class="container sm-mt-25px margin-top-59px mt-sm-5 mt-md-5 sm-mt-45px">
     <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto mt-sm-auto text-center">
 
