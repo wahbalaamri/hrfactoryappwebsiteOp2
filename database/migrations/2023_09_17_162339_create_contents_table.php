@@ -18,6 +18,7 @@ return new class extends Migration
             $table->longText('EnglishText');
             $table->string('page')->nullable()->default(null);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

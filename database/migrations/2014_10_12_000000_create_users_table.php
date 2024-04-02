@@ -15,10 +15,19 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->integer('client_id')->nullable()->constrained()->onDelete('cascade');
+            $table->integer('sector_id')->nullable()->constrained()->onDelete('cascade');
+            $table->integer('comp_id')->nullable()->constrained()->onDelete('cascade');
+            $table->integer('dep_id')->nullable()->constrained()->onDelete('cascade');
+            $table->string('user_type');
+            $table->boolean('isAdmin')->default(false);
             $table->string('password');
+            //is_active
+            $table->boolean('is_active')->default(0);
+            $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -69,8 +69,9 @@ return [
     | ahead and set this to a sensible default for you out of the box.
     |
     */
-
-    'timezone' => 'UTC',
+    //time zone => asia/Muscat
+    //date_default_timezone_set("Asia/Muscat");
+    'timezone' => 'Asia/Muscat',
 
     /*
     |--------------------------------------------------------------------------
@@ -168,6 +169,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Paytabscom\Laravel_paytabs\PaypageServiceProvider::class,
     ])->toArray(),
 
     /*

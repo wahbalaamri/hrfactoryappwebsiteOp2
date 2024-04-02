@@ -182,10 +182,17 @@
                     <div class="col-4">
                         <div class="row user-area list-inline float-end margin-0px text-white padding-tb-10px">
                             @guest
-                            <div class="col-8"><a href="#">{{ __('User Profile') }}</a></div>
-                            <div class="col-3"><a href="#">{{ __('Logout') }}</a></div>
+                            <div class="col-3"><a href="{{ route('login') }}">{{ __('Login') }}</a></div>
                             @else
-                            <div class="col-3"><a href="#">{{ __('Login') }}</a></div>
+                            <div class="col-8"><a href="#">{{ __('User Profile') }}</a></div>
+                            <div class="col-3">
+                                <a href="{{ route('logout') }}" class="text-white text-decoration-none" onclick="event.preventDefault();
+                                    document.getElementById('logout-form').submit();">
+                                    {{ __('Logout') }}
+                                </a>
+                                <form action="{{ route('logout') }}" method="post" id="logout-form" class="d-none">
+                                    @csrf</form>
+                            </div>
                             @endguest
                         </div>
                     </div>
@@ -219,7 +226,7 @@
                             <ul id="menu-main" class="float-end nav-menu dropdown-dark">
                                 <li><a href="#">{{ __('Home') }}</a></li>
 
-                                <li><a href="{{ route('Home') }}#subscriptionPlans">{{ __('Plans') }}</a></li>
+                                <li><a href="{{ route('Home') }}#subscriptionPlans">{{ __('Tools') }}</a></li>
                                 <li><a href="{{ route('Training') }}">{{ __('Learn') }}</a></li>
                                 <li class="dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -349,6 +356,230 @@
     <script type="text/javascript" src="assets/js/popper.min.js"></script>
     <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="assets/js/custom.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript">
+        function agree(contorl, div) {
+            var x = document.getElementById(div);
+            if ($('#' + contorl).is(':checked'))
+                x.style.display = "block";
+            else
+                x.style.display = "none";
+            }
+            function getCouponDiscount(textbox, link, catogry, price) {
+    var linkdata = $('#' + link).attr('href');
+    var priceBeforDiscount = price * 1000;
+    $.ajax({
+        type: 'POST',
+        url: "{{ route('coupon.getCouponRate') }}",
+        data:{
+            //csrf_token
+            _token: '{{ csrf_token() }}',
+            "catogry":catogry,
+            "code": $('#' + textbox).val(),
+        },
+        timeout: 5000,
+        success: function (data) {
+            if (data['result'] == "success") {
+                if (textbox == 'CourseCouponCode') {
+                    var CourseDiscountRate = parseFloat(data['rate']);
+                    var CourseintCost = parseInt(priceBeforDiscount) * ((100 - CourseDiscountRate) / 100);
+                    $('#CoursePlanPriceCD').html((priceBeforDiscount / 1000).toFixed(3));
+                    $('#CourseCouponDiscRateCD').html(CourseDiscountRate + '%');
+                    $('#CoursePriceAftDisCD').html((CourseintCost / 1000).toFixed(3));
+                    var CourseLink = $('#' + link).attr('href');
+                    //console.log(CourseintCost);
+                    //console.log(CourseLink + '');
+                    var SiplitedCourseLink = CourseLink.split('&')
+                    if (CourseintCost == 0) {
+                        var coursesplitedlink = SiplitedCourseLink[0].split('?');
+                        console.log(coursesplitedlink);
+                        var test = SiplitedCourseLink[0].replace(coursesplitedlink[0], '/TrainingHome/CourseMaterial')
+                        console.log(test)
+                        $('#' + link).attr('href', test);
+                    }
+                    else {
+                        console.log(SiplitedCourseLink[0]);
+                        var priceSpilted = SiplitedCourseLink[1].split('=')
+                        var CourseLinkafter = CourseLink.replace(priceSpilted[1], (CourseintCost / 1000).toFixed(3))
+                        $('#' + link).attr('href', CourseLinkafter);
+                    }
+
+                    $('#CoursePriceSaveCD').html('<del>' + ((priceBeforDiscount - CourseintCost) / 1000).toFixed(3) + '</del>');
+
+                    if ($('#CourseDiscountDiv').hasClass('d-none')) {
+                        $('#CourseDiscountDiv').toggleClass('d-none show', true, 400, "easeOutSine");
+                        $('#CourseDiscountDiv').removeClass('d-none');
+                    }
+                }
+                else {
+
+                    var splitedLink = linkdata.split("=");
+                    var RealCost = splitedLink[3];
+                    var discountRate = parseFloat(data['rate']);
+                    var splitedLinks = linkdata.split("/");
+                    console.log(splitedLinks);
+                    var RealCosts = splitedLinks[3];
+                    var plan = splitedLinks[4];
+                    var period = splitedLinks[5];
+                    console.log(plan);
+                    console.log(period);
+                    var intCost = parseInt((priceBeforDiscount) * ((100 - discountRate) / 100));
+                    var intCost1 = parseFloat((priceBeforDiscount) * ((100 - discountRate) / 100)/1000);
+                    if (intCost1 == 0.0) intCost1 = intCost1 + '000'
+                    var AfterDiscount = linkdata.replace(RealCosts, parseFloat(intCost1));
+                    newRoute="{{ route('Plans.checkout',[':plan',':period',':cost']) }}"
+                    newRoute = newRoute.replace(':cost', intCost1);
+                    newRoute = newRoute.replace(':plan', plan);
+                    newRoute = newRoute.replace(':period', period);
+                    $('#' + link).attr("href", newRoute);
+                    if (textbox == 'SearchCouponCodeStartUp') {
+                        $('#startupPlanPriceCD').html((priceBeforDiscount / 1000).toFixed(3)+ "<text class='m-2'><i class='fa fa-dollar-sign'></i>{{ __('USD') }}</text>");
+                        $('#startupCouponDiscRateCD').html(discountRate + '%');
+                        $('#startupPlanPriceAftDisCD').html((intCost / 1000).toFixed(3)+ "<text class='m-2'><i class='fa fa-dollar-sign'></i>{{ __('USD') }}</text>");
+
+                        $('#startupPlanPriceSaveCD').html('<del>' + ((priceBeforDiscount - intCost) / 1000).toFixed(3) + "</del><text class='m-2'><i class='fa fa-dollar-sign'></i>{{ __('USD') }}</text>");
+
+                        if ($('#annualStartUpDiscountDiv').hasClass('d-none')) {
+                            $('#annualStartUpDiscountDiv').toggleClass('d-none show', true, 400, "easeOutSine");
+                            $('#annualStartUpDiscountDiv').removeClass('d-none');
+                        }
+                        // if (intCost == 0) {
+                        //     if ($('#freeSubscribeStartUPAnnual').hasClass('d-none')) {
+                        //         $('#freeSubscribeStartUPAnnual').removeClass('d-none')
+                        //         $('#' + link).addClass('d-none');
+                        //     }
+                        // }
+                        // else {
+                            if ($('#' + link).hasClass('d-none')) {
+                                $('#freeSubscribeStartUPAnnual').addClass('d-none')
+                                $('#' + link).removeClass('d-none');
+                            }
+                        // }
+                    }
+                    if (textbox == 'MonthlySearchCouponCodeStartUp') {
+                        $('#MonthlystartupPlanPriceCD').html((priceBeforDiscount / 1000)+"<text class='m-2'><i class='fa fa-dollar-sign'></i>{{ __('USD') }}</text>");
+                        $('#MonthlystartupCouponDiscRateCD').html(discountRate + '%');
+                        $('#MonthlystartupPlanPriceAftDisCD').html((intCost / 1000).toFixed(3)+ "<text class='m-2'><i class='fa fa-dollar-sign'></i>{{ __('USD') }}</text>");
+
+                        $('#MonthlystartupPlanPriceSaveCD').html('<del>' + ((priceBeforDiscount - intCost) / 1000).toFixed(3) + "</del><text class='m-2'><i class='fa fa-dollar-sign'></i>{{ __('USD') }}</text>");
+
+                        if ($('#MonthlyStartUpDiscountDiv').hasClass('d-none')) {
+                            $('#MonthlyStartUpDiscountDiv').toggleClass('d-none show', true, 400, "easeOutSine");
+                            $('#MonthlyStartUpDiscountDiv').removeClass('d-none');
+                        }
+
+                        // if (intCost == 0) {
+                        //     if ($('#freeSubscribeStartUPMonthly').hasClass('d-none')) {
+                        //         $('#freeSubscribeStartUPMonthly').removeClass('d-none')
+                        //         $('#' + link).addClass('d-none');
+                        //     }
+                        // }
+                        // else {
+                            if ($('#' + link).hasClass('d-none')) {
+                                $('#freeSubscribeStartUPMonthly').addClass('d-none')
+                                $('#' + link).removeClass('d-none');
+                            }
+                        // }
+                    }
+                    if (textbox == 'MonthlySearchCouponCodeManualBuilder') {
+                        $('#MonthlyManualBuilderPlanPriceCD').html((priceBeforDiscount / 1000));
+                        $('#MonthlyManualBuilderCouponDiscRateCD').html(discountRate + '%');
+                        $('#MonthlyManualBuilderPlanPriceAftDisCD').html((intCost / 1000).toFixed(3));
+
+                        $('#MonthlyManualBuilderPlanPriceSaveCD').html('<del>' + ((priceBeforDiscount - intCost) / 1000).toFixed(3) + '</del>');
+
+                        if ($('#MonthlyManualBuilderDiscountDiv').hasClass('d-none')) {
+                            $('#MonthlyManualBuilderDiscountDiv').toggleClass('d-none show', true, 400, "easeOutSine");
+                            $('#MonthlyManualBuilderDiscountDiv').removeClass('d-none');
+                        }
+                        if (intCost == 0) {
+                            if ($('#freeSubscribeManualBuilderMonthly').hasClass('d-none')) {
+                                $('#freeSubscribeManualBuilderMonthly').removeClass('d-none')
+                                $('#' + link).addClass('d-none');
+                            }
+                        }
+                        else {
+                            if ($('#' + link).hasClass('d-none')) {
+                                $('#freeSubscribeManualBuilderMonthly').addClass('d-none')
+                                $('#' + link).removeClass('d-none');
+                            }
+                        }
+                    }
+                    if (textbox == 'AnnualSearchCouponCodeManualBuilder') {
+                        $('#AnnualManualBuilderPlanPriceCD').html((priceBeforDiscount / 1000));
+                        $('#AnnualManualBuilderCouponDiscRateCD').html(discountRate + '%');
+                        $('#AnnualManualBuilderPlanPriceAftDisCD').html((intCost / 1000).toFixed(3));
+
+                        $('#AnnualManualBuilderPlanPriceSaveCD').html('<del>' + ((priceBeforDiscount - intCost) / 1000).toFixed(3) + '</del>');
+
+                        if ($('#AnnualManualBuilderDiscountDiv').hasClass('d-none')) {
+                            $('#AnnualManualBuilderDiscountDiv').toggleClass('d-none show', true, 400, "easeOutSine");
+                            $('#AnnualManualBuilderDiscountDiv').removeClass('d-none');
+
+
+                        }
+                        if (intCost == 0) {
+                            if ($('#freeSubscribeManualBuilderAnnual').hasClass('d-none')) {
+                                $('#freeSubscribeManualBuilderAnnual').removeClass('d-none')
+                                $('#' + link).addClass('d-none');
+                            }
+                        }
+                        else {
+                            if ($('#' + link).hasClass('d-none')) {
+                                $('#freeSubscribeManualBuilderAnnual').addClass('d-none')
+                                $('#' + link).removeClass('d-none');
+                            }
+                        }
+                    }
+
+                }
+            }
+            else {
+
+                splitedLink = linkdata.split('=');
+                var RealCost = splitedLink[3];
+
+                var nochange = linkdata.replace(RealCost, parseInt(priceBeforDiscount));
+                $('#' + link).attr("href", nochange);
+
+                if (textbox == 'SearchCouponCodeStartUp') {
+                    if (!$('#annualStartUpDiscountDiv').hasClass('d-none')) {
+                        $('#annualStartUpDiscountDiv').addClass('d-none');
+
+                    }
+                }
+                if (textbox == 'MonthlySearchCouponCodeStartUp') {
+                    if (!$('#MonthlyStartUpDiscountDiv').hasClass('d-none')) {
+                        $('#MonthlyStartUpDiscountDiv').addClass('d-none');
+
+                    }
+                }
+                if (textbox == 'MonthlySearchCouponCodeManualBuilder') {
+                    if (!$('#MonthlyManualBuilderDiscountDiv').hasClass('d-none')) {
+                        $('#MonthlyManualBuilderDiscountDiv').addClass('d-none');
+
+                    }
+                }
+                if (textbox == 'AnnualSearchCouponCodeManualBuilder') {
+                    if (!$('#AnnualManualBuilderDiscountDiv').hasClass('d-none')) {
+                        $('#AnnualManualBuilderDiscountDiv').addClass('d-none');
+
+                    }
+                }
+                if (textbox == 'CourseCouponCode') {
+                    if (!$('#CourseDiscountDiv').hasClass('d-none')) {
+                        $('#CourseDiscountDiv').addClass('d-none');
+
+                    }
+                }
+            }
+        },
+    });
+
+}
+    </script>
+    @yield('scripts')
 </body>
 
 </html>
