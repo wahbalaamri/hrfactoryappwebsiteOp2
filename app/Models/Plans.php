@@ -27,7 +27,7 @@ class Plans extends Model
     //belongs to relationship with plansPrices
     public function plansPrices()
     {
-        return $this->hasOne(PlansPrices::class, 'plan');
+        return $this->hasMany(PlansPrices::class, 'plan');
     }
     //get array of plan features IDs
     public function getFeaturesAttribute()
@@ -39,5 +39,5 @@ class Plans extends Model
     {
         return $this->hasMany(PlanFeatures::class,'plan');
     }
-
+    //belongs to relationship with country
 }

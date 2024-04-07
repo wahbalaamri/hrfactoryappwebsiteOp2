@@ -155,7 +155,7 @@
         src="{{ asset('assets/revslider/js/extensions/revolution.extension.video.min.js') }}"></script>
     <script src="https://cdn.ckeditor.com/4.15.0/full/ckeditor.js"></script>
     <script src="{{ asset('Scripts/jquery.blockUI.js') }}"></script>
-
+    @yield('styles')
 </head>
 
 <body class="background-white">
@@ -165,8 +165,13 @@
             <div class="container" style="max-width: 98%">
                 <div class="row">
                     <div class="col-2 padding-tb-10px">
-
-                        <a class=" text-white" href="" id="dropdownMenuLink"> {{ __('العربية') }} </a>
+                        @if( app()->getLocale()=='en')
+                        <a class="text-white" href="{{ route('lang.swap','ar') }}"
+                            style="text-decoration: none">العربية</a>
+                        @else
+                        <a class="text-white" href="{{ route('lang.swap','en') }}"
+                            style="text-decoration: none">English</a>
+                        @endif
                     </div>
                     <div class="col-2 padding-tb-10px">
                         <ul class="list-inline float-right text-white" dir="ltr">
@@ -182,7 +187,8 @@
                     <div class="col-4">
                         <div class="row user-area list-inline float-end margin-0px text-white padding-tb-10px">
                             @guest
-                            <div class="col-3"><a href="{{ route('login') }}">{{ __('Login') }}</a></div>
+                            <div class="col-4"><a href="{{ route('login') }}">{{ __('Login') }}</a></div>
+                            <div class="col-4"><a href="{{ route('register') }}">{{ __('Register') }}</a></div>
                             @else
                             <div class="col-8"><a href="#">{{ __('User Profile') }}</a></div>
                             <div class="col-3">
@@ -260,8 +266,9 @@
         </div>
     </header>
     <!-- // header -->
-    @yield('content')
-
+    <div class="" dir="{{ app()->getLocale()=='ar'? 'rtl' : 'ltr' }}">
+        @yield('content')
+    </div>
 
     <footer class="background-secondry" dir="ltr">
         <div class="container">

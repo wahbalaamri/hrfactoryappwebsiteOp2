@@ -326,6 +326,7 @@ class PlansController extends Controller
             $plan_price = new PlansPrices();
             $plan_price->plan = $plan->id;
             $plan_price->country = $request->valid_in;
+            $plan_price->monthly_price = $request->monthly_price;
             $plan_price->annual_price = $request->annual_price;
             $plan_price->currency = $request->currency;
             $plan_price->payment_methods = json_encode($PM_keys);
@@ -337,5 +338,31 @@ class PlansController extends Controller
             //return forbidden
             return abort(403);
         }
+    }
+    //show plan
+    function show($id)
+    {
+        //get plan
+        $plan = Plans::find($id);
+        //get plan features
+        $features = $plan->features_obj;
+        //put $features id in array
+        $features_id = $features->pluck('feature_id')->toArray();
+        //get plan prices
+        $prices = $plan->plansPrices;
+        //process $prices data
+        foreach ($prices as $price) {
+            $price->Country_name = app()->getLocale() == 'en' ? $price->Country->name : $price->Country->name_ar;
+            $price->currency_sy = $price->currency_symbol;
+            $price->payment_methods = json_decode($price->payment_methods);
+        }
+        $data = [
+            'plan' => $plan,
+            'features' => $features,
+            'prices' => $prices,
+            'features_id' => $features_id
+        ];
+        //return json response
+        return response()->json($data);
     }
 }

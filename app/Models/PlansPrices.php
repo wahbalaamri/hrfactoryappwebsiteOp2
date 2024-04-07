@@ -26,7 +26,7 @@ class PlansPrices extends Model
     //belongs to relationship with countries
     public function Country()
     {
-        return $this->belongsTo(Countries::class, 'country');
+        return $this->belongsTo(Countries::class, 'country','id');
     }
     //get plan price currency
     public function getCurrencySymbolAttribute()

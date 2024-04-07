@@ -247,82 +247,153 @@
                                             <div class="row">
                                                 {{-- plan --}}
                                                 <div class="col-sm-12 text-center">
-                                                    <h6>{{ $plan->name }}</h6>
+                                                    <h6>{{ App()->getLocale()=='en'? $plan->name: $plan->name_ar }}</h6>
+                                                </div>
+                                                <div class="col-sm-12 text-center">
+                                                    <h6>{{ __('delivery mode') }}</h6> {!!
+                                                    App()->getLocale()=='en'?$plan->delivery_mode:$plan->delivery_mode_ar
+                                                    !!}
                                                 </div>
 
-                                                {{-- plan arabic --}}
-                                                {{-- <div class="col-sm-12 text-center">
-                                                    <h6>{{ $plan->name_ar }}</h6>
-                                                </div> --}}
-                                                {{-- delivery_mode --}}
-                                                <div class="col-sm-12 text-center">
-                                                    <h6>delivery mode</h6> {!! $plan->delivery_mode !!}
+                                            </div>
+                                        </div>
+                                        {{-- footer --}}
+                                        <div class="card-footer">
+                                            <div class="row">
+                                                <div class="col-md-4 col-sm-12 text-center">
+                                                    <a href="javascript:void(0)" class="btn btn-sm btn-info"
+                                                        onclick="showPlan('{{ $plan->id }}')">
+                                                        {{ __('Show') }}
+                                                    </a>
                                                 </div>
-                                                {{-- delivery_mode arabic --}}
-                                                {{-- <div class="col-sm-12 text-center">
-                                                    <h6>طريقة التوصيل</h6> {!! $plan->delivery_mode_ar !!}
-                                                </div> --}}
-                                                {{-- limitations --}}
-                                                <div class="col-sm-12 text-center">
-                                                    <h6>limitations</h6> {!! $plan->limitations !!}
+                                                <div class="col-md-4 col-sm-12 text-center">
+                                                    <a href="{{-- {{ route('service-plans.edit', $plan->id) }} --}}"
+                                                        class="btn btn-sm btn-warning">
+                                                        {{ __('Edit') }}
+                                                    </a>
                                                 </div>
-                                                {{-- limitations arabic --}}
-                                                {{-- <div class="col-sm-12 text-center">
-                                                    <h6>القيود</h6> {!! $plan->limitations_ar !!}
-                                                </div> --}}
-                                                {{-- download sample report --}}
-                                                <div class="col-sm-12 text-center">
-                                                    <a
-                                                        href="{{ asset('uploads/services/sample_reports/') }}{{ $plan->sample_report }}"></a>
+                                                <div class="col-md-4 col-sm-12 text-center">
+                                                    <form
+                                                        action="{{-- {{ route('service-plans.destroy', $plan->id) }} --}}"
+                                                        method="post">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-sm btn-danger">
+                                                            {{ __('Delete') }}
+                                                        </button>
+                                                    </form>
                                                 </div>
-                                                {{-- download sample report arabic --}}
-                                                <div class="col-sm-12 text-center">
-                                                    {{-- <a
-                                                        href="{{ asset('uploads/services/sample_reports/') }}{{ $plan->sample_report_ar }}"></a>
-                                                    --}}
-                                                </div>
-                                                {{-- features --}}
-                                                <hr>
-                                                <div class="col-sm-12 text-center">
-                                                    {{-- <h6 class="">benefits</h6> --}}
-                                                    <ul class="list-group" style="list-style-type: none">
-                                                        @foreach ($service->features as $feature)
-                                                        {{-- check if id in an array --}}
-                                                        @if (in_array($feature->id, $plan->Features))
-                                                        {{-- add tick --}}
-                                                        <li><i class="fa fa-check text-success pr-2 pl-2"></i>{{
-                                                            $feature->feature }}</li>
-                                                        @else
-                                                        {{-- add cross --}}
-                                                        <li><i class="fa fa-times text-danger pr-2 pl-2"></i>
-                                                        {{ $feature->feature }}</li>
-                                                        @endif
-                                                        @if(!$loop->last)
-                                                        <hr>
-                                                        @endif
-                                                        @endforeach
-                                                    </ul>
-                                                </div>
-                                                <hr>
-                                                {{-- price --}}
-                                                <div class="col-sm-12 text-center">
-                                                    {{-- <h6>price</h6> --}} {{
-                                                    number_format(($plan->plansPrices->annual_price)/12,2) }}{{
-                                                    $plan->plansPrices->currency_symbol }}/month
-                                                </div>
-                                                {{-- currncy --}}
-                                                {{-- <div class="col-sm-12 text-center">
-                                                    <h6>currency</h6> {{ $plan->currency }}
-                                                </div> --}}
-                                                {{-- country --}}
-                                                {{-- <div class="col-sm-12 text-center">
-                                                    <h6>country</h6> {{ $plan->plansPrices->Country->name }}
-                                                </div> --}}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 @endforeach
+                            </div>
+                            <div class="row justify-content-center d-none">
+                                <section class="content pb-3 pr-4 pl-4 w-100">
+                                    <div class="container-fluid h-100">
+                                        <div class="row">
+                                            <div class="col-md-4 col-sm-6">
+                                                <div class="card card-default">
+                                                    <div class="card-header bg-info">
+                                                        <h3 class="card-title">
+                                                            {{ __('Plan info') }}
+                                                        </h3>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="card card-info card-outline">
+                                                            <div class="card-header">
+                                                                <h5 class="card-title">{{ ('Plan info') }}</h5>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <p id="planInfo_P">
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card card-success card-outline">
+                                                            <div class="card-header">
+                                                                <h5 class="card-title">{{ ('Plan Delivery Mode') }}</h5>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <p id="deliveryMode_P">
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card card-danger card-outline">
+                                                            <div class="card-header">
+                                                                <h5 class="card-title">{{ ('Plan Limitations') }}</h5>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <p id="limitations_P">
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 col-sm-6">
+                                                <div class="card card-success">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            {{ __('Plan Features') }}
+                                                        </h3>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="card card-primary card-outline">
+                                                            <div class="card-header">
+                                                                <h5 class="card-title">{{ __('Features') }}</h5>
+
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <p id="features_P">
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 col-sm-6">
+                                                <div class="card card-primary">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            {{ __('Plan Prices') }}
+                                                        </h3>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="card card-primary card-outline">
+                                                            <div class="card-header">
+                                                                <h5 class="card-title">{{ __('Prices') }}</h5>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <div class="table-responsive">
+                                                                    <table
+                                                                        class="table table-bordered table-hover text-xs">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>#</th>
+                                                                                <th>{{ __('Country') }}</th>
+                                                                                <th>{{ __('Monthly Price') }}</th>
+                                                                                <th>{{ __('Annual Price') }}</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody id="PriceTable">
+                                                                            <tr>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
                             </div>
                         </div>
                     </div>
@@ -396,7 +467,8 @@
                         {{-- approach in Arabic --}}
                         <div class="form-group col-12">
                             <label for="approach_ar">{{ __('Approach Arabic') }}</label>
-                            <textarea name="approach_ar" class="form-control summernote" placeholder="Approach Arabic"></textarea>
+                            <textarea name="approach_ar" class="form-control summernote"
+                                placeholder="Approach Arabic"></textarea>
                         </div>
                         {{-- icon --}}
                         <div class="form-group col-12">
@@ -517,6 +589,51 @@ function showEdit(id) {
                 $('#status').next().text('In-Active');
             }
             $('#addEditFeature').modal('show');
+        }
+    });
+}
+//showPlan
+function showPlan(id) {
+    features="{{ $service->features }}";
+    isEnglish = "{{ App()->getLocale() == 'en' }}";
+    // convert features to array of objects
+    features = JSON.parse(features.replace(/&quot;/g, '"'));
+    var url = "{{ route('service-plans.show', ':id') }}";
+    url = url.replace(':id', id);
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function (data) {
+            // clear table
+            $('#PriceTable').html('');
+            data.prices.forEach((price, index) => {
+                $('#PriceTable').append(`
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${price.Country_name}</td>
+                        <td>${price.monthly_price} ${price.currency_sy}</td>
+                        <td>${price.annual_price} ${price.currency_sy}</td>
+                    </tr>
+                `);
+            });
+            //clear features_P
+            $('#features_P').html('');
+            //show plan features
+            features.forEach((feature, index) => {
+                //if feature is in plan features
+                if (data.features_id.includes(feature.id)) {
+                $('#features_P').append(isEnglish ? `<p><i class="fa fa-check text-success pr-2"></i>${feature.feature}</p>` : `<p><i class="fa fa-check text-success pl-2"></i>${feature.feature_ar}</p>`);
+                }
+                else{
+                    $('#features_P').append(isEnglish ? `<p><i class="fa fa-times text-danger pr-2"></i>${feature.feature}</p>` : `<p><i class="fa fa-times text-danger pl-2"></i>${feature.feature_ar}</p>`);
+                }
+            });
+            $('#planInfo_P').html(data.plan.name);
+            $('#deliveryMode_P').html(data.plan.delivery_mode);
+            $('#limitations_P').html(data.plan.limitations);
+            // $('#features_P').html(data.plan.features);
+
+            $('.d-none').removeClass('d-none');
         }
     });
 }

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('client_size');
             $table->integer('partner_id')->nullable();
             $table->string('logo_path')->nullable();
+            $table->string('phone')->nullable();
             $table->string('webiste')->nullable();
             $table->boolean('use_sections')->default(false);
             //is_active

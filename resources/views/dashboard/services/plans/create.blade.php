@@ -208,7 +208,7 @@
                                         <div class="w-75">
                                             <div class="row">
                                                 {{-- service valid in country --}}
-                                                <div class="form-group col-md-6 col-sm-12">
+                                                <div class="form-group col-md-3 col-sm-12">
                                                     <label for="valid_in">{{ __('Plan Valid In') }}</label>
                                                     <select name="valid_in" id="valid_in" class="form-control">
                                                         <option value="">{{ __('Select Country') }}</option>
@@ -232,6 +232,17 @@
                                                     </select>
                                                     {{-- validation --}}
                                                     @error('valid_in')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                {{-- monthly_price --}}
+                                                <div class="form-group col-md-3 col-sm-12">
+                                                    <label for="monthly_price">{{ __('Monthly Price') }}</label>
+                                                    <input type="number" name="monthly_price" id="monthly_price"
+                                                        class="form-control" placeholder="{{ __('monthly Price') }}"
+                                                        value="{{ old('monthly_price') }}">
+                                                    {{-- validation --}}
+                                                    @error('monthly_price')
                                                     <span class="text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </div>
@@ -289,7 +300,7 @@
                                                     <label for="payment_methods">{{ __('Payment Methods') }}</label>
                                                     {{-- checkbox input --}}
                                                     <div class="row">
-                                                        <div class="form-check col-md-4 col-sm-12">
+                                                        <div class="form-check col-md-6 col-sm-12">
                                                             <input class="form-check-input" type="checkbox"
                                                                 name="PM-online" value="0"
                                                                 id="PM-online">
@@ -297,7 +308,7 @@
                                                                 {{ __('Online') }}
                                                             </label>
                                                         </div>
-                                                        <div class="form-check col-md-4 col-sm-12">
+                                                        <div class="form-check col-md-6 col-sm-12">
                                                             <input class="form-check-input" type="checkbox"
                                                                 name="PM-offline" value="0"
                                                                 id="PM-offline">
@@ -305,7 +316,7 @@
                                                                 {{ __('offline') }}
                                                             </label>
                                                         </div>
-                                                        <div class="form-check col-md-4 col-sm-12">
+                                                        <div class="form-check col-md-6 col-sm-12">
                                                             <input class="form-check-input" type="checkbox"
                                                                 name="PM-perscope" value="0"
                                                                 id="PM-perscope">
@@ -313,7 +324,7 @@
                                                                 {{ __('Per-scope') }}
                                                             </label>
                                                         </div>
-                                                        <div class="form-check col-md-4 col-sm-12">
+                                                        <div class="form-check col-md-6 col-sm-12">
                                                             <input class="form-check-input" type="checkbox"
                                                                 name="PM-other" value="0"
                                                                 id="PM-other">

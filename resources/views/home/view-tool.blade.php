@@ -92,13 +92,13 @@
                                     <tr>
                                         <th>{{ __('Monthly Subscription Fee') }}</th>
                                         @foreach ($service->plans as $plan)
-                                        <td>{{ $plan->plansPrices->annual_price }}</td>
+                                        <td>{{ $plan->plansPrices[0]->monthly_price }} {{ $plan->plansPrices[0]->currency_symbol }}</td>
                                         @endforeach
                                     </tr>
                                     <tr>
                                         <th>{{ __('Annual Subscription Fee') }}</th>
                                         @foreach ($service->plans as $plan)
-                                        <td>{{ $plan->plansPrices->annual_price }}</td>
+                                        <td>{{ $plan->plansPrices[0]->annual_price }} {{ $plan->plansPrices[0]->currency_symbol }}</td>
                                         @endforeach
                                     </tr>
                                     {{-- if user loged in --}}

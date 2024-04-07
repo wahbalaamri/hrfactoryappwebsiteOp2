@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CouponsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MigrationConrtoller;
@@ -46,6 +47,11 @@ Route::get('/admin/dashboard', [HomeController::class, 'dashboard'])->name('admi
 Route::get('/client/dashboard', [HomeController::class, 'client'])->name('client.dashboard')->middleware('auth:web');
 Route::post('Coupons/getCouponRate', [CouponsController::class, 'getCouponRate'])->name('coupon.getCouponRate');
 Route::get('tools/view/{id}',[HomeController::class,'viewTool'])->name('tools.view');
+Route::post('register/newclient', [RegisterController::class, 'registerNewClient'])->name('register.newclient');
+Route::get('lang/{locale}', function () {
+    session()->put('locale', request()->locale);
+    return redirect()->back();
+})->name('lang.swap');
 
 //group routes for admin
 Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
@@ -118,6 +124,7 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
   ==================================================================================================================*/
     Route::get('service-plans/create/{id}',[PlansController::class,'create'])->name('service-plans.create');
     Route::post('service-plans/store/{id}',[PlansController::class,'store'])->name('service-plans.store');
+    Route::get('service-plans/show/{id}',[PlansController::class,'show'])->name('service-plans.show');
 /*==================================================================================================================
   =                                                                                                                =
   =                                                                                                                =

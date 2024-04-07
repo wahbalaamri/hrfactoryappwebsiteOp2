@@ -38,6 +38,6 @@ class Countries extends Model
     //has many relationship with plansPrices
     public function plansPrices()
     {
-        return $this->hasMany(PlansPrices::class);
+        return $this->hasMany(PlansPrices::class,'id','country');
     }
 }
