@@ -204,7 +204,7 @@
                             alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
+                        <a href="#" class="d-block">{{ Auth()->user()->name }}</a>
                     </div>
                 </div>
 
@@ -267,6 +267,15 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="{{ route('ManageHrDiagnosis.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-user-md"></i>
+                                <p>
+                                    {{ __('Manager Hr Diagnosis') }}
+                                    {{-- <span class="right badge badge-danger">New</span> --}}
+                                </p>
+                            </a>
+                        </li>
+                        {{-- <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-copy"></i>
                                 <p>
@@ -858,7 +867,7 @@
                                 <i class="nav-icon far fa-circle text-info"></i>
                                 <p>Informational</p>
                             </a>
-                        </li>
+                        </li> --}}
                         @else
                         <li class="nav-item"><a href="{{ route('Client.startup') }}" class="nav-link">
                                 <i class="fa fa-folder text-info"></i>

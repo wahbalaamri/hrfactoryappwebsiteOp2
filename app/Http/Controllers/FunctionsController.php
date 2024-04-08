@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Functions;
 use App\Http\Requests\StoreFunctionsRequest;
 use App\Http\Requests\UpdateFunctionsRequest;
+use App\Models\Plans;
 
 class FunctionsController extends Controller
 {
@@ -14,6 +15,10 @@ class FunctionsController extends Controller
     public function index()
     {
         //
+        $remotFunctionsArry = array();
+        $functions = Functions::all();
+
+        return view('Functions.index', compact('functions'));
     }
 
     /**

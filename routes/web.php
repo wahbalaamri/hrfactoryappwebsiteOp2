@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CouponsController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ManageHrDiagnosisController;
 use App\Http\Controllers\MigrationConrtoller;
 use App\Http\Controllers\PlansController;
 use App\Http\Controllers\SectionsController;
@@ -130,6 +131,28 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
   =                                                                                                                =
   =                                                                                                                =
   =                                        SERVICE PLANS ROUTES END                                                =
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                                                                                                =
+  ==================================================================================================================*/
+/*==================================================================================================================
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                        SERVICE ManageHrDiagnosis ROUTES START                                              =
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                                                                                                =
+  ==================================================================================================================*/
+    Route::get('ManageHrDiagnosis/index',[ManageHrDiagnosisController::class,'index'])->name('ManageHrDiagnosis.index');
+    Route::get('ManageHrDiagnosis/create',[ManageHrDiagnosisController::class,'create'])->name('ManageHrDiagnosis.create');
+    Route::post('ManageHrDiagnosis/store',[ManageHrDiagnosisController::class,'store'])->name('ManageHrDiagnosis.store');
+    Route::get('ManageHrDiagnosis/show/{id}',[ManageHrDiagnosisController::class,'show'])->name('ManageHrDiagnosis.show');
+/*==================================================================================================================
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                        SERVICE ManageHrDiagnosis ROUTES END                                                =
   =                                                                                                                =
   =                                                                                                                =
   =                                                                                                                =
