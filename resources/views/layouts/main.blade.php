@@ -232,7 +232,7 @@
                             <ul id="menu-main" class="float-end nav-menu dropdown-dark">
                                 <li><a href="#">{{ __('Home') }}</a></li>
 
-                                <li><a href="{{ route('Home') }}#subscriptionPlans">{{ __('Tools') }}</a></li>
+                                <li><a href="{{ route('Home') }}#subscriptionPlans">{{ __('Solutions') }}</a></li>
                                 <li><a href="{{ route('Training') }}">{{ __('Learn') }}</a></li>
                                 <li class="dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"

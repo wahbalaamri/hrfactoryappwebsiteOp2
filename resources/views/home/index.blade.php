@@ -123,16 +123,16 @@
                             <div class="blog-item thum-hover background-white hvr-float hvr-sh2 ">
                                 <div class="position-relative">
                                     <div class="date z-index-101 padding-10px image-builder"></div>
-                                    <div class="item-thumbnail"><a href="{{ route('Plans.manualBuilder') }}"><img
+                                    <div class="item-thumbnail"><a href="{{ route('tools.view',$service->id) }}"><img
                                                 src="{{ asset('uploads/services/icons') }}/{{ $service->service_icon }}" alt=""></a></div>
                                 </div>
                                 <div class="blog-item padding-lr-30px text-center">
-                                    <a href="{{ route('Plans.manualBuilder') }}" class="text-extra-large d-block "><span style="color:#f39c12"><span style="font-size:18px">{{ $service->name }}</span></span></a>
+                                    <a href="{{ route('tools.view',$service->id) }}" class="text-extra-large d-block "><span style="color:#f39c12"><span style="font-size:18px">{{ $service->name }}</span></span></a>
                                     <div class="text-center padding-lr-30px padding-bottom-42px height-200 cms"
                                         data-contentId="11"><span style="font-size:14px"><span style="color:black">{!! $service->description !!}</span></span>
                                     </div>
                                     <div class="text-center blog-item padding-bottom-22px">
-                                        <a class="youtube" href="#">
+                                        <a class="youtube" href="{{ route('tools.view',$service->id) }}">
                                             <img src="{{ asset('assets/img/player-01.png') }}" alt="">
                                         </a>
                                     </div>
@@ -143,7 +143,7 @@
                             </div>
                         </div>
                         @endforeach
-                        <div class="col-lg-4 col-md-6 sm-mb-30px wow fadeInUp padding-bottom-42px">
+                        {{-- <div class="col-lg-4 col-md-6 sm-mb-30px wow fadeInUp padding-bottom-42px">
                             <div class="blog-item thum-hover background-white hvr-float hvr-sh2 ">
                                 <div class="position-relative">
                                     <div class="date z-index-101 padding-10px image-builder"></div>
@@ -308,7 +308,7 @@
                                             __('Go') }}</a></div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

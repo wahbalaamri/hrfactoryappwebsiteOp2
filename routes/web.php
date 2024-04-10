@@ -145,8 +145,8 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
   =                                                                                                                =
   ==================================================================================================================*/
     Route::get('ManageHrDiagnosis/index',[ManageHrDiagnosisController::class,'index'])->name('ManageHrDiagnosis.index');
-    Route::get('ManageHrDiagnosis/create',[ManageHrDiagnosisController::class,'create'])->name('ManageHrDiagnosis.create');
-    Route::post('ManageHrDiagnosis/store',[ManageHrDiagnosisController::class,'store'])->name('ManageHrDiagnosis.store');
+    Route::get('ManageHrDiagnosis/createFunction',[ManageHrDiagnosisController::class,'createFunction'])->name('ManageHrDiagnosis.createFunction');
+    Route::post('ManageHrDiagnosis/storeFunction',[ManageHrDiagnosisController::class,'storeFunction'])->name('ManageHrDiagnosis.storeFunction');
     Route::get('ManageHrDiagnosis/show/{id}',[ManageHrDiagnosisController::class,'show'])->name('ManageHrDiagnosis.show');
 /*==================================================================================================================
   =                                                                                                                =

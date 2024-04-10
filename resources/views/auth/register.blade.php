@@ -125,7 +125,7 @@
                                     <button type="button" class="step-trigger" role="tab" aria-controls="company"
                                         id="company-trigger" aria-selected="true">
                                         <span class="bs-stepper-circle">1</span>
-                                        <span class="bs-stepper-label">{{ __('Company info') }}</span>
+                                        <span class="bs-stepper-label">{{ __('Organization info') }}</span>
                                     </button>
                                 </div>
                                 <div class="line"></div>
@@ -144,27 +144,27 @@
                                     <div class="row">
                                         {{-- company name in English --}}
                                         <div class="form-group col-md-6 col-sm-12">
-                                            <label for="company_name_en">{{ __('Company Name (English)') }}</label>
+                                            <label for="company_name_en">{{ __('Organization Name') }}</label>
                                             <input type="text" class="form-control" id="company_name_en"
-                                                name="company_name_en" placeholder="Company Name (English)">
+                                                name="company_name_en" placeholder="Organization Name">
                                             @error('company_name_en')
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
                                         {{-- company name in Arabic --}}
-                                        <div class="form-group col-md-6 col-sm-12">
+                                        {{-- <div class="form-group col-md-6 col-sm-12">
                                             <label for="company_name_ar">{{ __('Company Name (Arabic)') }}</label>
                                             <input type="text" class="form-control" id="company_name_ar"
                                                 name="company_name_ar" placeholder="Company Name (Arabic)">
                                             @error('company_name_ar')
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
-                                        </div>
+                                        </div> --}}
                                         {{--select company sector --}}
                                         <div class="form-group col-md-6 col-sm-12">
-                                            <label for="company_sector">{{ __('Company Sector') }}</label>
+                                            <label for="company_sector">{{ __('Sector') }}</label>
                                             <select class="form-control" id="company_sector" name="company_sector">
-                                                <option value="">{{ __('Select Company Sector') }}</option>
+                                                <option value="">{{ __('Select Sector') }}</option>
                                                 @foreach ($industries as $industry)
                                                 <option value="{{ $industry->id }}">@if(App()->isLocale('en')){{
                                                     $industry->name }} @else {{ $industry->name_ar }} @endif</option>
@@ -176,9 +176,9 @@
                                         </div>
                                         {{-- select company country --}}
                                         <div class="form-group col-md-6 col-sm-12">
-                                            <label for="company_country">{{ __('Company Country') }}</label>
+                                            <label for="company_country">{{ __('Country') }}</label>
                                             <select class="form-control" id="company_country" name="company_country">
-                                                <option value="">{{ __('Select Company Country') }}</option>
+                                                <option value="">{{ __('Select Country') }}</option>
                                                 @foreach ($countries as $country)
                                                 <option value="{{ $country->id }}">@if(App()->isLocale('en')){{
                                                     $country->name }} @else {{ $country->name_ar }} @endif</option>
@@ -190,9 +190,9 @@
                                         </div>
                                         {{-- select company size group --}}
                                         <div class="form-group col-md-6 col-sm-12">
-                                            <label for="company_size">{{ __('Company Size') }}</label>
+                                            <label for="company_size">{{ __('Size') }}</label>
                                             <select class="form-control" id="company_size" name="company_size">
-                                                <option value="">{{ __('Select Company Size') }}</option>
+                                                <option value="">{{ __('Select Size') }}</option>
                                                 {{-- KEY VALUE LOOP --}}
 
                                                 @foreach ($numberOfEmployees as $vlue=>$size)
@@ -205,15 +205,15 @@
                                         </div>
                                         {{-- company phone number --}}
                                         <div class="form-group col-md-6 col-sm-12">
-                                            <label for="phone">{{ __('Company Phone') }}</label>
+                                            <label for="phone">{{ __('Phone') }}</label>
                                             <input type="text" class="form-control" id="phone" name="phone"
-                                                placeholder="Company Phone">
+                                                placeholder="Phone">
                                             @error('phone')
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
                                         {{-- logo_path --}}
-                                        <div class="form-group col-md-6 col-sm-12">
+                                        {{-- <div class="form-group col-md-6 col-sm-12">
                                             <label for="logo_path">{{ __('Company Logo') }}</label>
                                             <div class="input-group">
                                                 <div class="custom-file">
@@ -227,16 +227,16 @@
                                             @error('logo_path')
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
-                                        </div>
+                                        </div> --}}
                                         {{-- company webiste --}}
-                                        <div class="form-group col-md-6 col-sm-12">
+                                        {{-- <div class="form-group col-md-6 col-sm-12">
                                             <label for="website">{{ __('Company Website') }}</label>
                                             <input type="text" class="form-control" id="website" name="website"
                                                 placeholder="Company Website">
                                             @error('website')
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
-                                        </div>
+                                        </div> --}}
                                     </div>
                                     <div class="pt-2 pb-4">
                                         <a href="javascript:void(0)" class="btn btn-primary float-end pb-2"
@@ -275,7 +275,7 @@
                                         </div>
                                         {{--focal point password --}}
                                         <div class="form-group col-md-6 col-sm-12">
-                                            <label for="password">{{ __('Focal Point Password') }}</label>
+                                            <label for="password">{{ __('Create Password') }}</label>
                                             <div class="input-group" dir="ltr">
                                                 <input type="password" class="form-control" id="password"
                                                     name="password" placeholder="Focal Point Password">

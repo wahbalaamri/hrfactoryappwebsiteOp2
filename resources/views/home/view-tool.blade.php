@@ -4,11 +4,11 @@
 <div class="container-fluid">
     <div class="row main-bg">
         <div class="col-lg-6 col-md-12 col-sm-12 p-0 m-0 text-center justify-content-center align-self-center">
-            <h1 class="text-white" style="font-size: 3.4rem">
-                {{ __('HR Diagnostic Solutions') }}
+            <h1 class="text-white" style="font-size: 3.4rem; line-height: 4.0rem">
+                {{ $service->slug}}
             </h1>
-            <span style="font-size: 2.4rem">{{ __('Maximize your return on people investment') }}
-            </span>
+            {{-- <span style="font-size: 2.4rem">{{ __('Maximize your return on people investment') }}
+            </span> --}}
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12 p-0 m-0">
             <img src="{{ asset('uploads/services/images/') }}/{{ $service->service_media_path }}"
@@ -56,7 +56,7 @@
     <div class="row pt-2 pb-5" style="background-color: #f8f7f5;">
         <div class="col-12 pb-1 pt-1 text-center justify-content-center align-self-center">
             <h1 class="text-center text-capitalize">
-                {{ __('Solution Plans') }}
+                {{ __('Plans') }}
             </h1>
         </div>
         <div class="col-12">
@@ -90,15 +90,31 @@
                                     </tr>
                                     @endforeach
                                     <tr>
-                                        <th>{{ __('Monthly Subscription Fee') }}</th>
+                                        <th>{{ __('One time Subscription Fee') }}</th>
                                         @foreach ($service->plans as $plan)
-                                        <td>{{ $plan->plansPrices[0]->monthly_price }} {{ $plan->plansPrices[0]->currency_symbol }}</td>
+                                        <td>{{ $plan->plansPrices[0]->monthly_price }} {{
+                                            $plan->plansPrices[0]->currency_symbol }}
+                                            <a href="javascript:void(0)" class="btn btn-sm btn-warning">{{ __('Subscripe
+                                                now') }}</a>
+                                        </td>
                                         @endforeach
                                     </tr>
                                     <tr>
                                         <th>{{ __('Annual Subscription Fee') }}</th>
                                         @foreach ($service->plans as $plan)
-                                        <td>{{ $plan->plansPrices[0]->annual_price }} {{ $plan->plansPrices[0]->currency_symbol }}</td>
+                                        @php
+
+                                        $TotalMonthlyprice = $plan->plansPrices[0]->monthly_price*12;
+                                        $diff= $TotalMonthlyprice - $plan->plansPrices[0]->annual_price ;
+                                        $percentage= number_format(($diff / $TotalMonthlyprice)*100,2)
+                                        @endphp
+                                        <td><del>{{ $TotalMonthlyprice}}
+                                            </del> {{ $plan->plansPrices[0]->annual_price }} {{
+                                            $plan->plansPrices[0]->currency_symbol }} <span class="text-success">({{
+                                                __('Save') }} {{
+                                                $percentage }}%)</span> <a href="javascript:void(0)"
+                                                class="btn btn-sm btn-success">{{ __('Subscripe
+                                                now') }}</a></td>
                                         @endforeach
                                     </tr>
                                     {{-- if user loged in --}}

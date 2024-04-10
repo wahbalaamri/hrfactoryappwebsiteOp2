@@ -4,13 +4,13 @@
 <div id="page-title" class="text-grey background-overlay "
     style="background-image: url('{{ asset('assets/img/aboutus.jpg') }}');" dir="@dir">
     <div>
-        <div class="container padding-tb-185px z-index-2 position-relative">
+        <div class="container padding-tb-20px z-index-2 position-relative">
             <h1 class="font-weight-700 text-capitalize page-title-about cms" data-contentId="63">{!!
                 app()->getLocale()=='ar'? $contents->where('d_id', 63)->first()->ArabicText: $contents->where('d_id',
                 63)->first()->EnglishText !!}</h1>
             <div class="row ">
                 <div class="col-lg-7">
-                    <h1 class="font-weight-700 pageSubTitle-about padding-tb-15px cms" data-contentId="64">{!!
+                    <h1 class="font-weight-700 pageSubTitle-about padding-tb-15px cms w-75" data-contentId="64">{!!
                         app()->getLocale()=='ar'? $contents->where('d_id', 64)->first()->ArabicText:
                         $contents->where('d_id', 64)->first()->EnglishText !!}</h1>
                 </div>

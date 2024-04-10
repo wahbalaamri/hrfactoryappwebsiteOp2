@@ -13,7 +13,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item active">Service</li>
+                        <li class="breadcrumb-item active">HR Diagnosis</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -32,14 +32,14 @@
                             <h3 class="card-title">{{ __('Functions') }}
                             </h3>
                             <div class="card-tools">
-                                <a href="" class="btn btn-primary">
-                                    <i class="fas fa-plus"></i> {{ __('Add New') }}
+                                <a href="{{ route('ManageHrDiagnosis.createFunction') }}" class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-plus"></i>
                                 </a>
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-hover">
+                                <table class="table table-hover table-bordered">
                                     <thead>
                                         <tr>
                                             <th>#</th>

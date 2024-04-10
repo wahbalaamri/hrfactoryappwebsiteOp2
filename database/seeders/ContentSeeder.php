@@ -29,12 +29,12 @@ class ContentSeeder extends Seeder
             $new_content->EnglishText = $content['EnglishText'];
             $new_content->save();
         }
-        echo "seeding done";
+
         $test = Content::whereIn('d_id', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 47, 48, 49, 50, 122, 123, 124, 125])->update(['page' => 'home']);
         $test = Content::whereIn('d_id', [104 ,96,97,98,99,100,101,102,103])->update(['page' => 'aboutus']);
         $test = Content::whereIn('d_id', [68,69,70,116,117,118,119,120,121])->update(['page' => 'startup']);
         $test = Content::whereIn('d_id', [63,64])->update(['page' => 'login']);
         $test = Content::whereIn('d_id', [79,80,81])->update(['page' => 'manualbuilder']);
-        Log::info("seeding done");
+
     }
 }
