@@ -26,7 +26,7 @@
                 <li class="list-group-item" data-mdb-sortable-item>Item 1</li>
                 <li class="list-group-item" data-mdb-sortable-item>Item 2</li>
                 <li class="list-group-item" data-mdb-sortable-item>Item 3</li>
-              </ul>
+            </ul>
             <div class="accordion" id="accordionExample">
                 <div class="accordion-item" draggable="true">
                     <h2 class="accordion-header">
@@ -1263,6 +1263,54 @@ $(".editSection").on("click", function () {
                             secid = sectionId;
             });
 </script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/5.23.0/mdb.min.js"></script>
+<script>
+    const draggables = document.querySelectorAll('.accordion-item')
+const containers = document.querySelectorAll('.accordion')
+
+draggables.forEach(draggable => {
+  draggable.addEventListener('dragstart', () => {
+    draggable.classList.add('dragging')
+  })
+
+  draggable.addEventListener('dragend', () => {
+    draggable.classList.remove('dragging')
+  })
+})
+
+containers.forEach(container => {
+  container.addEventListener('dragover', e => {
+      const draggable = document.querySelector('.dragging')
+      // get draggable parent element
+        const parent = draggable.parentElement;
+        //check if parent is not the same as the container
+        if(container.contains(draggable)){
+            e.preventDefault()
+    const afterElement = getDragAfterElement(container, e.clientY)
+    console.log(afterElement);
+    if (afterElement == null) {
+      container.appendChild(draggable)
+    } else {
+      container.insertBefore(draggable, afterElement)
+    }
+        }
+
+  })
+})
+
+function getDragAfterElement(container, y) {
+  const draggableElements = [...container.querySelectorAll('.accordion-item:not(.dragging)')]
+
+  return draggableElements.reduce((closest, child) => {
+    const box = child.getBoundingClientRect()
+    const offset = y - box.top - box.height / 2
+
+    if (offset < 0 && offset > closest.offset) {
+      return { offset: offset, element: child }
+    } else {
+      return closest
+    }
+  }, { offset: Number.NEGATIVE_INFINITY }).element
+}
+</script>
 
 @endsection
