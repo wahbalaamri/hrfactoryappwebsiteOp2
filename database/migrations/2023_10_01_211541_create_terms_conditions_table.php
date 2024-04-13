@@ -14,16 +14,18 @@ return new class extends Migration
         Schema::create('terms_conditions', function (Blueprint $table) {
             $table->id();
             //cascade on plan delete
-            $table->integer('plan_id')->constrained()->onDelete('cascade');
+            $table->integer('plan_id')->default(0)->constrained()->onDelete('cascade');
             // cascade on country delete
             $table->integer('country_id')->constrained()->onDelete('cascade');
-            $table->integer('subscription_period');
+            $table->integer('period');
             $table->longText('arabic_text');
             $table->longText('english_text');
             $table->longText('arabic_title');
             $table->longText('english_title');
             $table->boolean('is_active')->default(0);
-            $table->unique(['plan_id', 'country_id', 'subscription_period']);
+            $table->integer('for')->nullable();
+            $table->integer('service')->nullable();
+            $table->unique(['plan_id', 'country_id', 'period','for', 'service']);
             $table->timestamps();
             $table->softDeletes();
         });

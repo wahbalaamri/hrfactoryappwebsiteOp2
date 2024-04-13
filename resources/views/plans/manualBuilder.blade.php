@@ -39,8 +39,7 @@
                 </div>
             </div>
             <h3 class="font-weight-700 text-capitalize page-title-tech cms pb-3" style="line-height: 1.2;"
-                data-contentId="79">{!! app()->getLocale()=='ar'? $contents->where('d_id', 79)->first()->ArabicText:
-                $contents->where('d_id', 79)->first()->EnglishText !!}</h3>
+                data-contentId="79">{!! app()->getLocale()=='ar'? $contents->where('d_id', 79)->first()->ArabicText:$contents->where('d_id', 79)->first()->EnglishText !!}</h3>
         </div>
     </div>
 </div>
@@ -144,7 +143,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" data-contentId="">@Html.Raw(ViewBag.MBMText)</div>
+            <div class="modal-body" data-contentId="">Html.Raw(ViewBag.MBMText)</div>
         </div>
     </div>
 </div>
@@ -154,12 +153,12 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 id="exampleModalLabel1" class="modal-title" data-contentId="">@ViewBag.MBATitle</h5>
+                <h5 id="exampleModalLabel1" class="modal-title" data-contentId="">ViewBag.MBATitle</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" data-contentId="">@Html.Raw(ViewBag.MBAText)</div>
+            <div class="modal-body" data-contentId="">Html.Raw(ViewBag.MBAText)</div>
         </div>
     </div>
 </div>
@@ -175,7 +174,7 @@
         startYear = startDate.getFullYear();
         endDay = endDate.getDate();
         endYear = endDate.getFullYear();
-        var userId =@Session["UserId"];
+        var userId =;
         var planId = "3";
         var fromDay = startDay;
         var fromMonth = startmonth;
@@ -213,7 +212,7 @@
         startYear = startDate.getFullYear();
         endDay = endDate.getDate();
         endYear = endDate.getFullYear();
-        var userId =@Session["UserId"];
+        var userId =
         var planId = "3";
         var fromDay = startDay;
         var fromMonth = startmonth;
@@ -223,7 +222,7 @@
         var toYear = endYear;
         var price = 0;
          $.ajax({
-            url: "@Url.Action("SubscribeFree", "Plans")",
+            url: "",
             data: {
                 "userId": userId, "planId": planId,
                 "fromDay": fromDay, "fromMonth": fromMonth, "fromYear": fromYear,

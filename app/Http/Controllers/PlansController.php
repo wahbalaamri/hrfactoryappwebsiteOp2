@@ -83,15 +83,15 @@ class PlansController extends Controller
         } else {
             $vedi_src = app()->getLocale() == 'ar' ? $vedio->EmbadedArabic : $vedio->EmbadedEnglish;
         }
-        $m_terms = TermsConditions::where([['CountryId', 158], ['TermsConditionType', 2]])->first();
-        $a_terms = TermsConditions::where([['CountryId', 158], ['TermsConditionType', 3]])->first();
+        $m_terms = TermsConditions::where([['country_id', 158], ['period', 2]])->first();
+        $a_terms = TermsConditions::where([['country_id', 158], ['period', 3]])->first();
 
         $data = [
             'contents' => $contents,
             // 'DocFiles' => DocFile::latest()->take(3)->get(),
             // 'DocFilesCount' => DocFile::where([['CountryId', 0], ['isFileActive', true]])->whereIn('CategoryId', $categories)->count(),
-            'MonthlyPriceDisp' => ceil(doubleval($plan->ManthlyPrice) * 2.6008),
-            'AnnualPriceDisp' => ceil(doubleval($plan->AnnualPrice) * 2.6008),
+            'MonthlyPriceDisp' => 23,
+            'AnnualPriceDisp' => 98,
             'm_terms' => $m_terms,
             'a_terms' => $a_terms,
             'year' => SubscriptionPeriod::Year->name,
@@ -101,7 +101,7 @@ class PlansController extends Controller
             'countries' => Countries::all()->groupBy('IsArabCountry'),
             'List' => $List,
             'vedi_src' => $vedi_src,
-            'defaultMB_parents' => DefaultMB::where([['CountryID', 158], ['CompanySize', 1], ['ParenId', null], ['LanguageId', app()->getLocale() == 'ar' ? 2 : 1]])->orderBy('Ordering')->get(),
+            'defaultMB_parents' => DefaultMB::where([['country_id', 158], ['company_size', 1], ['paren_id', null], ['language', app()->getLocale() == 'ar' ? 2 : 1]])->orderBy('ordering')->get(),
 
         ];
         return view('plans.SectionPlans')->with($data);

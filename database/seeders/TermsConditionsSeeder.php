@@ -13,21 +13,21 @@ class TermsConditionsSeeder extends Seeder
      */
     public function run(): void
     {
-        // // check if termsCondtions is empty
-        // if (TermsConditions::count() > 0) {
-        //     return;
-        // }
-        // $contents = json_decode(file_get_contents('https://www.hrfactoryapp.com/Home/shipData'), true);
-        // // insert content to database
-        // foreach ($contents['termsConditions'] as  $termsCondition) {
-        //     $new_termsCondition = new TermsConditions();
-        //     $new_termsCondition->TermsConditionType=$termsCondition['TermsConditionType'];
-        //     $new_termsCondition->CountryId=$termsCondition['CountryId'];
-        //     $new_termsCondition->ArabicText = $termsCondition['ArabicText'];
-        //     $new_termsCondition->EnglishText = $termsCondition['EnglishText'];
-        //     $new_termsCondition->ArabicTitle = $termsCondition['ArabicTitle'];
-        //     $new_termsCondition->EnglishTitle = $termsCondition['EnglishTitle'];
-        //     $new_termsCondition->save();
-        // }
+        // check if termsCondtions is empty
+        if (TermsConditions::count() > 0) {
+            return;
+        }
+        $contents = json_decode(file_get_contents('https://www.hrfactoryapp.com/Home/shipData'), true);
+        // insert content to database
+        foreach ($contents['termsConditions'] as  $termsCondition) {
+            $new_termsCondition = new TermsConditions();
+            $new_termsCondition->period=$termsCondition['TermsConditionType'];
+            $new_termsCondition->country_id=$termsCondition['CountryId'];
+            $new_termsCondition->arabic_text = $termsCondition['ArabicText'];
+            $new_termsCondition->english_text = $termsCondition['EnglishText'];
+            $new_termsCondition->arabic_title = $termsCondition['ArabicTitle'];
+            $new_termsCondition->english_title = $termsCondition['EnglishTitle'];
+            $new_termsCondition->save();
+        }
     }
 }

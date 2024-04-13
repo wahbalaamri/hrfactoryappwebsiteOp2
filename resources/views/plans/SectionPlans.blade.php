@@ -22,8 +22,118 @@
     </div>
     <div class="row pt-5 mt-4" dir="@dir">
         <div class="col-lg-3 btn-acc">
-            <div class="releasesWrp" id="releases">
+            <ul class="list-group sortable" data-mdb-sortable="sortable">
+                <li class="list-group-item" data-mdb-sortable-item>Item 1</li>
+                <li class="list-group-item" data-mdb-sortable-item>Item 2</li>
+                <li class="list-group-item" data-mdb-sortable-item>Item 3</li>
+              </ul>
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item" draggable="true">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Accordion Item #1
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            {{-- ===================================================== --}}
+                            <div class="accordion" id="accordionExample1">
+                                <div class="accordion-item" draggable="true">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseOne1" aria-expanded="true"
+                                            aria-controls="collapseOne">
+                                            Accordion Item #1
+                                        </button>
+                                    </h2>
+                                    <div id="collapseOne1" class="accordion-collapse collapse show"
+                                        data-bs-parent="#accordionExample1">
+                                        <div class="accordion-body">
+                                            <strong>This is the first item's accordion body.</strong> It is shown by
+                                            default, until the collapse plugin adds the appropriate classes that we use
+                                            to style each element. These classes control the overall appearance, as well
+                                            as the showing and hiding via CSS transitions. You can modify any of this
+                                            with custom CSS or overriding our default variables. It's also worth noting
+                                            that just about any HTML can go within the <code>.accordion-body</code>,
+                                            though the transition does limit overflow.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item" draggable="true">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapseTwo2"
+                                            aria-expanded="false" aria-controls="collapseTwo">
+                                            Accordion Item #2
+                                        </button>
+                                    </h2>
+                                    <div id="collapseTwo2" class="accordion-collapse collapse"
+                                        data-bs-parent="#accordionExample1">
+                                        <div class="accordion-body">
+                                            <strong>This is the second item's accordion body.</strong> It is hidden by
+                                            default, until the collapse plugin adds the appropriate classes that we use
+                                            to style each element. These classes control the overall appearance, as well
+                                            as the showing and hiding via CSS transitions. You can modify any of this
+                                            with custom CSS or overriding our default variables. It's also worth noting
+                                            that just about any HTML can go within the <code>.accordion-body</code>,
+                                            though the transition does limit overflow.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item" draggable="true">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapseThree3"
+                                            aria-expanded="false" aria-controls="collapseThree">
+                                            Accordion Item #3
+                                        </button>
+                                    </h2>
+                                    <div id="collapseThree3" class="accordion-collapse collapse"
+                                        data-bs-parent="#accordionExample1">
+                                        <div class="accordion-body">
+                                            <strong>This is the third item's accordion body.</strong> It is hidden by
+                                            default, until the collapse plugin adds the appropriate classes that we use
+                                            to style each element. These classes control the overall appearance, as well
+                                            as the showing and hiding via CSS transitions. You can modify any of this
+                                            with custom CSS or overriding our default variables. It's also worth noting
+                                            that just about any HTML can go within the <code>.accordion-body</code>,
+                                            though the transition does limit overflow.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- ======================================================== --}}
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item" draggable="true">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Accordion Item #2
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item" draggable="true">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Accordion Item #3
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="releasesWrp" id="releases">
                 <ul class="releases">
                     <li>
                         {{-- @if (Model.DefaultMB.Count != 0)
@@ -579,13 +689,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel2" class="modal-title" data-contentId="">{!!
-                    App()->getLocale()=='ar'?$m_terms['ArabicTitle']:$m_terms['EnglishTitle'] !!}</h5>
+                    App()->getLocale()=='ar'?$m_terms['arabic_title']:$m_terms['english_title'] !!}</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body" data-contentId="">{!!
-                App()->getLocale()=='ar'?$m_terms['ArabicText']:$m_terms['EnglishText'] !!}</div>
+                App()->getLocale()=='ar'?$m_terms['arabic_text']:$m_terms['english_text'] !!}</div>
         </div>
     </div>
 </div>
@@ -596,13 +706,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="agreeYearModalLabel1" class="modal-title" data-contentId="">{!!
-                    App()->getLocale()=='ar'?$a_terms['ArabicTitle']:$a_terms['EnglishTitle'] !!}</h5>
+                    App()->getLocale()=='ar'?$a_terms['arabic_title']:$a_terms['english_title'] !!}</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body" data-contentId="">{!!
-                App()->getLocale()=='ar'?$a_terms['ArabicText']:$a_terms['EnglishText'] !!}</div>
+                App()->getLocale()=='ar'?$a_terms['arabic_text']:$a_terms['english_text'] !!}</div>
         </div>
     </div>
 </div>
@@ -1153,4 +1263,6 @@ $(".editSection").on("click", function () {
                             secid = sectionId;
             });
 </script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/5.23.0/mdb.min.js"></script>
+
 @endsection
