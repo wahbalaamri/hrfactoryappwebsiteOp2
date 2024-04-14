@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('respondent');
             $table->boolean('status');
             $table->boolean('IsDefault')->default(1);
+            $table->boolean('IsDriver')->default(1);
             $table->softDeletes();
             $table->timestamps();
         });

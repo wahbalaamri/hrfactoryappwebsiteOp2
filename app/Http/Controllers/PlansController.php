@@ -101,7 +101,7 @@ class PlansController extends Controller
             'countries' => Countries::all()->groupBy('IsArabCountry'),
             'List' => $List,
             'vedi_src' => $vedi_src,
-            'defaultMB_parents' => DefaultMB::where([['country_id', 158], ['company_size', 1], ['paren_id', null], ['language', app()->getLocale() == 'ar' ? 2 : 1]])->orderBy('ordering')->get(),
+            'defaultMB_parents' => DefaultMB::where([['country_id', 158], ['company_size', 1], ['paren_id', null], ['language', app()->getLocale() == 'ar' ? 'ar' : 'en']])->orderBy('ordering')->get(),
 
         ];
         return view('plans.SectionPlans')->with($data);

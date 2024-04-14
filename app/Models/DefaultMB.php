@@ -12,6 +12,6 @@ class DefaultMB extends Model
     //one to many relationship, create children relationship
     public function children()
     {
-        return $this->hasMany(DefaultMB::class, 'ParenId')->orderBy('Ordering');
+        return $this->hasMany(DefaultMB::class, 'paren_id')->orderBy('Ordering');
     }
 }

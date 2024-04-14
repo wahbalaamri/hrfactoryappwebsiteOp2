@@ -18,10 +18,11 @@ class DefaultMBSeeder extends Seeder
         // if (DefaultMB::count() > 0) {
         //     return;
         // }
-        $contents = json_decode(file_get_contents('https://www.hrfactoryapp.com/Home/shipDef'), true);
+        $contents = json_decode(file_get_contents('http://localhost:1148/Home/shipDef?email=Admin@hrfactoryapp.com&country=183&companysize=1&lang=2'), true);
         // insert content to database
         foreach ($contents['defaultMBs'] as  $defaultMB) {
             $new_defaultMB = new DefaultMB();
+            $new_defaultMB->id = $defaultMB['Id'];
             $new_defaultMB->title = $defaultMB['Title'];
             $new_defaultMB->ordering = $defaultMB['Ordering'];
             $new_defaultMB->paren_id = $defaultMB['ParenId'];

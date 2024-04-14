@@ -275,6 +275,15 @@
                                 </p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('Leader360Review.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-user-md"></i>
+                                <p>
+                                    {{ __('360 Review') }}
+                                    {{-- <span class="right badge badge-danger">New</span> --}}
+                                </p>
+                            </a>
+                        </li>
                         {{-- <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-copy"></i>
@@ -942,6 +951,7 @@
     <script src="{{ asset('dashboard/dist/js/demo.js') }}"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="{{ asset('dashboard/dist/js/pages/dashboard.js') }}"></script>
+    <script src="{{ asset('dashboard/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
     @yield('scripts')
 </body>
 

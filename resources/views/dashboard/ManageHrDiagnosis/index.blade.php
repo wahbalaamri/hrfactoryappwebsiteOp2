@@ -8,12 +8,25 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">{{ __('HR Diagnosis Tool') }}</h1>
+                    <h1 class="m-0">
+                        @if ($service_type==4)
+                        {{ __('HR Diagnosis Tool') }}</h1>
+                    @elseif ($service_type==5)
+                    {{ __('360 Review Tool') }}</h1>
+                    @else
+                    {{ __('Employee Engagment Tool') }}</h1>
+                    @endif
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item active">HR Diagnosis</li>
+                        <li class="breadcrumb-item active">
+                            @if ($service_type==4)
+                            HR Diagnosis
+                            @elseif ($service_type==5)
+                            360 Review
+                            @endif
+                        </li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -32,7 +45,13 @@
                             <h3 class="card-title">{{ __('Functions') }}
                             </h3>
                             <div class="card-tools">
-                                <a href="{{ route('ManageHrDiagnosis.createFunction') }}" class="btn btn-secondary btn-sm">
+                                <a href="@if ($service_type==4)
+                                    {{ route('ManageHrDiagnosis.createFunction') }}
+
+                                @elseif ($service_type==5)
+                                    {{ route('Leader360Review.createFunction') }}
+                                @endif"
+                                    class="btn btn-secondary btn-sm">
                                     <i class="fas fa-plus"></i>
                                 </a>
                             </div>
@@ -57,28 +76,33 @@
                                             <td>
                                                 {{-- button to view practices --}}
 
-                                                <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
-                                                    data-target="#viewPracticesModal">
-                                                    <i class="fas fa-eye" data-toggle="modal"
-                                                        data-target="#viewPracticesModal"></i> {{ __('View Practices')
-                                                    }}</button>
+                                                <a href="{{ route('ManageHrDiagnosis.showPractices',$function->id) }}"
+                                                    class="btn btn-info btn-sm">
+                                                    <i class="fas fa-eye"></i> {{ __('View Practices')
+                                                    }}</a>
                                             </td>
                                             <td>
-                                                <a href=""
+                                                <a href="{{ route('ManageHrDiagnosis.editFunction',$function->id) }}"
                                                     class="btn btn-primary btn-sm">
-                                                    <i class="fas fa-edit"></i> {{ __('Edit') }}
+                                                    <i class="fas fa-edit"></i>
                                                 </a>
-                                                <a href=""
-                                                    class="btn btn-danger btn-sm">
-                                                    <i class="fas fa-trash"></i> {{ __('Delete') }}
-                                                </a>
+                                                <button type="button" class="btn btn-danger btn-sm"
+                                                    onclick="confirmDelete({{ $function->id }})">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                                <form id="delete-form-{{ $function->id }}"
+                                                    action="{{ route('ManageHrDiagnosis.destroyFunction',$function->id) }}"
+                                                    method="POST" style="display: none;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
                                             </td>
                                             @endforeach
                                             @else
-                                            <tr>
-                                                <td colspan="4" class="text-center">{{ __('No Data Found') }}</td>
-                                            </tr>
-                                            @endif
+                                        <tr>
+                                            <td colspan="4" class="text-center">{{ __('No Data Found') }}</td>
+                                        </tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
@@ -87,4 +111,24 @@
                 </div>
     </section>
 </div>
+@endsection
+@section('scripts')
+<script src=""></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function confirmDelete(id) {
+        Swal.fire({
+            title: "{{ __('Are you sure?') }}",
+            text: "{{ __('You will not be able to recover this data') }}",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: "{{ __('Yes, delete it!') }}",
+            cancelButtonText: "{{ __('Cancel') }}",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-' + id).submit();
+            }});
+            }
+</script>
 @endsection

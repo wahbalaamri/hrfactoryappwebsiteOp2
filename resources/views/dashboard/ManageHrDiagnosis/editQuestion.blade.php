@@ -1,6 +1,6 @@
 @extends('dashboard.layouts.main')
-
 @section('content')
+<!-- Content Wrapper. Contains page content -->
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -40,36 +40,50 @@
                         {{-- card body --}}
                         <div class="card-body">
                             {{-- form --}}
-                            <form action="{{ $function==null? route('ManageHrDiagnosis.storeFunction') : route('ManageHrDiagnosis.updateFunction',$function->id) }}" method="POST">
+                            <form
+                                action="{{ $question==null? route('ManageHrDiagnosis.storeQuestion',$practice->id): route('ManageHrDiagnosis.updateQuestion',$question->id) }}"
+                                method="POST">
                                 @csrf
-                                @if ($function!=null)
-                                    @method('PUT')
+                                @if($question!=null)
+                                @method('PUT')
+                                @endif
+                                {{-- SHOW ERRORS --}}
+                                @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                                 @endif
                                 <div class="row">
                                     <div class="form-group col-md-6 col-sm-12">
-                                        <label for="title">{{ __('Function Title') }}</label>
-                                        <input type="text" name="title" id="title" class="form-control"
-                                            placeholder="Enter Function Title" value="{{ $function==null? old('title'):old('title',$function->title) }}">
+                                        <label for="question">{{ __('Question') }}</label>
+                                        <input type="text" name="question" id="question" class="form-control"
+                                            placeholder="Enter Question"
+                                            value="{{ $question!=null?old('question',$question->question):old('question') }}">
                                         {{-- validation --}}
-                                        @error('title')
+                                        @error('question')
                                         <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
-                                    {{-- title_ar --}}
+                                    {{-- question arabic --}}
                                     <div class="form-group col-md-6 col-sm-12">
-                                        <label for="title_ar">{{ __('Function Title (Arabic)') }}</label>
-                                        <input type="text" name="title_ar" id="title_ar" class="form-control"
-                                            placeholder="Enter Function Title in Arabic" value="{{ $function==null? old('title_ar'):old('title_ar',$function->title_ar) }}">
+                                        <label for="question_ar">{{ __('Question Arabic') }}</label>
+                                        <input type="text" name="question_ar" id="question_ar" class="form-control"
+                                            placeholder="Enter Question Arabic"
+                                            value="{{ $question!=null?old('question_ar',$question->question_ar):old('question_ar') }}">
                                         {{-- validation --}}
-                                        @error('title_ar')
+                                        @error('question_ar')
                                         <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
                                     {{-- description --}}
                                     <div class="form-group col-md-6 col-sm-12">
-                                        <label for="description">{{ __('Function Description') }}</label>
+                                        <label for="description">{{ __('Description') }}</label>
                                         <textarea name="description" id="description" class="form-control summernote"
-                                            placeholder="Enter Function Description">{{ $function==null? old('description'):old('description',$function->description) }}</textarea>
+                                            placeholder="Enter Description">{{ $question!=null?old('description',$question->description):old('description') }}</textarea>
                                         {{-- validation --}}
                                         @error('description')
                                         <span class="text-danger">{{ $message }}</span>
@@ -77,21 +91,21 @@
                                     </div>
                                     {{-- description_ar --}}
                                     <div class="form-group col-md-6 col-sm-12">
-                                        <label for="description_ar">{{ __('Function Description (Arabic)') }}</label>
+                                        <label for="description_ar">{{ __('Description Arabic') }}</label>
                                         <textarea name="description_ar" id="description_ar"
                                             class="form-control summernote"
-                                            placeholder="Enter Function Description in Arabic">{{ $function==null? old('description_ar'):old('description_ar',$function->description_ar) }}</textarea>
+                                            placeholder="Enter Description Arabic">{{ $question!=null?old('description_ar',$question->description_ar):old('description_ar') }}</textarea>
                                         {{-- validation --}}
                                         @error('description_ar')
                                         <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
-                                    {{-- select respondent --}}
+                                    {{-- respondent --}}
                                     <div class="form-group col-md-6 col-sm-12">
-                                        <label for="respondent">{{ __('Select Respondent') }}</label>
+                                        <label for="respondent">{{ __('Respondent') }}</label>
                                         <select name="respondent" id="respondent" class="form-control">
                                             <option value="">{{ __('Select Respondent') }}</option>
-                                            <option value="1" @if ($function!=null) @if (old('respondent',$function->
+                                            <option value="1" @if ($question!=null) @if (old('respondent',$question->
                                                 respondent)==1)
                                                 selected
                                                 @endif
@@ -100,7 +114,7 @@
                                                 selected
                                                 @endif
                                                 @endif>{{ __('Only HR Employees') }}</option>
-                                            <option value="2" @if ($function!=null) @if (old('respondent',$function->
+                                            <option value="2" @if ($question!=null) @if (old('respondent',$question->
                                                 respondent)==2)
                                                 selected
                                                 @endif
@@ -109,7 +123,7 @@
                                                 selected
                                                 @endif
                                                 @endif>{{ __('Only Employees') }}</option>
-                                            <option value="3" @if ($function!=null) @if (old('respondent',$function->
+                                            <option value="3" @if ($question!=null) @if (old('respondent',$question->
                                                 respondent)==3)
                                                 selected
                                                 @endif
@@ -118,7 +132,7 @@
                                                 selected
                                                 @endif
                                                 @endif>{{ __('Only Managers') }}</option>
-                                            <option value="4" @if ($function!=null) @if (old('respondent',$function->
+                                            <option value="4" @if ($question!=null) @if (old('respondent',$question->
                                                 respondent)==4)
                                                 selected
                                                 @endif
@@ -127,7 +141,7 @@
                                                 selected
                                                 @endif
                                                 @endif>{{ __('HR Employees & Employees') }}</option>
-                                            <option value="5" @if ($function!=null) @if (old('respondent',$function->
+                                            <option value="5" @if ($question!=null) @if (old('respondent',$question->
                                                 respondent)==5)
                                                 selected
                                                 @endif
@@ -136,7 +150,7 @@
                                                 selected
                                                 @endif
                                                 @endif>{{ __('Managers & Employees') }}</option>
-                                            <option value="6" @if ($function!=null) @if (old('respondent',$function->
+                                            <option value="6" @if ($question!=null) @if (old('respondent',$question->
                                                 respondent)==6)
                                                 selected
                                                 @endif
@@ -145,7 +159,7 @@
                                                 selected
                                                 @endif
                                                 @endif>{{ __('Managers & HR Employees') }}</option>
-                                            <option value="7" @if ($function!=null) @if (old('respondent',$function->
+                                            <option value="7" @if ($question!=null) @if (old('respondent',$question->
                                                 respondent)==7)
                                                 selected
                                                 @endif
@@ -154,7 +168,7 @@
                                                 selected
                                                 @endif
                                                 @endif>{{ __('All Employees') }}</option>
-                                            <option value="8" @if ($function!=null) @if (old('respondent',$function->
+                                            <option value="8" @if ($question!=null) @if (old('respondent',$question->
                                                 respondent)==8)
                                                 selected
                                                 @endif
@@ -169,31 +183,25 @@
                                         <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
-                                    {{-- switch for status --}}
+                                    {{-- status --}}
                                     <div class="form-group col-md-6 col-sm-12">
                                         <label for="status">{{ __('Status') }}</label>
                                         <br>
                                         <input type="checkbox" name="status" checked data-bootstrap-switch
                                             data-off-color="danger" data-on-color="success">
                                     </div>
-                                    {{-- submit button --}}
-                                    <div @class([ 'form-group col-md-12 col-sm-12' , 'text-right'=>
-                                        App()->isLocale('en'),
-                                        'text-left'=>App()->isLocale('ar')
-                                        ])>
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-save"></i> {{ __('Save') }}
-                                        </button>
+                                    <div class="form-group col-md-12 col-sm-12">
+                                        <button type="submit" class="btn btn-success">{{ __('Save') }}</button>
                                     </div>
+                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
     </section>
-    <!-- /.content -->
 </div>
-<!-- /.content-wrapper -->
 @endsection
 @section('scripts')
 <script>

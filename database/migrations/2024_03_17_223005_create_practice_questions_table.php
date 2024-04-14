@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->text('description_ar')->nullable();
             $table->boolean('status');
+            $table->boolean('IsENPS')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });
