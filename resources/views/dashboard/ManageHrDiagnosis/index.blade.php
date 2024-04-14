@@ -13,7 +13,7 @@
                         {{ __('HR Diagnosis Tool') }}</h1>
                     @elseif ($service_type==5)
                     {{ __('360 Review Tool') }}</h1>
-                    @else
+                    @elseif ($service_type==3)
                     {{ __('Employee Engagment Tool') }}</h1>
                     @endif
                 </div><!-- /.col -->
@@ -25,6 +25,8 @@
                             HR Diagnosis
                             @elseif ($service_type==5)
                             360 Review
+                            @elseif ($service_type==3)
+                            Employee Engagment
                             @endif
                         </li>
                     </ol>
@@ -50,8 +52,9 @@
 
                                 @elseif ($service_type==5)
                                     {{ route('Leader360Review.createFunction') }}
-                                @endif"
-                                    class="btn btn-secondary btn-sm">
+                                @elseif($service_type==3)
+                                    {{ route('EmployeeEngagment.createFunction') }}
+                                @endif" class="btn btn-secondary btn-sm">
                                     <i class="fas fa-plus"></i>
                                 </a>
                             </div>
@@ -76,14 +79,25 @@
                                             <td>
                                                 {{-- button to view practices --}}
 
-                                                <a href="{{ route('ManageHrDiagnosis.showPractices',$function->id) }}"
-                                                    class="btn btn-info btn-sm">
+                                                <a href=" @if ($service_type==4)
+                                                {{ route('ManageHrDiagnosis.showPractices',$function->id) }}
+                                                @elseif($service_type==5)
+                                                {{ route('Leader360Review.showPractices',$function->id) }}
+                                                @elseif($service_type==3)
+                                                {{ route('EmployeeEngagment.showPractices',$function->id) }}
+                                                @endif
+                                                " class="btn btn-info btn-sm">
                                                     <i class="fas fa-eye"></i> {{ __('View Practices')
                                                     }}</a>
                                             </td>
                                             <td>
-                                                <a href="{{ route('ManageHrDiagnosis.editFunction',$function->id) }}"
-                                                    class="btn btn-primary btn-sm">
+                                                <a href="@if ($service_type==4)
+                                                    {{ route('ManageHrDiagnosis.editFunction',$function->id) }}
+                                                    @elseif($service_type==5)
+                                                    {{ route('Leader360Review.editFunction',$function->id) }}
+                                                    @elseif($service_type==3)
+                                                    {{ route('EmployeeEngagment.editFunction',$function->id) }}
+                                                    @endif" class="btn btn-primary btn-sm">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                 <button type="button" class="btn btn-danger btn-sm"
@@ -91,7 +105,13 @@
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                                 <form id="delete-form-{{ $function->id }}"
-                                                    action="{{ route('ManageHrDiagnosis.destroyFunction',$function->id) }}"
+                                                    action="@if ($service_type==4)
+                                                        {{ route('ManageHrDiagnosis.destroyFunction',$function->id) }}
+                                                        @elseif($service_type==5)
+                                                        {{ route('Leader360Review.destroyFunction',$function->id) }}
+                                                        @elseif($service_type==3)
+                                                        {{ route('EmployeeEngagment.destroyFunction',$function->id) }}
+                                                        @endif"
                                                     method="POST" style="display: none;">
                                                     @csrf
                                                     @method('DELETE')

@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CouponsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Leader360ReviewController;
+use App\Http\Controllers\ManageEmployeeEngagmentController;
 use App\Http\Controllers\ManageHrDiagnosisController;
 use App\Http\Controllers\MigrationConrtoller;
 use App\Http\Controllers\PlansController;
@@ -204,6 +205,42 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
   =                                                                                                                =
   =                                                                                                                =
   =                                        SERVICE Leader360Review ROUTES END                                                =
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                                                                                                =
+  ==================================================================================================================*/
+    /*==================================================================================================================
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                        SERVICE EmployeeEngagment ROUTES START                                              =
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                                                                                                =
+  ==================================================================================================================*/
+    Route::get('EmployeeEngagment/index', [ManageEmployeeEngagmentController::class, 'index'])->name('EmployeeEngagment.index');
+    Route::get('EmployeeEngagment/createFunction', [ManageEmployeeEngagmentController::class, 'createFunction'])->name('EmployeeEngagment.createFunction');
+    Route::post('EmployeeEngagment/storeFunction', [ManageEmployeeEngagmentController::class, 'storeFunction'])->name('EmployeeEngagment.storeFunction');
+    Route::get('EmployeeEngagment/showPractices/{id}', [ManageEmployeeEngagmentController::class, 'showPractices'])->name('EmployeeEngagment.showPractices');
+    Route::get('EmployeeEngagment/createPractice/{id}', [ManageEmployeeEngagmentController::class, 'createPractice'])->name('EmployeeEngagment.createPractice');
+    Route::post('EmployeeEngagment/storePractice/{id}', [ManageEmployeeEngagmentController::class, 'storePractice'])->name('EmployeeEngagment.storePractice');
+    Route::get('EmployeeEngagment/showQuestions/{id}', [ManageEmployeeEngagmentController::class, 'showQuestions'])->name('EmployeeEngagment.showQuestions');
+    Route::get('EmployeeEngagment/editPractice/{id}', [ManageEmployeeEngagmentController::class, 'editPractice'])->name('EmployeeEngagment.editPractice');
+    Route::delete('EmployeeEngagment/destroyPractice/{id}', [ManageEmployeeEngagmentController::class, 'destroyPractice'])->name('EmployeeEngagment.destroyPractice');
+    Route::get('EmployeeEngagment/editFunction/{id}', [ManageEmployeeEngagmentController::class, 'editFunction'])->name('EmployeeEngagment.editFunction');
+    Route::put('EmployeeEngagment/updateFunction/{id}', [ManageEmployeeEngagmentController::class, 'updateFunction'])->name('EmployeeEngagment.updateFunction');
+    Route::delete('EmployeeEngagment/destroyFunction/{id}', [ManageEmployeeEngagmentController::class, 'destroyFunction'])->name('EmployeeEngagment.destroyFunction');
+    Route::get('EmployeeEngagment/createQuestion/{id}', [ManageEmployeeEngagmentController::class, 'createQuestion'])->name('EmployeeEngagment.createQuestion');
+    Route::post('EmployeeEngagment/storeQuestion/{id}', [ManageEmployeeEngagmentController::class, 'storeQuestion'])->name('EmployeeEngagment.storeQuestion');
+    Route::get('EmployeeEngagment/editQuestion/{id}', [ManageEmployeeEngagmentController::class, 'editQuestion'])->name('EmployeeEngagment.editQuestion');
+    Route::put('EmployeeEngagment/updateQuestion/{id}', [ManageEmployeeEngagmentController::class, 'updateQuestion'])->name('EmployeeEngagment.updateQuestion');
+    Route::delete('EmployeeEngagment/deleteQuestion/{id}', [ManageEmployeeEngagmentController::class, 'deleteQuestion'])->name('EmployeeEngagment.deleteQuestion');
+    Route::put('EmployeeEngagment/updatePractice/{id}', [ManageEmployeeEngagmentController::class, 'updatePractice'])->name('EmployeeEngagment.updatePractice');
+    /*==================================================================================================================
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                        SERVICE EmployeeEngagment ROUTES END                                                =
   =                                                                                                                =
   =                                                                                                                =
   =                                                                                                                =

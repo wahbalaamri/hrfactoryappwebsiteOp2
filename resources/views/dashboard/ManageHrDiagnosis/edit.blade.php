@@ -8,12 +8,27 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">{{ __('HR Diagnosis Tool') }}</h1>
+                    <h1 class="m-0">@if($service_type==4)
+                        {{ __('HR Diagnosis Tool') }}
+                        @elseif($service_type==5)
+                        {{ __('360 Review Tool') }}
+                        @elseif($service_type==3)
+                        {{ __('Employee Engagment Tool') }}
+                        @endif
+                    </h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item active">HR Diagnosis</li>
+                        <li class="breadcrumb-item active">
+                            @if($service_type == 4)
+                            HR Diagnosis
+                            @elseif($service_type == 5)
+                            360 Review
+                            @elseif($service_type == 3)
+                            Employee Engagment
+                            @endif
+                        </li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -32,7 +47,14 @@
                         <div class="card-header">
                             <h3 class="card-title">{{ __('Add New Function') }}</h3>
                             <div class="card-tools">
-                                <a href="{{ route('ManageHrDiagnosis.index') }}" class="btn btn-warning btn-sm">
+                                <a href="@if($service_type==4)
+                                {{ route('ManageHrDiagnosis.index') }}
+                                @elseif ($service_type==5)
+                                {{ route('Leader360Review.index') }}
+                                @elseif($service_type==3)
+                                {{ route('EmployeeEngagment.index') }}
+                                @endif
+                                " class="btn btn-warning btn-sm">
                                     <i class="fas fa-arrow-left"></i>
                                 </a>
                             </div>
@@ -40,7 +62,14 @@
                         {{-- card body --}}
                         <div class="card-body">
                             {{-- form --}}
-                            <form action="{{ $function==null? route('ManageHrDiagnosis.storeFunction') : route('ManageHrDiagnosis.updateFunction',$function->id) }}" method="POST">
+                            <form action="@if($service_type==4)
+                            {{ $function==null? route('ManageHrDiagnosis.storeFunction') : route('ManageHrDiagnosis.updateFunction',$function->id) }}
+                            @elseif($service_type==5)
+                            {{ $function==null? route('Leader360Review.storeFunction') : route('Leader360Review.updateFunction',$function->id) }}
+                            @elseif($service_type==3)
+                            {{ $function==null? route('EmployeeEngagment.storeFunction') : route('EmployeeEngagment.updateFunction',$function->id) }}
+                            @endif
+                            " method="POST">
                                 @csrf
                                 @if ($function!=null)
                                     @method('PUT')

@@ -7,12 +7,28 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">{{ __('HR Diagnosis Tool') }}</h1>
+                    <h1 class="m-0">
+                        @if($service_type==4)
+                        {{ __('HR Diagnosis Tool') }}
+                        @elseif($service_type==5)
+                        {{ __('360 Review Tool') }}
+                        @elseif($service_type==3)
+                        {{ __('Employee Engagment Tool') }}
+                        @endif
+                    </h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item active">HR Diagnosis</li>
+                        <li class="breadcrumb-item active">
+                            @if($service_type == 4)
+                            HR Diagnosis
+                            @elseif($service_type == 5)
+                            360 Review
+                            @elseif($service_type == 3)
+                            Employee Engagment
+                            @endif
+                        </li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -31,11 +47,27 @@
                         <div class="card-header">
                             <h3 class="card-title">{{ __('Function Practices') }}</h3>
                             <div class="card-tools">
-                                <a href="{{ route('ManageHrDiagnosis.index') }}" class="btn btn-warning btn-sm">
+                                <a href="
+                                @if($serivce_type==4)
+                                {{ route('ManageHrDiagnosis.index') }}
+                                @elseif($service_type==5)
+                                {{ route('Leader360Review.index') }}
+                                @elseif($service_type==3)
+                                {{ route('EmployeeEngagment.index') }}
+                                @endif
+                                " class="btn btn-warning btn-sm">
                                     <i class="fas fa-arrow-left"></i>
                                 </a>
                                 {{-- button to add new practice --}}
-                                <a href="{{ route('ManageHrDiagnosis.createPractice',$function->id) }}"
+                                <a href="
+                                @if($service_type==4)
+                                {{ route('ManageHrDiagnosis.createPractice',$function->id) }}
+                                @elseif($service_type==5)
+                                {{ route('Leader360Review.createPractice',$function->id) }}
+                                @elseif($service_type==3)
+                                {{ route('EmployeeEngagment.createPractice',$function->id) }}
+                                @endif
+                                "
                                     class="btn btn-secondary btn-sm">
                                     <i class="fas fa-plus"></i>
                                 </a>
@@ -61,7 +93,15 @@
                                             <td>{{ $practice->title }}</td>
                                             <td>
                                                 {{-- button to view questions --}}
-                                                <a href="{{ route('ManageHrDiagnosis.showQuestions',$practice->id) }}"
+                                                <a href="
+                                                @if($service_type==4)
+                                                {{ route('ManageHrDiagnosis.showQuestions',$practice->id) }}
+                                                @elseif($service_type==5)
+                                                {{ route('Leader360Review.showQuestions',$practice->id) }}
+                                                @elseif($service_type==3)
+                                                {{ route('EmployeeEngagment.showQuestions',$practice->id) }}
+                                                @endif
+                                                "
                                                     class="btn btn-info btn-sm">
                                                     <i class="fas fa-eye"></i> {{ __('View Questions') }}</a>
 
@@ -69,7 +109,15 @@
                                             <td>
                                                 <div class="row">
                                                     {{-- button to edit practice --}}
-                                                    <a href="{{ route('ManageHrDiagnosis.editPractice',$practice->id) }}"
+                                                    <a href="
+                                                    @if($service_type==4)
+                                                    {{ route('ManageHrDiagnosis.editPractice',$practice->id) }}
+                                                    @elseif($service_type==5)
+                                                    {{ route('Leader360Review.editPractice',$practice->id) }}
+                                                    @elseif($service_type==3)
+                                                    {{ route('EmployeeEngagment.editPractice',$practice->id) }}
+                                                    @endif
+                                                    "
                                                         class="btn btn-warning btn-sm m-1">
                                                         <i class="fa fa-edit text-xs"></i>
                                                     </a>
@@ -80,7 +128,15 @@
                                                     </button>
                                                     {{-- button to delete practice --}}
                                                     <form
-                                                        action="{{ route('ManageHrDiagnosis.destroyPractice',$practice->id)}}"
+                                                        action="
+                                                        @if($service_type==4)
+                                                        {{ route('ManageHrDiagnosis.destroyPractice',$practice->id)}}
+                                                        @elseif($service_type==5)
+                                                        {{ route('Leader360Review.destroyPractice',$practice->id)}}
+                                                        @elseif($service_type==3)
+                                                        {{ route('EmployeeEngagment.destroyPractice',$practice->id)}}
+                                                        @endif
+                                                        "
                                                         method="POST" id="destroyPractice{{ $practice->id }}">
                                                         @csrf
                                                         @method('DELETE')
