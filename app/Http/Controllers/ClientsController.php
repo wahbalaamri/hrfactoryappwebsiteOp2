@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Clients;
 use App\Http\Requests\StoreClientsRequest;
 use App\Http\Requests\UpdateClientsRequest;
+use App\Models\Departments;
+use App\Models\Plans;
+use App\Models\Surveys;
 
 class ClientsController extends Controller
 {
@@ -82,6 +85,25 @@ class ClientsController extends Controller
     //subscriptions function
     public function subscriptions($id)
     {
-        return view('dashboard.client.subscriptions');
+        $data=[
+            'id'=>$id
+        ];
+        return view('dashboard.client.subscriptions')->with($data);
+    }
+    //ShowEmployeeEngagment function
+    public function ShowEmployeeEngagment($id)
+    {
+        $client = Clients::find($id);
+        $departments = Departments::all();
+        $plan_id=Plans::where("service",3)->pluck('id')->toArray();
+        $client_survyes=Surveys::where('client_id', $client->id)->whereIn('plan_id',$plan_id)->get();
+
+        $data=[
+            'id'=>$id,
+            'client'=>$client,
+            'departments'=>$departments,
+            'client_survyes'=>$client_survyes
+        ];
+        return view('dashboard.client.employeeEngagment')->with($data);
     }
 }

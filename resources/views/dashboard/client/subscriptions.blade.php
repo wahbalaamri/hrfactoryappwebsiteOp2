@@ -72,7 +72,7 @@
                                         <div class="icon">
                                             <i class="ion ion-happy"></i>
                                         </div>
-                                        <a href="#" class="small-box-footer">
+                                        <a href="{{route('clients.ShowEmployeeEngagment',$id)}}" class="small-box-footer">
                                             {{ __('Get Started') }} <i class="fas fa-arrow-circle-right"></i>
                                         </a>
                                     </div>

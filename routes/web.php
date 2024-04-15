@@ -257,6 +257,7 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
   ==================================================================================================================*/
     Route::get('clients/index', [ClientsController::class, 'index'])->name('clients.index');
     Route::get('clients/subscriptions/{id}', [ClientsController::class, 'subscriptions'])->name('clients.subscriptions');
+    Route::get('clients/ShowEmployeeEngagment/{id}', [ClientsController::class, 'ShowEmployeeEngagment'])->name('clients.ShowEmployeeEngagment');
     /*==================================================================================================================
   =                                                                                                                =
   =                                                                                                                =
