@@ -213,6 +213,15 @@
                                         <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
+                                    @if($service_type==3)
+                                    {{-- IsENPS --}}
+                                    <div class="form-group col-md-6 col-sm-12">
+                                        <label for="IsENPS">{{ __('Is ENPS') }}</label>
+                                        <br>
+                                        <input type="checkbox" name="IsENPS" checked data-bootstrap-switch
+                                            data-off-color="danger" data-on-color="success">
+                                    </div>
+                                    @endif
                                     {{-- status --}}
                                     <div class="form-group col-md-6 col-sm-12">
                                         <label for="status">{{ __('Status') }}</label>
@@ -236,6 +245,7 @@
 @section('scripts')
 <script>
     $("[name='status']").bootstrapSwitch();
+    $("[name='IsENPS']").bootstrapSwitch();
          $('.summernote').summernote();
 </script>
 @endsection

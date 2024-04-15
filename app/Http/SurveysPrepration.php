@@ -26,7 +26,7 @@ class SurveysPrepration
         }
     }
     //createFunction
-    function createFunction(Request $request,$service_type)
+    function createFunction(Request $request, $service_type)
     {
         $data = [
             'function' => null,
@@ -36,7 +36,7 @@ class SurveysPrepration
         return view('dashboard.ManageHrDiagnosis.edit')->with($data);
     }
     //storeFunction
-    function storeFunction(Request $request,$service_type)
+    function storeFunction(Request $request, $service_type)
     {
 
         try {
@@ -47,16 +47,26 @@ class SurveysPrepration
             $function->description = $request->description;
             $function->description_ar = $request->description_ar;
             $function->respondent = $request->respondent;
+            if( $service_type==3)
+            {
+                $function->IsDriver = $request->IsDriver != null;
+            }
             $function->status = $request->status != null;
             $function->service_id = Services::select('id')->where('service_type', $service_type)->first()->id;
             $function->save();
-            return redirect()->route('ManageHrDiagnosis.index')->with('success', 'Function created successfully');
+            if ($service_type == 4)
+                return redirect()->route('ManageHrDiagnosis.index')->with('success', 'Function created successfully');
+            else if ($service_type == 3)
+                return redirect()->route('EmployeeEngagment.index')->with('success', 'Function created successfully');
+            else if ($service_type == 5)
+                return redirect()->route('Leader360Review.index')->with('success', 'Function created successfully');
         } catch (\Exception $e) {
+            Log::info($e->getMessage());
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
     //showPractices function
-    function showPractices($id,$service_type)
+    function showPractices($id, $service_type)
     {
         try {
             //get all practices of the function
@@ -72,7 +82,7 @@ class SurveysPrepration
         }
     }
     //createPractice function
-    function createPractice($id,$service_type)
+    function createPractice($id, $service_type)
     {
         try {
             //return view to create practice
@@ -88,7 +98,7 @@ class SurveysPrepration
         }
     }
     //storePractice function
-    function storePractice(Request $request, $id,$service_type)
+    function storePractice(Request $request, $id, $service_type)
     {
         try {
             //store practice
@@ -100,14 +110,19 @@ class SurveysPrepration
             $practice->status = $request->status != null;
             $practice->function_id = $id;
             $practice->save();
-            return redirect()->route('ManageHrDiagnosis.showPractices', $id)->with('success', 'Practice created successfully');
+            if ($service_type == 4)
+                return redirect()->route('ManageHrDiagnosis.showPractices', $id)->with('success', 'Practice created successfully');
+            else if ($service_type == 3)
+                return redirect()->route('EmployeeEngagment.showPractices', $id)->with('success', 'Practice created successfully');
+            else if ($service_type == 5)
+                return redirect()->route('Leader360Review.showPractices', $id)->with('success', 'Practice created successfully');
         } catch (\Exception $e) {
             Log::info($e->getMessage());
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
     //showQuestions function
-    function showQuestions($id,$service_type)
+    function showQuestions($id, $service_type)
     {
         try {
             //get all questions of the practice
@@ -122,7 +137,7 @@ class SurveysPrepration
         }
     }
     //createQuestion function
-    function createQuestion($id,$service_type)
+    function createQuestion($id, $service_type)
     {
         try {
             //return view to create question
@@ -138,7 +153,7 @@ class SurveysPrepration
         }
     }
     //storeQuestion function
-    function storeQuestion(Request $request, $id,$service_type)
+    function storeQuestion(Request $request, $id, $service_type)
     {
         try {
             //store question
@@ -151,13 +166,18 @@ class SurveysPrepration
             $question->status = $request->status != null;
             $question->practice_id = $id;
             $question->save();
-            return redirect()->route('ManageHrDiagnosis.showQuestions', $id)->with('success', 'Question created successfully');
+            if ($service_type == 4)
+                return redirect()->route('ManageHrDiagnosis.showQuestions', $id)->with('success', 'Question created successfully');
+            else if ($service_type == 3)
+                return redirect()->route('EmployeeEngagment.showQuestions', $id)->with('success', 'Question created successfully');
+            else if ($service_type == 5)
+                return redirect()->route('Leader360Review.showQuestions', $id)->with('success', 'Question created successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
     //editQuestion function
-    function editQuestion($id,$service_type)
+    function editQuestion($id, $service_type)
     {
         try {
             //return view to edit question
@@ -175,7 +195,7 @@ class SurveysPrepration
         }
     }
     //updateQuestion function
-    function updateQuestion(Request $request, $id,$service_type)
+    function updateQuestion(Request $request, $id, $service_type)
     {
         try {
             //update question
@@ -187,26 +207,36 @@ class SurveysPrepration
             $question->respondent = $request->respondent;
             $question->status = $request->status != null;
             $question->save();
-            return redirect()->route('ManageHrDiagnosis.showQuestions', $question->practice_id)->with('success', 'Question updated successfully');
+            if ($service_type == 4)
+                return redirect()->route('ManageHrDiagnosis.showQuestions', $question->practice_id)->with('success', 'Question updated successfully');
+            else if ($service_type == 3)
+                return redirect()->route('EmployeeEngagment.showQuestions', $question->practice_id)->with('success', 'Question updated successfully');
+            else if ($service_type == 5)
+                return redirect()->route('Leader360Review.showQuestions', $question->practice_id)->with('success', 'Question updated successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
     //deleteQuestion function
-    function deleteQuestion(Request $request, $id,$service_type)
+    function deleteQuestion(Request $request, $id, $service_type)
     {
         try {
             //delete question
             $question = PracticeQuestions::find($id);
             $practice_id = $question->practice_id;
             $question->delete();
-            return redirect()->route('ManageHrDiagnosis.showQuestions', $practice_id)->with('success', 'Question deleted successfully');
+            if ($service_type == 4)
+                return redirect()->route('ManageHrDiagnosis.showQuestions', $practice_id)->with('success', 'Question deleted successfully');
+            else if ($service_type == 3)
+                return redirect()->route('EmployeeEngagment.showQuestions', $practice_id)->with('success', 'Question deleted successfully');
+            else if ($service_type == 5)
+                return redirect()->route('Leader360Review.showQuestions', $practice_id)->with('success', 'Question deleted successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
     //editPractice function
-    function editPractice($id,$service_type)
+    function editPractice($id, $service_type)
     {
         try {
             //return view to edit practice
@@ -224,7 +254,7 @@ class SurveysPrepration
         }
     }
     //updatePractice function
-    function updatePractice(Request $request, $id,$service_type)
+    function updatePractice(Request $request, $id, $service_type)
     {
         try {
             //update practice
@@ -235,13 +265,18 @@ class SurveysPrepration
             $practice->description_ar = $request->description_ar;
             $practice->status = $request->status != null;
             $practice->save();
-            return redirect()->route('ManageHrDiagnosis.showPractices', $practice->function_id)->with('success', 'Practice updated successfully');
+            if ($service_type == 4)
+                return redirect()->route('ManageHrDiagnosis.showPractices', $practice->function_id)->with('success', 'Practice updated successfully');
+            else if ($service_type == 3)
+                return redirect()->route('EmployeeEngagment.showPractices', $practice->function_id)->with('success', 'Practice updated successfully');
+            else if ($service_type == 5)
+                return redirect()->route('Leader360Review.showPractices', $practice->function_id)->with('success', 'Practice updated successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
     //destroyPractice function
-    function destroyPractice(Request $request, $id,$service_type)
+    function destroyPractice(Request $request, $id, $service_type)
     {
         try {
             //delete practice
@@ -250,13 +285,18 @@ class SurveysPrepration
             //delete all questions of the practice
             $practice->questions()->delete();
             $practice->delete();
-            return redirect()->route('ManageHrDiagnosis.showPractices', $function_id)->with('success', 'Practice deleted successfully');
+            if ($service_type == 4)
+                return redirect()->route('ManageHrDiagnosis.showPractices', $function_id)->with('success', 'Practice deleted successfully');
+            else if ($service_type == 3)
+                return redirect()->route('EmployeeEngagment.showPractices', $function_id)->with('success', 'Practice deleted successfully');
+            else if ($service_type == 5)
+                return redirect()->route('Leader360Review.showPractices', $function_id)->with('success', 'Practice deleted successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
     //editFunction function
-    function editFunction($id,$service_type)
+    function editFunction($id, $service_type)
     {
         try {
             //return view to edit function
@@ -271,7 +311,7 @@ class SurveysPrepration
         }
     }
     //updateFunction function
-    function updateFunction(Request $request, $id,$service_type)
+    function updateFunction(Request $request, $id, $service_type)
     {
         try {
             //update function
@@ -282,14 +322,23 @@ class SurveysPrepration
             $function->description_ar = $request->description_ar;
             $function->respondent = $request->respondent;
             $function->status = $request->status != null;
+            if( $service_type==3)
+            {
+                $function->IsDriver = $request->IsDriver != null;
+            }
             $function->save();
-            return redirect()->route('ManageHrDiagnosis.index')->with('success', 'Function updated successfully');
+            if ($service_type == 4)
+                return redirect()->route('ManageHrDiagnosis.index')->with('success', 'Function updated successfully');
+            else if ($service_type == 3)
+                return redirect()->route('EmployeeEngagment.index')->with('success', 'Function updated successfully');
+            else if ($service_type == 5)
+                return redirect()->route('Leader360Review.index')->with('success', 'Function updated successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
     //destroyFunction function
-    function destroyFunction(Request $request, $id,$service_type)
+    function destroyFunction(Request $request, $id, $service_type)
     {
         try {
             //delete function
@@ -301,7 +350,12 @@ class SurveysPrepration
                 $practice->delete();
             });
             $function->delete();
-            return redirect()->route('ManageHrDiagnosis.index')->with('success', 'Function deleted successfully');
+            if ($service_type == 4)
+                return redirect()->route('ManageHrDiagnosis.index')->with('success', 'Function deleted successfully');
+            else if ($service_type == 3)
+                return redirect()->route('EmployeeEngagment.index')->with('success', 'Function deleted successfully');
+            else if ($service_type == 5)
+                return redirect()->route('Leader360Review.index')->with('success', 'Function deleted successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

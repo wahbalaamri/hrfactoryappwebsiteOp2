@@ -267,6 +267,15 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="{{ route('clients.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>
+                                    {{ __('Clients') }}
+                                    {{-- <span class="right badge badge-danger">New</span> --}}
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{ route('ManageHrDiagnosis.index') }}" class="nav-link">
                                 <i class="nav-icon fas fa-user-md"></i>
                                 <p>
@@ -277,9 +286,18 @@
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('Leader360Review.index') }}" class="nav-link">
-                                <i class="nav-icon fas fa-user-md"></i>
+                                <i class="nav-icon fas fa-compress-arrows-alt"></i>
                                 <p>
                                     {{ __('360 Review') }}
+                                    {{-- <span class="right badge badge-danger">New</span> --}}
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('EmployeeEngagment.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-laugh-beam"></i>
+                                <p>
+                                    {{ __('Employee Engagment') }}
                                     {{-- <span class="right badge badge-danger">New</span> --}}
                                 </p>
                             </a>
@@ -952,6 +970,11 @@
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="{{ asset('dashboard/dist/js/pages/dashboard.js') }}"></script>
     <script src="{{ asset('dashboard/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('dashboard/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('dashboard/plugins/datatables-bs4/js/dataTables.bootstrap4.js') }}"></script>
+    <script src="{{ asset('dashboard/plugins/datatables-responsive/js/dataTables.responsive.js') }}"></script>
+    <script src="{{ asset('dashboard/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('dashboard/plugins/datatables-buttons/js/dataTables.buttons.js') }}"></script>
     @yield('scripts')
 </body>
 

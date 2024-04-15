@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\CouponsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Leader360ReviewController;
@@ -241,6 +242,26 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
   =                                                                                                                =
   =                                                                                                                =
   =                                        SERVICE EmployeeEngagment ROUTES END                                                =
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                                                                                                =
+  ==================================================================================================================*/
+      /*==================================================================================================================
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                        SERVICE Clients ROUTES START                                              =
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                                                                                                =
+  ==================================================================================================================*/
+    Route::get('clients/index', [ClientsController::class, 'index'])->name('clients.index');
+    Route::get('clients/subscriptions/{id}', [ClientsController::class, 'subscriptions'])->name('clients.subscriptions');
+    /*==================================================================================================================
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                        SERVICE Clients ROUTES END                                                =
   =                                                                                                                =
   =                                                                                                                =
   =                                                                                                                =

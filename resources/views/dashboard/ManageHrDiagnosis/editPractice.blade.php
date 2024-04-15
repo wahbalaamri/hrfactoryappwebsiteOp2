@@ -47,7 +47,7 @@
                         <div class="card-header">
                             <h3 class="card-title">{{ __('Add New Function') }}</h3>
                             <div class="card-tools">
-                                <a href="@if($serivce_type==4)
+                                <a href="@if($service_type==4)
                                 {{ route('ManageHrDiagnosis.index') }}
                                 @elseif($service_type==5)
                                 {{ route('Leader360Review.index') }}

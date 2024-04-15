@@ -52,7 +52,7 @@
                                 @elseif($service_type == 5)
                                 {{ route('Leader360Review.showPractices',$practice->function_id) }}
                                 @elseif($service_type == 3)
-                                {{ route('ManageEmployeeEngagement.showPractices',$practice->function_id) }}
+                                {{ route('EmployeeEngagment.showPractices',$practice->function_id) }}
                                 @endif
                                 "
                                     class="btn btn-warning btn-sm">
@@ -65,7 +65,7 @@
                                 @elseif($service_type == 5)
                                 {{ route('Leader360Review.createQuestion',$practice->id) }}
                                 @elseif($service_type == 3)
-                                {{ route('ManageEmployeeEngagement.createQuestion',$practice->id) }}
+                                {{ route('EmployeeEngagment.createQuestion',$practice->id) }}
                                 @endif
                                 "
                                     class="btn btn-secondary btn-sm">
@@ -98,7 +98,7 @@
                                                 @elseif($service_type == 5)
                                                 {{ route('Leader360Review.editQuestion',$question->id) }}
                                                 @elseif($service_type == 3)
-                                                {{ route('ManageEmployeeEngagement.editQuestion',$question->id) }}
+                                                {{ route('EmployeeEngagment.editQuestion',$question->id) }}
                                                 @endif
 
                                                 "
@@ -117,7 +117,7 @@
                                                     @elseif($service_type == 5)
                                                     {{ route('Leader360Review.deleteQuestion',$question->id)}}
                                                     @elseif($service_type == 3)
-                                                    {{ route('ManageEmployeeEngagement.deleteQuestion',$question->id)}}
+                                                    {{ route('EmployeeEngagment.deleteQuestion',$question->id)}}
                                                     @endif
                                                     "
                                                     method="POST">

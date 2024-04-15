@@ -72,13 +72,14 @@
                             " method="POST">
                                 @csrf
                                 @if ($function!=null)
-                                    @method('PUT')
+                                @method('PUT')
                                 @endif
                                 <div class="row">
                                     <div class="form-group col-md-6 col-sm-12">
                                         <label for="title">{{ __('Function Title') }}</label>
                                         <input type="text" name="title" id="title" class="form-control"
-                                            placeholder="Enter Function Title" value="{{ $function==null? old('title'):old('title',$function->title) }}">
+                                            placeholder="Enter Function Title"
+                                            value="{{ $function==null? old('title'):old('title',$function->title) }}">
                                         {{-- validation --}}
                                         @error('title')
                                         <span class="text-danger">{{ $message }}</span>
@@ -88,7 +89,8 @@
                                     <div class="form-group col-md-6 col-sm-12">
                                         <label for="title_ar">{{ __('Function Title (Arabic)') }}</label>
                                         <input type="text" name="title_ar" id="title_ar" class="form-control"
-                                            placeholder="Enter Function Title in Arabic" value="{{ $function==null? old('title_ar'):old('title_ar',$function->title_ar) }}">
+                                            placeholder="Enter Function Title in Arabic"
+                                            value="{{ $function==null? old('title_ar'):old('title_ar',$function->title_ar) }}">
                                         {{-- validation --}}
                                         @error('title_ar')
                                         <span class="text-danger">{{ $message }}</span>
@@ -198,6 +200,15 @@
                                         <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
+                                    {{-- switch for isDriver --}}
+                                    @if($service_type==3)
+                                    <div class="form-group col-md-6 col-sm-12">
+                                        <label for="IsDriver">{{ __('Is Driver') }}</label>
+                                        <br>
+                                        <input type="checkbox" name="IsDriver" checked data-bootstrap-switch
+                                            data-off-color="danger" data-on-color="success">
+                                    </div>
+                                    @endif
                                     {{-- switch for status --}}
                                     <div class="form-group col-md-6 col-sm-12">
                                         <label for="status">{{ __('Status') }}</label>
@@ -227,6 +238,7 @@
 @section('scripts')
 <script>
     $("[name='status']").bootstrapSwitch();
+    $("[name='IsDriver']").bootstrapSwitch();
          $('.summernote').summernote();
 </script>
 @endsection
