@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 
 class Clients extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     // table name
     protected $table = 'clients';
     //fields
@@ -28,5 +30,30 @@ class Clients extends Model
     public function focalPoint()
     {
         return $this->hasMany(FocalPoints::class, 'client_id', 'id');
+    }
+    //relationship sectors
+    public function sectors()
+    {
+        return $this->hasMany(Sectors::class, 'client_id', 'id');
+    }
+    //relationship get all departments
+    public function departments()
+    {
+        //return all departments of this client
+        $departments = [];
+        foreach ($this->sectors as $sector) {
+            foreach ($sector->companies as $company) {
+                foreach ($company->departments as $department) {
+                    $departments[] = $department;
+                }
+
+            }
+        }
+        return $departments;
+    }
+    //relationship with surveys
+    public function surveys()
+    {
+        return $this->hasMany(Surveys::class, 'client_id', 'id');
     }
 }

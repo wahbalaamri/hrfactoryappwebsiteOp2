@@ -24,6 +24,8 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->string('age_generation')->nullable();
             $table->integer('employee_type');
+            $table->string('isCandidate')->nullable()->default(false);
+            $table->string('isBoard')->nullable()->default(false);
             //sent survey status
             $table->boolean('send_status')->default(false);
             //sent survey date
@@ -33,6 +35,7 @@ return new class extends Migration
             //sent reminder date
             $table->dateTime('reminder_date')->nullable();
             $table->integer('added_by');
+            $table->json('acting_for')->nullable();
             //unique constraint on client_id, survey_id,sector_id,comp_id,dep_id and emp_id or mobile or email
             $table->unique(['client_id', 'survey_id','sector_id','comp_id'], 'unique_respondent');
             $table->softDeletes();

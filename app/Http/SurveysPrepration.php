@@ -4,7 +4,7 @@ namespace App\Http;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Models\{Functions, Services, FunctionPractices, PracticeQuestions};
+use App\Models\{Clients, Functions, Services, FunctionPractices, Industry, Plans, PracticeQuestions, Sectors, Surveys,Companies,Departments};
 
 class SurveysPrepration
 {
@@ -47,8 +47,7 @@ class SurveysPrepration
             $function->description = $request->description;
             $function->description_ar = $request->description_ar;
             $function->respondent = $request->respondent;
-            if( $service_type==3)
-            {
+            if ($service_type == 3) {
                 $function->IsDriver = $request->IsDriver != null;
             }
             $function->status = $request->status != null;
@@ -322,8 +321,7 @@ class SurveysPrepration
             $function->description_ar = $request->description_ar;
             $function->respondent = $request->respondent;
             $function->status = $request->status != null;
-            if( $service_type==3)
-            {
+            if ($service_type == 3) {
                 $function->IsDriver = $request->IsDriver != null;
             }
             $function->save();
@@ -358,6 +356,179 @@ class SurveysPrepration
                 return redirect()->route('Leader360Review.index')->with('success', 'Function deleted successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+    //add new survey function
+    function editSurvey($id, $type, $survey = null)
+    {
+        $client = Clients::find($id);
+        $service_id = Services::select('id')->where('service_type', $type)->first()->id;
+        $plan = Plans::where("service", $service_id)->get();
+        $data = [
+            'id' => $id,
+            'type' => $type,
+            'client' => $client,
+            'plans' => $plan,
+            'survey' => $survey
+        ];
+        return view('dashboard.client.editSurvey')->with($data);
+    }
+    function CreateOrUpdateSurvey(Request $request, $user_id, $service_type, $by_admin = false, $survey = null)
+    {
+        try {
+            if ($survey == null) {
+                $survey = new Surveys();
+            }
+            $survey->client_id = $user_id;
+            $survey->plan_id = $request->plan_id;
+            $survey->survey_title = $request->survey_title;
+            $survey->survey_des = $request->survey_des;
+            $survey->survey_stat = $request->survey_stat != null;
+            $survey->save();
+            if ($by_admin)
+                return redirect()->route('clients.ShowSurveys', [$user_id, $service_type])->with('success', 'Survey created successfully');
+            else
+                return redirect()->route('clients.ShowSurveys', [$user_id, $service_type])->with('success', 'Survey created successfully');
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+    function changeSurveyStat(Request $request, $user_id, $service_type, $survey_id, $by_admin = false)
+    {
+        try {
+            $survey = Surveys::find($survey_id);
+            $survey->survey_stat = $request->status == '1';
+            $survey->save();
+            //json response with status
+            return response()->json(['status' => true, 'message' => 'Survey status changed successfully']);
+
+        } catch (\Exception $e) {
+
+            //json response with status
+            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+        }
+    }
+    function surveyDetails($id, $type, $survey_id, $by_admin = false)
+    {
+        $survey = Surveys::find($survey_id);
+        $data = [
+            'id' => $id,
+            'type' => $type,
+            'survey' => $survey,
+        ];
+        return view('dashboard.client.surveyDetails')->with($data);
+    }
+    function deleteSurvey($id, $type, $survey_id, $by_admin = false)
+    {
+        try {
+            $survey = Surveys::find($survey_id);
+            $survey->delete();
+            return redirect()->route('clients.ShowSurveys', [$id, $type])->with('success', 'Survey deleted successfully');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+    //respondents function
+    function respondents($id, $type, $survey_id)
+    {
+        $survey = Surveys::find($survey_id);
+        $client = Clients::find($id);
+        $data = [
+            'id' => $id,
+            'type' => $type,
+            'survey' => $survey,
+            'client' => $client
+        ];
+        return view('dashboard.client.respondents')->with($data);
+    }
+    //saveSCDS function
+    function saveSCD(Request $request, $by_admin = false)
+    {
+        
+        try{
+            if($request->type=="sector")
+            {
+                //if sector id = other
+                if($request->_id == "other")
+                {
+                    //create new sector
+                    $Industry = new Industry();
+                    $Industry->name = $request->name_en;
+                    $Industry->name_ar = $request->name_ar;
+                    $Industry->system_create = false;
+                    $Industry->client_id = $request->client_id;
+                    $Industry->save();
+                    //create new sctore
+                    $sector = new Sectors();
+                    $sector->client_id = $request->client_id;
+                    $sector->name_en = $request->name_en;
+                    $sector->name_ar = $request->name_ar;
+                    $sector->save();
+                    //json response with status
+                    return response()->json(['status' => true, 'message' => 'Sector created successfully', 'sector' => $sector]);
+                }
+                else
+                {
+                    //find the industry
+                    $Industry = Industry::find($request->_id);
+                    //create new sector
+                    $sector = new Sectors();
+                    $sector->client_id = $request->client_id;
+                    $sector->name_en = $Industry->name;
+                    $sector->name_ar = $Industry->name_ar;
+                    $sector->save();                   
+                    //json response with status
+                    return response()->json(['status' => true, 'message' => 'Sector created successfully', 'sector' => $sector]);
+                }
+            }
+            //type = comp
+            else if($request->type=="comp")
+            {
+                //create new company
+                $company = new Companies();
+                $company->client_id = $request->client_id;
+                $company->sector_id = $request->_id;
+                $company->name_en = $request->name_en;
+                $company->name_ar = $request->name_ar;
+                $company->save();
+                //json response with status
+                return response()->json(['status' => true, 'message' => 'Company created successfully', 'company' => $company]);
+            }
+            //type = dep
+            else if($request->type=="dep")
+            {
+                //create new department
+                $department = new Departments();
+                $department->company_id = $request->_id;
+                $department->name_en = $request->name_en;
+                $department->name_ar = $request->name_ar;
+                $department->dep_level = 0;
+                $department->save();
+                //json response with status
+                return response()->json(['status' => true, 'message' => 'Department created successfully', 'department' => $department]);
+            }
+            // type = sub-dep
+            else if($request->type=="sub-dep")
+            {
+                //find the department
+                $p_department = Departments::find($request->_id);
+                //create new department
+                $department = new Departments();
+                $department->company_id = $p_department->company_id;
+                $department->parent_id = $request->_id;
+                $department->name_en = $request->name_en;
+                $department->name_ar = $request->name_ar;
+                $department->parent_id = $p_department->id;
+                $department->dep_level = $p_department->dep_level + 1;
+                $department->save();
+                //json response with status
+                return response()->json(['status' => true, 'message' => 'Department created successfully', 'department' => $department]);
+            }
+        }
+        catch (\Exception $e) {
+            //json response with status
+            return response()->json(['status' => false, 'message' => $e->getMessage()]);
         }
     }
 }

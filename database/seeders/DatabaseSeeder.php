@@ -13,15 +13,15 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            IndustrySeeder::class,
+            CountriesSeeder::class,
             UserSeeder::class,
             ContentSeeder::class,
             CategorySeeder::class,
             DocFileSeeder::class,
             PlansSeeder::class,
             TermsConditionsSeeder::class,
-            CountriesSeeder::class,
             CouponsSeeder::class,
-            IndustrySeeder::class,
             DefaultMBSeeder::class,
             VediosSeeder::class,
             UserPlansSeeder::class,

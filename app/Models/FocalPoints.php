@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FocalPoints extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     // table name
     protected $table = 'focal_points';
     //fields

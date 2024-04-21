@@ -3,11 +3,16 @@
 namespace Database\Seeders;
 
 use App\Models\Clients;
+use App\Models\Companies;
+use App\Models\Countries;
 use App\Models\FocalPoints;
+use App\Models\Industry;
 use App\Models\PolicyMBFile;
+use App\Models\Sectors;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 
 class UserSeeder extends Seeder
 {
@@ -51,12 +56,16 @@ class UserSeeder extends Seeder
                 //create new client
                 $olduser = User::where('email', $user['Email'])->get()->first();
                 if ($olduser == null) {
-
+                    //get sector id
+                    $sector = json_decode(file_get_contents('http://localhost:1148/Home/GetIndustry/' . $user['IndustryId']), true);
+                    $country = json_decode(file_get_contents('http://localhost:1148/Home/GetCountry/' . $user['CountryId']), true);
+                    $LocalSector = Industry::where('name', $sector['Name'])->first();
+                    $LocalCountry = Countries::where('name', $country['Name'])->first();
                     $client = new Clients();
                     $client->name = $user['Name'];
                     $client->name_ar = $user['NameAr'];
-                    $client->country = $user['CountryId'];
-                    $client->industry = $user['IndustryId'];
+                    $client->country = $LocalCountry->id;
+                    $client->industry = $LocalSector->id;
                     $client->client_size = $user['NumberOFEmployees'];
                     $client->partner_id = null;
                     $client->logo_path = null;
@@ -64,8 +73,21 @@ class UserSeeder extends Seeder
                     $client->use_sections = true;
                     $client->is_active = $user['IsDeleted'] == 1 ? false : true;
                     //delete_at
-                    $client->deleted_at = $user['IsDeleted'] == 1 ? now()->format('Y-m-d H:i:s') : null;
+                    // $client->deleted_at = $user['IsDeleted'] == 1 ? now()->format('Y-m-d H:i:s') : null;
                     $client->save();
+                    //create new sector
+                    $sector = new Sectors();
+                    $sector->client_id = $client->id;
+                    $sector->name_en = $LocalSector->name;
+                    $sector->name_ar = $LocalSector->name_ar;
+                    $sector->save();
+                    //create new company
+                    $company = new Companies();
+                    $company->client_id = $client->id;
+                    $company->sector_id = $sector->id;
+                    $company->name_en = $user['Name'];
+                    $company->name_ar = $user['NameAr'] != null ? $user['NameAr'] : $user['Name'];
+                    $company->save();
                     //create new focal point
                     $focal_point = new FocalPoints();
                     $focal_point->client_id = $client->id;
@@ -76,29 +98,38 @@ class UserSeeder extends Seeder
                     $focal_point->position = null;
                     $focal_point->is_active = $user['IsDeleted'] == 1 ? false : true;
                     //delete_at
-                    $focal_point->deleted_at = $user['IsDeleted'] == 1 ? now()->format('Y-m-d H:i:s') : null;
+                    // $focal_point->deleted_at = $user['IsDeleted'] == 1 ? now()->format('Y-m-d H:i:s') : null;
                     $focal_point->save();
                     //seed users
                     $user_ = new User();
                     $user_->name = $user['Name'];
                     $user_->email = $user['Email'];
                     $user_->client_id = $client->id;
-                    $user_->sector_id = null;
-                    $user_->comp_id = null;
+                    $user_->sector_id =$sector->id;
+                    $user_->comp_id = $company->id;
                     $user_->dep_id = null;
                     $user_->user_type = 'client';
                     $user_->isAdmin = false;
                     $user_->password = bcrypt($user['Password']);
                     $user_->is_active = $user['IsDeleted'] == 1 ? false : true;
                     //delete_at
-                    $user_->deleted_at = $user['IsDeleted'] == 1 ? now()->format('Y-m-d H:i:s') : null;
+                    // $user_->deleted_at = $user['IsDeleted'] == 1 ? now()->format('Y-m-d H:i:s') : null;
                     $user_->save();
                     //seed policy file
-                    $PloicyFile = new PolicyMBFile();
-                    $PloicyFile->user_id = $client->id;
-                    $PloicyFile->name = $user['DocumentName'];
-                    $PloicyFile->name_ar = $user['DocumentNameAr'];
-                    $PloicyFile->save();
+                    $policy = new PolicyMBFile();
+                    $policy->user_id = $client->id;
+                    $policy->name = $user['DocumentName'];
+                    $policy->name_ar = $user['DocumentNameAr'];
+                    $policy->save();
+                    if($user['IsDeleted'] == 1)
+                    {
+                        $client->delete();
+                        $user_->delete();
+                        $company->delete();
+                        $focal_point->delete();
+                        $policy->delete();
+                        $sector->delete();
+                    }
                 }
             }
         }

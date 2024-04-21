@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('name_en');
             // department name in arabic
             $table->string('name_ar');
+            $table->string('dep_level');//0 ,1,2
             // department parent
             $table->unsignedBigInteger('parent_id')->nullable()->constrained()->onDelete('cascade');
             $table->softDeletes();

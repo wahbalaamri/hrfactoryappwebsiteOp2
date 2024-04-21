@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             //cascading on sector id on delete
             $table->unsignedBigInteger('sector_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('client_id')->constrained()->onDelete('cascade');
             // company name in english
             $table->string('name_en');
             // company name in arabic
-            $table->string('name_ar');
+            $table->string('name_ar')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

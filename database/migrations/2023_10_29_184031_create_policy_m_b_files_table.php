@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('name_ar')->nullable();
             //string logo path
             $table->string('logo')->nullable();
+            //soft delete
+            $table->softDeletes();
             $table->timestamps();
         });
     }

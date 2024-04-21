@@ -17,8 +17,8 @@ return new class extends Migration
             $table->integer('country_id')->constrained()->onDelete('cascade');
             $table->integer('ordering')->nullable();
             $table->integer('paren_id')->nullable()->constrained()->onDelete('cascade');
-            $table->longText('description');
-            $table->longText('content');
+            $table->longText('description')->nullable();
+            $table->longText('content')->nullable();
             $table->integer('user_id')->nullable();
             $table->string('language');
             $table->integer('default_MB_id');

@@ -29,6 +29,10 @@
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('dashboard/plugins/summernote/summernote-bs4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('dashboard/plugins/bs-stepper/css/bs-stepper.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('dashboard/plugins/toastr/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('dashboard/plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('dashboard/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    @yield('styles')
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -975,6 +979,7 @@
     <script src="{{ asset('dashboard/plugins/datatables-responsive/js/dataTables.responsive.js') }}"></script>
     <script src="{{ asset('dashboard/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('dashboard/plugins/datatables-buttons/js/dataTables.buttons.js') }}"></script>
+    <script src="{{ asset('dashboard/plugins/select2/js/select2.full.min.js') }}"></script>
     @yield('scripts')
 </body>
 

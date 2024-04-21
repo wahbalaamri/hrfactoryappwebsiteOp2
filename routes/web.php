@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\CouponsController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\IndustryController;
 use App\Http\Controllers\Leader360ReviewController;
 use App\Http\Controllers\ManageEmployeeEngagmentController;
 use App\Http\Controllers\ManageHrDiagnosisController;
@@ -56,7 +57,9 @@ Route::get('lang/{locale}', function () {
     session()->put('locale', request()->locale);
     return redirect()->back();
 })->name('lang.swap');
-
+//get all industries route
+Route::get('/industries/all/{id}', [IndustryController::class, 'allIndustries'])->name('industries.all');
+Route::post('clients/saveSCD', [ClientsController::class, 'saveSCD'])->name('clients.saveSCD');
 //group routes for admin
 Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('admin.dashboard');
@@ -246,7 +249,7 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
   =                                                                                                                =
   =                                                                                                                =
   ==================================================================================================================*/
-      /*==================================================================================================================
+    /*==================================================================================================================
   =                                                                                                                =
   =                                                                                                                =
   =                                                                                                                =
@@ -257,7 +260,15 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
   ==================================================================================================================*/
     Route::get('clients/index', [ClientsController::class, 'index'])->name('clients.index');
     Route::get('clients/subscriptions/{id}', [ClientsController::class, 'subscriptions'])->name('clients.subscriptions');
-    Route::get('clients/ShowEmployeeEngagment/{id}', [ClientsController::class, 'ShowEmployeeEngagment'])->name('clients.ShowEmployeeEngagment');
+    Route::get('clients/ShowSurveys/{id}/{type}', [ClientsController::class, 'ShowSurveys'])->name('clients.ShowSurveys');
+    Route::get('clients/createSurvey/{id}/{type}', [ClientsController::class, 'createSurvey'])->name('clients.createSurvey');
+    Route::get('clients/editSurvey/{id}/{type}/{survey}', [ClientsController::class, 'editSurvey'])->name('clients.editSurvey');
+    Route::post('clients/storeSurvey/{id}/{type}/{survey?}', [ClientsController::class, 'storeSurvey'])->name('clients.storeSurvey');
+    Route::delete('clients/destroySurvey/{id}/{type}/{survey}', [ClientsController::class, 'destroySurvey'])->name('clients.destroySurvey');
+    Route::post('clients/changeSurveyStat/{id}/{type}/{survey}', [ClientsController::class, 'changeSurveyStat'])->name('clients.changeSurveyStat');
+    Route::get('clients/surveyDetails/{id}/{type}/{survey}', [ClientsController::class, 'surveyDetails'])->name('clients.surveyDetails');
+    Route::get('clients/respondents/{id}/{type}/{survey}', [ClientsController::class, 'Respondents'])->name('clients.Respondents');
+    
     /*==================================================================================================================
   =                                                                                                                =
   =                                                                                                                =

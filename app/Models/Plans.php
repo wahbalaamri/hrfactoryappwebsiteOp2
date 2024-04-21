@@ -39,5 +39,10 @@ class Plans extends Model
     {
         return $this->hasMany(PlanFeatures::class,'plan');
     }
+    //belongs to relationship with surveys
+    public function surveys()
+    {
+        return $this->hasMany(Surveys::class, 'plan_id');
+    }
     //belongs to relationship with country
 }
