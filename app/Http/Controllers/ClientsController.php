@@ -97,6 +97,11 @@ class ClientsController extends Controller
     {
         return $surveysPrepration->viewSubscriptions($id,true);
     }
+    //saveSubscription function
+    public function saveSubscription(Request $request, SurveysPrepration $surveysPrepration,$id)
+    {
+        return $surveysPrepration->saveSubscription($request,$id, true);
+    }
     //ShowEmployeeEngagment function
     public function ShowSurveys(SurveysPrepration $surveysPrepration, $id, $type)
     {

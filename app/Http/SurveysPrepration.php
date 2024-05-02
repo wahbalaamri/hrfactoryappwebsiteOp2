@@ -4,7 +4,7 @@ namespace App\Http;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Models\{Clients, Functions, Services, FunctionPractices, Industry, Plans, PracticeQuestions, Sectors, Surveys, Companies, Departments, EmailContents, Employees, PrioritiesAnswers, Respondents, SurveyAnswers};
+use App\Models\{Clients, ClientSubscriptions, Functions, Services, FunctionPractices, Industry, Plans, PracticeQuestions, Sectors, Surveys, Companies, Departments, EmailContents, Employees, PrioritiesAnswers, Respondents, SurveyAnswers};
 use Yajra\DataTables\Facades\DataTables;
 
 class SurveysPrepration
@@ -467,10 +467,10 @@ class SurveysPrepration
                 ->addColumn('isAddAsRespondent', function ($employee) use ($respondents_ids) {
                     return in_array($employee->id, $respondents_ids) ? true : false;
                 })
-                ->addColumn('SendSurvey', function ($employee) use ($respondents_ids,$survey_id) {
+                ->addColumn('SendSurvey', function ($employee) use ($respondents_ids, $survey_id) {
                     return in_array($employee->id, $respondents_ids) ? '<a href="javascript:void(0);" onclick="SendSurvey(\'' . $employee->id . '\',\'' . $survey_id . '\')" class="btn btn-info btn-xs"><i class="fa fa-paper-plane"></i></a>' : '<span class="badge bg-danger">' . __('Not Added') . '</span>';
                 })
-                ->addColumn('SendReminder', function ($employee) use ($respondents_ids,$survey_id) {
+                ->addColumn('SendReminder', function ($employee) use ($respondents_ids, $survey_id) {
                     return in_array($employee->id, $respondents_ids) ? '<a href="javascript:void(0);" onclick="SendReminder(\'' . $employee->id . '\',\'' . $survey_id . '\')" class="btn btn-warning btn-xs"><i class="fa fa-paper-plane"></i></a>' : '<span class="badge bg-danger">' . __('Not Added') . '</span>';
                 })
                 ->rawColumns(['action', 'hr', 'SendSurvey', 'SendReminder'])
@@ -600,7 +600,7 @@ class SurveysPrepration
     {
         $survey = Surveys::find($survey_id);
         $client = Clients::find($id);
-        $emailContet = EmailContents::where([['survey_id', $survey_id],['client_id',$id]])->first();
+        $emailContet = EmailContents::where([['survey_id', $survey_id], ['client_id', $id]])->first();
         $data = [
             'id' => $id,
             'type' => $type,
@@ -621,7 +621,7 @@ class SurveysPrepration
         }
     }
     //storeSurveyEmail function
-    function storeSurveyEmail(Request $request, $id, $type, $survey_id, $emailid=null ,$by_admin = false)
+    function storeSurveyEmail(Request $request, $id, $type, $survey_id, $emailid = null, $by_admin = false)
     {
         try {
             //find client
@@ -640,11 +640,8 @@ class SurveysPrepration
 
             if ($emailid == null) {
                 $email = new EmailContents();
-
-            }
-            else{
+            } else {
                 $email = EmailContents::find($emailid);
-
             }
 
             //check if survey_logo
@@ -654,7 +651,6 @@ class SurveysPrepration
                 $file_name = time() . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('uploads/emails'), $file_name);
                 $email->logo = $file_name;
-
             }
             $email->email_type = 'survey';
             $email->client_id = $id;
@@ -931,8 +927,8 @@ class SurveysPrepration
             'id' => $id,
             'client' => $client
         ];
-         //if request is ajax
-         if (request()->ajax()) {
+        //if request is ajax
+        if (request()->ajax()) {
             //setup yajra datatable
             $subscriptions = $client->subscriptions();
             return DataTables::of($subscriptions)
@@ -953,5 +949,35 @@ class SurveysPrepration
                 ->make(true);
         }
         return view('dashboard.client.subscrip')->with($data);
+    }
+    //saveSubscription function
+    function saveSubscription(Request $request, $id, $by_admin = false)
+    {
+        try {
+            //create new subscription
+            if ($request->id == null) {
+                $subscription = new ClientSubscriptions();
+            } else {
+                $subscription = ClientSubscriptions::find($request->id);
+            }
+            //find client
+            $client = Clients::find($request->client_id);
+            //find service
+            $service = Services::find($request->service);
+            //find plan
+            $plan = Plans::find($request->plan);
+            $subscription->client_id = $id;
+            $subscription->service_id = $request->service;
+            $subscription->plan_id = $request->plan;
+            $subscription->start_date = $request->start_date;
+            $subscription->end_date = $request->end_date;
+            $subscription->is_active = $request->status != null;
+            $subscription->save();
+            //json response with status
+            return response()->json(['status' => true, 'message' => 'Subscription created successfully', 'subscription' => $subscription]);
+        } catch (\Exception $e) {
+            //json response with status
+            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+        }
     }
 }

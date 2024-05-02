@@ -311,6 +311,7 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
     Route::get('clients/getEmployee/{id}', [ClientsController::class, 'getEmployee'])->name('clients.getEmployee');
     Route::post('clients/saveSurveyRespondents', [ClientsController::class, 'saveSurveyRespondents'])->name('clients.saveSurveyRespondents');
     Route::get('clients/view-Subscriptions/{id}', [ClientsController::class, 'viewSubscriptions'])->name('clients.viewSubscriptions');
+    Route::post('clients/saveSubscription/{id}', [ClientsController::class, 'saveSubscription'])->name('clients.saveSubscription');
     /*==================================================================================================================
   =                                                                                                                =
   =                                                                                                                =

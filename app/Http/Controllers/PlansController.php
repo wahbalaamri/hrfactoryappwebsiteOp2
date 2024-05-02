@@ -366,7 +366,7 @@ class PlansController extends Controller
         return response()->json($data);
     }
     //getPlan function
-    function getPlan($id)
+    function getPlan(Request $request,$id)
     {
         try {
             //find service with type $id
@@ -377,8 +377,11 @@ class PlansController extends Controller
             }
             //get plans of service id
             $plans = Plans::where('service', $service->id)->get()->append('planName');
+            $plans_ids=$plans->pluck('id')->toArray();
+            //get all plans prices where country is $request->country
+            $plans_prices = PlansPrices::whereIn('plan', $plans_ids)->where('country', $request->country)->get();
             //return json response
-            return response()->json(['status' => true, 'plans' => $plans]);
+            return response()->json(['status' => true, 'plans' => $plans, 'plans_prices' => $plans_prices]);
         } catch (\Exception $e) {
             //return error
             Log::error($e->getMessage());

@@ -82,7 +82,9 @@
 @section('scripts')
 <script>
     var plans=[];
+    var plansprice=[];
     $(document).ready(function() {
+        $("#status").bootstrapSwitch();
         url="{{ route('clients.viewSubscriptions',':d') }}"
         url=url.replace(':d',"{{ $id }}")
         $('#subscripTable').DataTable({
@@ -144,11 +146,13 @@
                     url: url,
                     type: "get",
                     data: {
-                        service: service
+                        service: service,
+                        country: "{{ $client->country }}"
                     },
                     success: function(data) {
                         if(data.status){
                             plans=data.plans;
+                            plansprice=data.plans_prices;
                         $('#plan').empty();
                         $('#plan').append('<option value="">Select Plan</option>');
                         $.each(data.plans, function(key, value) {
@@ -175,6 +179,8 @@
             var period = $(this).val();
             var start_date = $('#start_date').val();
             if(period && start_date)
+            //get plan price of selected plan and period
+        console.log(plansprice.filter(plan=>plan.plan_id==$('#plan').val() && plan.period_id==period)[0].price);
             {setEndDate(period,start_date);}
         });
         //start_date change

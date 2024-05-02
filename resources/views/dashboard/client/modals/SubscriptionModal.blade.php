@@ -49,6 +49,12 @@
                             <label for="end_date">{{ __('End Date') }}</label>
                             <input type="date" class="form-control" name="end_date" id="end_date" disabled>
                         </div>
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label for="status">{{ __('Status') }}</label>
+                            <br>
+                            <input type="checkbox" name="status" id="status" checked data-bootstrap-switch
+                                data-off-color="danger" data-on-color="success">
+                        </div>
                         {{-- checkbox confirmation --}}
                         <div class="form-group col-md-10">
                             <div class="form-check">
