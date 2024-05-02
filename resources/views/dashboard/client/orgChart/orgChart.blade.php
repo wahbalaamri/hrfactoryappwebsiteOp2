@@ -39,7 +39,7 @@
                             {{-- tool --}}
                             <div class="card-tools">
                                 {{-- back --}}
-                                <a href="{{ route('clients.subscriptions',$id) }}"
+                                <a href="{{ route('clients.manage',$id) }}"
                                     class="btn btn-sm btn-primary {{ App()->getLocale()=='ar'? 'float-start':'float-end' }}">{{
                                     __('Back') }}</a>
                                 {{-- create new survey --}}
