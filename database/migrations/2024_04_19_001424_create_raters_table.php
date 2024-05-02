@@ -13,14 +13,22 @@ return new class extends Migration
     {
         Schema::create('raters', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->integer('survey_id')->constrained()->onDelete('cascade');
             //candidate uuid
-            $table->string('candidate_id')->index('candidate_id');
-            //rater uuid
-            $table->string('rater_id')->index('rater_id');
+            $table->uuid('candidate_id');
+            $table->uuid('rater_id');
+
             //type of rater
             $table->string('type');
+            $table->boolean('send_status')->default(false);
+            $table->dateTime('sent_date')->nullable();
+            $table->boolean('reminder_status')->default(false);
+            $table->dateTime('reminder_date')->nullable();
             $table->softDeletes();
             $table->timestamps();
+            $table->foreign('candidate_id')->references('id')->on('employees');//Employee id ();
+            //rater uuid
+            $table->foreign('rater_id')->references('id')->on('employees');
         });
     }
 

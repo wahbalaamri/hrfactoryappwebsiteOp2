@@ -980,6 +980,7 @@
     <script src="{{ asset('dashboard/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('dashboard/plugins/datatables-buttons/js/dataTables.buttons.js') }}"></script>
     <script src="{{ asset('dashboard/plugins/select2/js/select2.full.min.js') }}"></script>
+    <script src="{{ asset('dashboard/plugins/toastr/toastr.min.js') }}"></script>
     @yield('scripts')
 </body>
 

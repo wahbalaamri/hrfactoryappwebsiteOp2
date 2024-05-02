@@ -365,4 +365,24 @@ class PlansController extends Controller
         //return json response
         return response()->json($data);
     }
+    //getPlan function
+    function getPlan($id)
+    {
+        try {
+            //find service with type $id
+            $service = Services::where('service_type', $id)->first();
+            //service not found return not found
+            if (!$service) {
+                return response()->json(['status' => false, 'error' => 'Service not found']);
+            }
+            //get plans of service id
+            $plans = Plans::where('service', $service->id)->get()->append('planName');
+            //return json response
+            return response()->json(['status' => true, 'plans' => $plans]);
+        } catch (\Exception $e) {
+            //return error
+            Log::error($e->getMessage());
+            return response()->json(['status'=>false, 'error' => $e->getMessage()]);
+        }
+    }
 }

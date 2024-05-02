@@ -114,7 +114,7 @@
 </div>
 @endsection
 @section('scripts')
-<script src="{{ asset('dashboard/plugins/toastr/toastr.min.js') }}"></script>
+
 <script>
     $(".form-check-input").bootstrapSwitch();
     //onchange switch

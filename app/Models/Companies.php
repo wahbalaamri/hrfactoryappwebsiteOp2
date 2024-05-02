@@ -27,4 +27,9 @@ class Companies extends Model
     {
         return $this->hasMany(Departments::class, 'company_id', 'id');
     }
+    //company name
+    public function getNameAttribute()
+    {
+        return app()->getLocale() == 'ar' ? $this->name_ar : $this->name_en;
+    }
 }

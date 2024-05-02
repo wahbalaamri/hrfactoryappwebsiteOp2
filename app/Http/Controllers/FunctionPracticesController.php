@@ -63,4 +63,26 @@ class FunctionPracticesController extends Controller
     {
         //
     }
+    //setup practices from https://3h.hrfactoryapp.com/practice/getp
+    function setup()
+    {
+        //read data from the API
+        $url = "https://3h.hrfactoryapp.com/practice/getp";
+        $json = file_get_contents($url);
+        $data= json_decode($json);
+        //loop through the data
+        foreach($data as $item){
+            //check if the practice exists
+                //create a new practice
+                $practice = new FunctionPractices();
+                $practice->id= $item->id;
+                $practice->function_id= $item->FunctionId;
+                $practice->title = $item->PracticeTitle;
+                $practice->title_ar = $item->PracticeTitleAr;
+                $practice->status = $item->Status;
+                $practice->save();
+        }
+        // return to route
+        return redirect()->route('EmployeeEngagment.index');
+    }
 }

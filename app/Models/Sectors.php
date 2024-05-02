@@ -27,4 +27,9 @@ class Sectors extends Model
     {
         return $this->hasMany(Companies::class, 'sector_id', 'id');
     }
+    //sector name
+    public function getNameAttribute()
+    {
+        return App()->isLocale('ar') ? $this->name_ar : $this->name_en;
+    }
 }

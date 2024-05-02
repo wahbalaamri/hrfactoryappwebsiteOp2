@@ -88,30 +88,19 @@ class ClientsController extends Controller
     }
 
     //subscriptions function
-    public function subscriptions($id)
+    public function manage(SurveysPrepration $surveysPrepration,$id)
     {
-        $data = [
-            'id' => $id
-        ];
-        return view('dashboard.client.subscriptions')->with($data);
+       return $surveysPrepration->manage($id);
+    }
+    //viewSubscriptions function
+    public function viewSubscriptions(SurveysPrepration $surveysPrepration, $id)
+    {
+        return $surveysPrepration->viewSubscriptions($id,true);
     }
     //ShowEmployeeEngagment function
-    public function ShowSurveys($id, $type)
+    public function ShowSurveys(SurveysPrepration $surveysPrepration, $id, $type)
     {
-        $client = Clients::find($id);
-        $departments = $client->departments();
-        $service_id = Services::select('id')->where('service_type', $type)->first()->id;
-        $plan_id = Plans::where("service", $service_id)->pluck('id')->toArray();
-        $client_survyes = Surveys::where('client_id', $client->id)->whereIn('plan_id', $plan_id)->get();
-
-        $data = [
-            'id' => $id,
-            'type' => $type,
-            'client' => $client,
-            'departments' => $departments,
-            'client_survyes' => $client_survyes
-        ];
-        return view('dashboard.client.Surveys')->with($data);
+        return $surveysPrepration->ShowSurveys($id, $type);
     }
     //createSurvey function
     public function createSurvey(SurveysPrepration $surveysPrepration, $id, $type)
@@ -149,19 +138,72 @@ class ClientsController extends Controller
         return $surveysPrepration->editSurvey($id, $type, $survey_id);
     }
     //Respondents function
-    public function Respondents(SurveysPrepration $surveysPrepration, $id, $type, $survey_id)
+    public function Respondents(Request $request, SurveysPrepration $surveysPrepration, $id, $type, $survey_id)
     {
-        return $surveysPrepration->Respondents($id, $type, $survey_id);
+        return $surveysPrepration->Respondents($request, $id, $type, $survey_id);
     }
     //saveSCD function
     public function saveSCD(Request $request, SurveysPrepration $surveysPrepration)
     {
         try {
-            Log::info($request->type);
             return $surveysPrepration->saveSCD($request, true);
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
             //     return response()->json(['message' => 'Error'], 500);
         }
+    }
+    //ShowCreateEmail function
+    public function ShowCreateEmail(SurveysPrepration $surveysPrepration, $id, $type, $survey_id)
+    {
+        return $surveysPrepration->ShowCreateEmail($id, $type, $survey_id, true);
+    }
+    //getClientLogo function
+    public function getClientLogo(SurveysPrepration $surveysPrepration, $id)
+    {
+        return $surveysPrepration->getClientLogo($id, true);
+    }
+    //storeSurveyEmail function
+    public function storeSurveyEmail(Request $request, SurveysPrepration $surveysPrepration, $id, $type, $survey_id,$emailid=null)
+    {
+        return $surveysPrepration->storeSurveyEmail($request, $id, $type, $survey_id,$emailid, true);
+    }
+    //orgChart function
+    public function orgChart(Request $request, SurveysPrepration $surveysPrepration, $id)
+    {
+        return $surveysPrepration->orgChart($request, $id, true);
+    }
+    //Employees function
+    public function Employees(Request $request, SurveysPrepration $surveysPrepration, $id)
+    {
+        return $surveysPrepration->Employees($request, $id, true);
+    }
+    //companies function
+    public function companies(Request $request, SurveysPrepration $surveysPrepration, $id)
+    {
+        return $surveysPrepration->companies($request, $id, true);
+    }
+    //departments function
+    public function departments(Request $request, SurveysPrepration $surveysPrepration, $id)
+    {
+        return $surveysPrepration->departments($request, $id, true);
+    }
+    //storeEmployee function
+    public function storeEmployee(Request $request, SurveysPrepration $surveysPrepration)
+    {
+        return $surveysPrepration->storeEmployee($request, true);
+    }
+    //getEmployee function
+    public function getEmployee(Request $request, SurveysPrepration $surveysPrepration, $id)
+    {
+        return $surveysPrepration->getEmployee($request, $id, true);
+    }
+    //getDepartment function
+    public function getDepartment(Request $request, SurveysPrepration $surveysPrepration, $id)
+    {
+        return $surveysPrepration->getDepartment($request, $id, true);
+    }
+    //saveSurveyRespondents function
+    public function saveSurveyRespondents(Request $request, SurveysPrepration $surveysPrepration)
+    {
+        return $surveysPrepration->saveSurveyRespondents($request, true);
     }
 }

@@ -218,7 +218,7 @@
                                     <div class="form-group col-md-6 col-sm-12">
                                         <label for="IsENPS">{{ __('Is ENPS') }}</label>
                                         <br>
-                                        <input type="checkbox" name="IsENPS" checked data-bootstrap-switch
+                                        <input type="checkbox" name="IsENPS" @if ($question!=null) @if($question->IsENPS) checked @endif @else checked @endif data-bootstrap-switch
                                             data-off-color="danger" data-on-color="success">
                                     </div>
                                     @endif
@@ -226,7 +226,7 @@
                                     <div class="form-group col-md-6 col-sm-12">
                                         <label for="status">{{ __('Status') }}</label>
                                         <br>
-                                        <input type="checkbox" name="status" checked data-bootstrap-switch
+                                        <input type="checkbox" name="status" @if ($question!=null) @if($question->status) checked @endif @else checked @endif data-bootstrap-switch
                                             data-off-color="danger" data-on-color="success">
                                     </div>
                                     <div class="form-group col-md-12 col-sm-12">

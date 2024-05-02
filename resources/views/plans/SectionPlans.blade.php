@@ -1098,7 +1098,7 @@ $(".cities").sortable({
     });
 
     function render(order) {
-        console.log('Output HTML of releases in new order: ' + order);
+        // console.log('Output HTML of releases in new order: ' + order);
     }
     function deleteSection(sectionId) {
                 Swal.fire({

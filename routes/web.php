@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ClientsController;
+use App\Http\Controllers\ClientSubscriptionsController;
 use App\Http\Controllers\CouponsController;
+use App\Http\Controllers\FunctionPracticesController;
+use App\Http\Controllers\FunctionsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IndustryController;
 use App\Http\Controllers\Leader360ReviewController;
@@ -10,10 +13,12 @@ use App\Http\Controllers\ManageEmployeeEngagmentController;
 use App\Http\Controllers\ManageHrDiagnosisController;
 use App\Http\Controllers\MigrationConrtoller;
 use App\Http\Controllers\PlansController;
+use App\Http\Controllers\PracticeQuestionsController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\ServiceApproachesController;
 use App\Http\Controllers\ServiceFeaturesController;
 use App\Http\Controllers\ServicesController;
+use App\Http\Controllers\TermsConditionsController;
 use App\Http\Controllers\TrainingController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -60,6 +65,14 @@ Route::get('lang/{locale}', function () {
 //get all industries route
 Route::get('/industries/all/{id}', [IndustryController::class, 'allIndustries'])->name('industries.all');
 Route::post('clients/saveSCD', [ClientsController::class, 'saveSCD'])->name('clients.saveSCD');
+Route::get('client/companies/{id}', [ClientsController::class, 'companies'])->name('client.companies');
+Route::get('client/departments/{id}', [ClientsController::class, 'departments'])->name('client.departments');
+Route::get('client/getdep/{id}', [ClientsController::class, 'getDepartment'])->name('client.getDep');
+Route::get('function/setup', [FunctionsController::class, 'setup']);
+Route::get('practice/setup', [FunctionPracticesController::class, 'setup']);
+Route::get('question/setup', [PracticeQuestionsController::class, 'setup']);
+Route::get('plans/getUserPlan', [ClientSubscriptionsController::class, 'getUserPlan']);
+Route::get('plans/getPlan/{id}', [PlansController::class, 'getPlan'])->name('subscription.getPlans');
 //group routes for admin
 Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('admin.dashboard');
@@ -132,6 +145,27 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
     Route::get('service-plans/create/{id}', [PlansController::class, 'create'])->name('service-plans.create');
     Route::post('service-plans/store/{id}', [PlansController::class, 'store'])->name('service-plans.store');
     Route::get('service-plans/show/{id}', [PlansController::class, 'show'])->name('service-plans.show');
+    /*==================================================================================================================
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                        SERVICE PLANS ROUTES END                                                =
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                                                                                                =
+  ==================================================================================================================*/
+    /*==================================================================================================================
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                        SERVICE Terms Conditions ROUTES START                                              =
+  =                                                                                                                =
+  =                                                                                                                =
+  =                                                                                                                =
+  ==================================================================================================================*/
+    Route::get('termsconditions/create/{id}', [TermsConditionsController::class, 'create'])->name('termsconditions.create');
+    Route::post('termsconditions/store/{id?}', [TermsConditionsController::class, 'store'])->name('termsconditions.store');
+    Route::get('termsconditions/show/{id}', [TermsConditionsController::class, 'show'])->name('termsconditions.show');
     /*==================================================================================================================
   =                                                                                                                =
   =                                                                                                                =
@@ -259,7 +293,7 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
   =                                                                                                                =
   ==================================================================================================================*/
     Route::get('clients/index', [ClientsController::class, 'index'])->name('clients.index');
-    Route::get('clients/subscriptions/{id}', [ClientsController::class, 'subscriptions'])->name('clients.subscriptions');
+    Route::get('clients/manage/{id}', [ClientsController::class, 'manage'])->name('clients.manage');
     Route::get('clients/ShowSurveys/{id}/{type}', [ClientsController::class, 'ShowSurveys'])->name('clients.ShowSurveys');
     Route::get('clients/createSurvey/{id}/{type}', [ClientsController::class, 'createSurvey'])->name('clients.createSurvey');
     Route::get('clients/editSurvey/{id}/{type}/{survey}', [ClientsController::class, 'editSurvey'])->name('clients.editSurvey');
@@ -268,7 +302,15 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
     Route::post('clients/changeSurveyStat/{id}/{type}/{survey}', [ClientsController::class, 'changeSurveyStat'])->name('clients.changeSurveyStat');
     Route::get('clients/surveyDetails/{id}/{type}/{survey}', [ClientsController::class, 'surveyDetails'])->name('clients.surveyDetails');
     Route::get('clients/respondents/{id}/{type}/{survey}', [ClientsController::class, 'Respondents'])->name('clients.Respondents');
-    
+    Route::get('clients/orgChart/{id}', [ClientsController::class, 'orgChart'])->name('clients.orgChart');
+    Route::get('clients/Employees/{id}', [ClientsController::class, 'Employees'])->name('clients.Employees');
+    Route::get('clients/ShowCreateEmail/{id}/{type}/{survey}', [ClientsController::class, 'ShowCreateEmail'])->name('clients.ShowCreateEmail');
+    Route::post('clients/storeSurveyEmail/{id}/{type}/{survey}/{emailid?}', [ClientsController::class, 'storeSurveyEmail'])->name('clients.storeSurveyEmail');
+    Route::get('clients/getClientLogo/{id}', [ClientsController::class, 'getClientLogo'])->name('clients.getClientLogo');
+    Route::post('clients/storeEmployee', [ClientsController::class, 'storeEmployee'])->name('clients.storeEmployee');
+    Route::get('clients/getEmployee/{id}', [ClientsController::class, 'getEmployee'])->name('clients.getEmployee');
+    Route::post('clients/saveSurveyRespondents', [ClientsController::class, 'saveSurveyRespondents'])->name('clients.saveSurveyRespondents');
+    Route::get('clients/view-Subscriptions/{id}', [ClientsController::class, 'viewSubscriptions'])->name('clients.viewSubscriptions');
     /*==================================================================================================================
   =                                                                                                                =
   =                                                                                                                =

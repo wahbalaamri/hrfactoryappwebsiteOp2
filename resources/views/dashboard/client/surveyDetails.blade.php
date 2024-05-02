@@ -67,7 +67,7 @@
                                         <div class="icon">
                                             <i class="fas fa-mail-bulk"></i>
                                         </div>
-                                        <a href="#" class="small-box-footer">
+                                        <a href="{{ route('clients.ShowCreateEmail',[$id,$type,$survey->id]) }}" class="small-box-footer">
                                             {{ __('Start') }}<i class="fas fa-arrow-circle-right"></i>
                                         </a>
                                     </div>

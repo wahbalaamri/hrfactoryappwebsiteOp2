@@ -56,4 +56,14 @@ class Clients extends Model
     {
         return $this->hasMany(Surveys::class, 'client_id', 'id');
     }
+    //hasMany Employees
+    public function employeesData()
+    {
+        return $this->hasMany(Employees::class, 'client_id');
+    }
+    //hasMany subscriptions
+    public function subscriptions()
+    {
+        return $this->hasMany(ClientSubscriptions::class, 'client_id');
+    }
 }

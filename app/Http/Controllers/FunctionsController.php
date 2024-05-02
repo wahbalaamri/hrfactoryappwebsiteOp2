@@ -6,6 +6,7 @@ use App\Models\Functions;
 use App\Http\Requests\StoreFunctionsRequest;
 use App\Http\Requests\UpdateFunctionsRequest;
 use App\Models\Plans;
+use App\Models\Services;
 
 class FunctionsController extends Controller
 {
@@ -67,5 +68,29 @@ class FunctionsController extends Controller
     public function destroy(Functions $functions)
     {
         //
+    }
+    //setup function from https://3h.hrfactoryapp.com/function/getf
+    public function setup()
+    {
+        //read the data from the url
+        $url = "https://3h.hrfactoryapp.com/function/getf";
+        $json = file_get_contents($url);
+        $data = json_decode($json);
+        //find service with type 3
+        $service = Services::where('service_type', 3)->first();
+        //insert the data into the database
+        foreach ($data as $item) {
+            $function = new Functions();
+            $function->id = $item->id;
+            $function->title = $item->FunctionTitle;
+            $function->title_ar = $item->FunctionTitleAr;
+            $function->respondent = $item->Respondent;
+            $function->status = $item->Status;
+            $function->service_id = $service->id;
+            $function->IsDefault= $item->IsDefault==1;
+            $function->IsDriver= $item->IsDriver==1;
+            $function->save();
+        }
+        return redirect()->route('EmployeeEngagment.index');
     }
 }

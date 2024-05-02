@@ -24,6 +24,7 @@ return new class extends Migration
             $table->longText('body_header_ar')->nullable();
             $table->longText('body_footer_ar')->nullable();
             $table->boolean('status')->default(1);
+            $table->boolean('use_client_logo')->default(0);
             //logo
             $table->string('logo')->nullable();
             //soft delete

@@ -63,4 +63,27 @@ class PracticeQuestionsController extends Controller
     {
         //
     }
+     //setup question from https://3h.hrfactoryapp.com/question/getq
+    function setup()
+    {
+        //read the question from the url
+        $url = "https://3h.hrfactoryapp.com/question/getq";
+        $json = file_get_contents($url);
+        $data=json_decode($json);
+        //loop through the data
+        foreach($data as $item){
+            //create a new question
+            $question = new PracticeQuestions();
+            $question->id = $item->id;
+            $question->question = $item->Question;
+            $question->question_ar = $item->QuestionAr;
+            $question->respondent = $item->Respondent;
+            $question->status = $item->Status;
+            $question->IsENPS = $item->IsENPS==1;
+            $question->practice_id=$item->PracticeId;
+            $question->save();
+        }
+        //redirect to the index page
+        return redirect()->route('EmployeeEngagment.index');
+    }
 }

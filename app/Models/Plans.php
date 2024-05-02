@@ -17,10 +17,10 @@ class Plans extends Model
     //get plan name
     public function getPlanNameAttribute()
     {
-        return app()->getLocale() == 'ar' ? $this->NameAR : $this->Name;
+        return app()->getLocale() == 'ar' ? $this->name_ar : $this->name;
     }
     //belongs to relationship with services
-    public function service()
+    public function service_()
     {
         return $this->belongsTo(Services::class, 'service');
     }
@@ -44,5 +44,14 @@ class Plans extends Model
     {
         return $this->hasMany(Surveys::class, 'plan_id');
     }
-    //belongs to relationship with country
+    //belongs to relationship with TermsConditions
+    public function termsConditions()
+    {
+        return $this->hasOne(TermsConditions::class, 'plan_id');
+    }
+    //belongs to relationship with ClientSubscriptions
+    public function clientSubscriptions()
+    {
+        return $this->hasMany(ClientSubscriptions::class, 'plan_id');
+    }
 }

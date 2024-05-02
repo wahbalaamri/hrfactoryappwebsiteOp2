@@ -328,6 +328,14 @@
                                                                 </p>
                                                             </div>
                                                         </div>
+                                                        <div class="card card-warning card-outline">
+                                                            <div class="card-header">
+                                                                <h5 class="card-title">{{ ('Plan Terms') }}</h5>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -485,6 +493,69 @@
         </div>
     </div>
 </div>
+{{-- show terms and Conditions Modal --}}
+<div class="modal fade" id="showTerms" tabindex="-1" aria-labelledby="showTermsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="showTermsLabel">
+                </h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row p-2">
+                    <div class="col-12">
+                        <p id="TermsP"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- Edit terms and condtions modal --}}
+<div class="modal fade" id="editTerms" tabindex="-1" aria-labelledby="editTermsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editTermsLabel">
+                </h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="">
+                    <div class="row p-2">
+                        <input type="hidden" name="Pid" id="Pid">
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label for="terms_title">{{ __('Terms & Condtions Title') }} (EN)</label>
+                            <input type="text" name="terms_title" id="terms_title" class="form-control"
+                                placeholder="Terms & Condtions Title">
+                        </div>
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label for="terms_title_ar">{{ __('Terms & Condtions Title') }} (AR)</label>
+                            <input type="text" name="terms_title_ar" id="terms_title_ar" class="form-control"
+                                placeholder="Terms & Condtions Title">
+                        </div>
+                        <div class="form-group col-12">
+                            <label for="terms">{{ __('Terms & Condtions') }} (EN)</label>
+                            <textarea name="terms" id="terms" class="form-control summernote"
+                                placeholder="Terms & Condtions"></textarea>
+                        </div>
+                        <div class="form-group col-12">
+                            <label for="terms_ar">{{ __('Terms & Condtions') }} (AR)</label>
+                            <textarea name="terms_ar" id="terms_ar" class="form-control summernote"
+                                placeholder="Terms & Condtions"></textarea>
+                        </div>
+                        {{-- save button  --}}
+                        <div class="form-group col-12">
+                            <a href="javascript:void(0)" class="btn btn-sm btn-success float-right" id="TermsSave">{{ __('Save')
+                                }}</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 @section('scripts')
 <script>
@@ -632,6 +703,16 @@ function showPlan(id) {
             $('#deliveryMode_P').html(data.plan.delivery_mode);
             $('#limitations_P').html(data.plan.limitations);
             // $('#features_P').html(data.plan.features);
+            if(data.plan.termsConditions){
+                $("#showTermsLabel").text(isEnglish?data.plan.termsConditions.english_title:data.plan.termsConditions.arabic_title);
+                $("TermsP").html(isEnglish?data.plan.termsConditions.english_terms:data.plan.termsConditions.arabic_terms);
+                //setup the terms and conditions form
+                $('#Pid').val(data.plan.id);
+                $('#terms_title').val(data.plan.termsConditions.english_title);
+                $('#terms_title_ar').val(data.plan.termsConditions.arabic_title);
+                $('#terms').html(data.plan.termsConditions.english_terms);
+                $('#terms_ar').html(data.plan.termsConditions.arabic_terms);
+            }
 
             $('.d-none').removeClass('d-none');
         }

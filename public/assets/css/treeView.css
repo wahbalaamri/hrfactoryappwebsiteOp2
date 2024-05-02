@@ -6,6 +6,7 @@ ul.tree {
 ul li {
     list-style: none;
     position: relative;
+    margin: 0.5rem;
 }
 
 li:before,
@@ -45,6 +46,10 @@ summary {
     cursor: pointer;
     display: block;
     position: relative;
+}
+
+summary span {
+    border-radius: 7px;
 }
 
 summary:before {

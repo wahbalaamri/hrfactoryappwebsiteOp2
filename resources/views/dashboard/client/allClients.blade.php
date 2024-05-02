@@ -98,7 +98,7 @@
                                                 </td>
                                                 <td>
                                                     {{-- view Client subscriptions page --}}
-                                                    <a href="{{ route('clients.subscriptions', $client->id) }}"
+                                                    <a href="{{ route('clients.manage', $client->id) }}"
                                                         class="btn btn-info btn-sm">
                                                         <i class="fas fa-eye"></i>
                                                         {{ __('Client subscriptions') }}

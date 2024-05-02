@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\traits\CustomRegistersUsers;
 use App\Models\Clients;
 use App\Models\Countries;
+use App\Models\Employees;
 use App\Models\FocalPoints;
+use App\Models\Industry;
 use App\Models\Partnerships;
+use App\Models\Sectors;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -28,7 +32,8 @@ class RegisterController extends Controller
     |
     */
 
-    use RegistersUsers;
+    // use RegistersUsers;
+    use CustomRegistersUsers;
 
     /**
      * Where to redirect users after registration.
@@ -106,7 +111,7 @@ class RegisterController extends Controller
                 $filename = time() . '.' . $extension;
                 $file->move('uploads/companies/logos/', $filename);
             } else {
-                $filename = 'default.png';
+                $filename = null;
             }
             // get current client country using API https://extreme-ip-lookup.com/json/?key=sswCYj3OKfeIuxY1C3Bd
             $client_ip = request()->ip();
@@ -129,12 +134,37 @@ class RegisterController extends Controller
             $newClient->webiste = $request->website;
             $newClient->partner_id = $partnership == null ? null : $partnership->partner_id;
             $newClient->save();
+            //retrieve industry
+            $industry = Industry::find($request->company_sector);
+            //create new sector
+            $newSector = new Sectors();
+            $newSector->client_id = $newClient->id;
+            $newSector->name_en = $industry->name;
+            $newSector->name_ar = $industry->name_ar;
+            $newSector->save();
+            //new Employee
+            $newEmployee = new Employees();
+            $newEmployee->client_id = $newClient->id;
+            $newEmployee->email = $request->focal_email;
+            $newEmployee->mobile = $request->focal_phone;
+            $newEmployee->sector_id = $newSector->id;
+            $newEmployee->emp_id = null;
+            $newEmployee->employee_type = 2;
+            $newEmployee->isCandidate = false;
+            $newEmployee->isBoard = false;
+            $newEmployee->acting_for = null;
+            $newEmployee->is_hr_manager = false;
+            $newEmployee->added_by = 0;
+            $newEmployee->save();
             //create new user
             $newUser = new User();
             $newUser->name = $request->focal_name;
             $newUser->email = $request->focal_email;
             $newUser->password = Hash::make($request->password);
             $newUser->client_id = $newClient->id;
+            $newUser->sector_id = $newSector->id;
+            $newUser->emp_id = $newEmployee->id;
+            $newUser->is_main = true;
             //user_type
             $newUser->user_type = "client";
             //is_active

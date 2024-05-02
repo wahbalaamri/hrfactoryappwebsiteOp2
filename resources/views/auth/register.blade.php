@@ -141,6 +141,16 @@
 
                                 <div id="company" class="content active dstepper-block" role="tabpanel"
                                     aria-labelledby="company-trigger">
+                                    {{-- show all errors --}}
+                                    @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <ul class="list-group">
+                                            @foreach ($errors->all() as $error)
+                                            <li class="list-group-item"> {{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                    @endif
                                     <div class="row">
                                         {{-- company name in English --}}
                                         <div class="form-group col-md-6 col-sm-12">

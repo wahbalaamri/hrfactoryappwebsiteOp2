@@ -20,9 +20,12 @@ return new class extends Migration
             $table->integer('comp_id')->nullable()->constrained()->onDelete('cascade');
             $table->integer('dep_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('user_type');
+            $table->string('emp_id')->nullable();
+            $table->boolean('is_main')->default(false);
             $table->boolean('isAdmin')->default(false);
             $table->string('password');
-            $table->string('phone')->nullable();
+            $table->integer('lang')->default(1);
+            $table->boolean('hide_my_result')->default(false);
             //is_active
             $table->boolean('is_active')->default(0);
             $table->timestamp('email_verified_at')->nullable();

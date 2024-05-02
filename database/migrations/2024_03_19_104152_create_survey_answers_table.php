@@ -16,10 +16,13 @@ return new class extends Migration
             $table->integer('survey_id');
             $table->integer('question_id');
             $table->integer('answer_value');
-            $table->string('answered_by');
+            $table->uuid('candidate')->nullable();
+            $table->uuid('answered_by');
             //soft deletes
             $table->softDeletes();
             $table->timestamps();
+            $table->foreign('candidate')->references('id')->on('employees')->onDelete('cascade');
+            $table->foreign('answered_by')->references('id')->on('respondents')->onDelete('cascade');
         });
     }
 

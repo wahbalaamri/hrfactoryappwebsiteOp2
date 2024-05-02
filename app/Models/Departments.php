@@ -37,4 +37,9 @@ class Departments extends Model
     {
         return $this->belongsTo(Departments::class, 'parent_id', 'id');
     }
+    //department name
+    public function getNameAttribute()
+    {
+        return app()->getLocale() == 'ar' ? $this->name_ar : $this->name_en;
+    }
 }
