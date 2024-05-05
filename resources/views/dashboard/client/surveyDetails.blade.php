@@ -82,7 +82,7 @@
                                         <div class="icon">
                                             <i class="ion ion-email"></i>
                                         </div>
-                                        <a href="#" class="small-box-footer">
+                                        <a href="{{ route('clients.showSendSurvey',[$id,$type,$survey->id]) }}" class="small-box-footer">
                                             {{ __('Start') }}<i class="fas fa-arrow-circle-right"></i>
                                         </a>
                                     </div>

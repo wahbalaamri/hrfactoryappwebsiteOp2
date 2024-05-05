@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\SurveysPrepration;
 use App\Jobs\SetupUsersIdInUsersOldSections;
 use App\Models\Content;
 use App\Models\Services;
@@ -51,7 +52,7 @@ class HomeController extends Controller
     {
         if (Auth()->check()); {
             //redirect to some route
-            return Auth()->user()->IsAdmin == 1 ? redirect()->route('admin.dashboard') : redirect()->route('client.dashboard');
+            return Auth()->user()->isAdmin == 1 ? redirect()->route('admin.dashboard') : redirect()->route('client.dashboard');
         }
     }
     function dashboard()
@@ -95,5 +96,11 @@ class HomeController extends Controller
             'service' => $service
         ];
         return view('home.view-tool')->with($data);
+    }
+    //manage function
+    public function manage(SurveysPrepration $surveysPrepration)
+    {
+        //get all surveys
+        return $surveysPrepration->manage(Auth()->user()->client_id);
     }
 }

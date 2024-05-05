@@ -57,13 +57,14 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
+                                            <th>{{ __('Service') }}</th>
                                             <th>{{ __('Plan') }}</th>
                                             <th>{{ __('Period') }}</th>
                                             <th>{{ __('Start Date') }}</th>
                                             <th>{{ __('End Date') }}</th>
                                             <th>{{ __('Paid Amount') }}</th>
                                             <th>{{ __('Status') }}</th>
-                                            <th>{{ __('Admin Actions') }}</th>
+                                            {{-- <th>{{ __('Admin Actions') }}</th> --}}
                                         </tr>
                                     </thead>
                                 </table>
@@ -98,6 +99,10 @@
                     searchable: false
                 },
                 {
+                    data: 'service',
+                    name: 'service'
+                },
+                {
                     data: 'plan',
                     name: 'plan'
                 },
@@ -118,15 +123,15 @@
                     name: 'paid_amount'
                 },
                 {
-                    data: 'status',
-                    name: 'status'
+                    data: 'is_active',
+                    name: 'is_active'
                 },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                }
+                // {
+                //     data: 'action',
+                //     name: 'action',
+                //     orderable: false,
+                //     searchable: false
+                // }
             ],
             "drawCallback": function(settings) {
                 var data = "{{ Auth::user()->isAdmin }}";
@@ -220,6 +225,11 @@
             var start_date = $('#start_date').val();
             var end_date = $('#end_date').val();
             var confirm = $('#confirm').is(':checked');
+            //status
+            var status = $('#status').is(':checked');
+            var url="{{ route('clients.saveSubscription',':d') }}"
+
+            url=url.replace(':d',"{{ $id }}")
             if(!confirm)
             {
                 toastr.error('Please confirm the subscription');
@@ -299,25 +309,29 @@
             }
             if (service && plan && period && start_date && end_date && confirm) {
                 $.ajax({
-                    url: "",
+                    url: url,
                     type: "POST",
                     data: {
+                        _token: "{{csrf_token()}}",
                         service: service,
                         plan: plan,
                         period: period,
                         start_date: start_date,
-                        end_date: end_date
+                        end_date: end_date,
+                        status: status,
+                        subscription: null,
                     },
                     success: function(data) {
                         if (data.status) {
                             $('#SubscriptionModal').modal('hide');
                             $('#subscripTable').DataTable().ajax.reload();
-                            toastr.success(data.msg);
+                            toastr.success(data.message);
                         } else {
                             toastr.error(data.error);
                         }
                     },
                     error: function(data) {
+                        toastr.error(data.error);
                         // console.log('Error:', data);
                     }
                 });

@@ -39,20 +39,16 @@
                             {{-- tool --}}
                             <div class="card-tools">
                                 {{-- back --}}
-                                <a href="{{ route('clients.subscriptions',$id) }}"
+                                <a href="{{ route('clients.surveyDetails',[$id,$type,$survey->id])}}"
                                     class="btn btn-sm btn-tool {{ App()->getLocale()=='ar'? 'float-start':'float-end' }}">
                                     <i class="fas fa-arrow-left"></i>
-                                </a>
-                                {{-- create new Employee --}}
-                                <a href="javascript:void(0);" data-toggle="modal" data-target="#EmployeeModal"
-                                    class="btn btn-sm btn-tool {{ App()->getLocale()=='ar'? 'float-end':'float-start' }}">
-                                    <i class="fas fa-plus"></i>
                                 </a>
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="Employee-data" class="table table-hover table-striped table-bordered text-center text-sm">
+                                <table id="Employee-data"
+                                    class="table table-hover table-striped table-bordered text-center text-sm">
                                     <thead>
 
                                         <tr>
@@ -62,11 +58,11 @@
                                             <th>{{__('Email')}}</th>
                                             <th>{{__('Phone')}}</th>
                                             <th>{{__('Position')}}</th>
-                                            <th>{{__('HR Manager?')}}</th>
+                                            {{-- <th>{{__('HR Manager?')}}</th>
                                             <th>{{__('Actions')}}</th>
                                             <th>{{__('Send Survey')}}</th>
                                             <th>{{__('Send Reminder')}}</th>
-                                            <th>{{__('Raters')}}</th>
+                                            <th>{{__('Raters')}}</th> --}}
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -82,11 +78,11 @@
                                             <td colspan=""></td>
                                             <td colspan=""></td>
                                             <td colspan=""></td>
+                                            {{-- <td colspan=""></td>
                                             <td colspan=""></td>
                                             <td colspan=""></td>
                                             <td colspan=""></td>
-                                            <td colspan=""></td>
-                                            <td colspan=""></td>
+                                            <td colspan=""></td> --}}
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -98,8 +94,6 @@
         </div>
     </section>
 </div>
-{{-- include editEmployee Modal --}}
-@include('dashboard.client.modals.editEmployee')
 <!-- /.content-wrapper -->
 @endsection
 @section('scripts')
@@ -116,17 +110,19 @@
                 serverSide: true,
                 ajax: url,
                 columns:[
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex',orderable: false, searchable: false,
+                    "render": function (data, type, row) {
+                        return '<button class="btn btn-xs btn-success mr-3 ml-3 text-xs show-more" data-id="' + data.id + '"><i class="fa fa-eye"></i></button>'+data;}},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                     {data: 'name', name: 'name'},
                     {data: 'email', name: 'email'},
                     {data: 'mobile', name: 'mobile'},
                     {data: 'position', name: 'position'},
-                    {data: 'hr', name: 'hr'},
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
-                    {data: 'SendSurvey', name: 'SendSurvey', orderable: false, searchable: false},
-                    {data: 'SendReminder', name: 'SendReminder', orderable: false, searchable: false},
-                    {data: 'raters', name: 'raters', orderable: false, searchable: false},
+                    // {data: 'hr', name: 'hr'},
+                    // {data: 'action', name: 'action', orderable: false, searchable: false},
+                    // {data: 'SendSurvey', name: 'SendSurvey', orderable: false, searchable: false},
+                    // {data: 'SendReminder', name: 'SendReminder', orderable: false, searchable: false},
+                    // {data: 'raters', name: 'raters', orderable: false, searchable: false},
                 ],
                 "columnDefs": [
             {
@@ -157,6 +153,52 @@
             });
         }
             });
+            //====================================================
+            var table = $('#Employee-data').DataTable();
+            // Add a button to each row that, when clicked, shows the additional info div
+$('#Employee-data tbody').on('click', 'button.show-more', function () {
+    var service="{{ $survey_type }}";
+    var tr = $(this).closest('tr');
+    var row = table.row(tr);
+    var data = row.data();
+    if (row.child.isShown()) {
+        // This row is already open - close it
+        this.innerHTML = '<i class="fa fa-eye"></i>';
+        //change button color
+        this.classList.remove('btn-danger');
+        this.classList.add('btn-success');
+        row.child.hide('slow');
+        tr.removeClass('shown');
+    } else {
+        this.innerHTML = '<i class="fa fa-eye-slash"></i>';
+        //change button color
+        this.classList.remove('btn-success');
+        this.classList.add('btn-danger');
+        // Open this row
+        row_data='<div class="details-div"><table class="table table-striped-columns"><tr><th>'
+            +"{{__('HR Manager?')}}"+'</th><th>'+"{{__('Actions')}}"+
+                '</th>'
+                if(service!=5){
+                    row_data+='<th>'+"{{__('Send Survey')}}"+'</th><th>'
+                        +"{{__('Send Reminder')}}"+'</th>'
+                }
+                if(service==5){
+        row_data+='<th>'+"{{__('Raters')}}"+'</th>'
+                }
+        row_data+='</tr><tr><td>'
+            +data['hr']+'</td><td>'+data['action']+'</td>'
+            if(service!=5){
+                row_data+='<td>'+data['SendSurvey']+'</td><td>'
+                    +data['SendReminder']+'</td>';
+            }
+            if(service==5){
+                row_data+='<td>'+data['raters']+'</td>'
+            }
+                row_data+='</tr></table></div>';
+        row.child(row_data).show('slow');
+        tr.addClass('shown');
+    }
+});
             //  Employee-data width 100%
             $('#Employee-data').css('width','100%');
             SetAsRespondent=()=>{

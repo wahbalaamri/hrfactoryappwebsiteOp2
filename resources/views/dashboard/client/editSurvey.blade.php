@@ -48,11 +48,12 @@
                                 @csrf
                                 {{-- select plans --}}
                                 <div class="form-group col-md-6 col-sm-12">
+                                    <input type="hidden" name="h_plan_id" value="{{ $client_subscription->plan_id }}">
                                     <label for="plan_id">{{ __('Select Plan') }}</label>
-                                    <select name="plan_id" id="plan_id" class="form-control">
+                                    <select name="plan_id" id="plan_id" class="form-control" disabled>
                                         <option value="">{{ __('Select Plan') }}</option>
                                         @foreach ($plans as $plan)
-                                        <option value="{{ $plan->id }}">{{ $plan->name }}</option>
+                                        <option value="{{ $plan->id }}" @if($client_subscription->plan_id==$plan->id) selected @endif>{{ $plan->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>

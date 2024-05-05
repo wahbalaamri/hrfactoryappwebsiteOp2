@@ -211,4 +211,14 @@ class ClientsController extends Controller
     {
         return $surveysPrepration->saveSurveyRespondents($request, true);
     }
+    //sendSurvey function
+    public function showSendSurvey(Request $request, SurveysPrepration $surveysPrepration, $id, $type, $survey_id)
+    {
+        return $surveysPrepration->showSendSurvey($request, $id, $type, $survey_id, true);
+    }
+    //sendSurvey function
+    public function sendSurvey(Request $request, SurveysPrepration $surveysPrepration, $id, $type, $survey_id)
+    {
+        return $surveysPrepration->sendSurvey($request, $id, $type, $survey_id, true);
+    }
 }

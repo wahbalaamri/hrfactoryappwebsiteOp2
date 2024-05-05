@@ -51,5 +51,10 @@ class Services extends Model
     {
         return $this->hasMany(Plans::class,'service','id');
     }
+    //name attribute
+    public function getServiceNameAttribute()
+    {
+        return app()->getLocale() == 'ar' ? $this->name_ar : $this->name;
+    }
 
 }

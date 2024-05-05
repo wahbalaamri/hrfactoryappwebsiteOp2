@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\traits\CustomRegistersUsers;
 use App\Models\Clients;
+use App\Models\Companies;
 use App\Models\Countries;
 use App\Models\Employees;
 use App\Models\FocalPoints;
@@ -142,12 +143,22 @@ class RegisterController extends Controller
             $newSector->name_en = $industry->name;
             $newSector->name_ar = $industry->name_ar;
             $newSector->save();
+            //add new comapny
+            //create new company
+            $company = new Companies();
+            $company->client_id = $newClient->id;
+            $company->sector_id = $newSector->id;
+            $company->name_en = $request->company_name_en;
+            $company->name_ar = $request->company_name_ar != null ? $request->company_name_ar : $request->company_name_en;
+            $company->save();
             //new Employee
             $newEmployee = new Employees();
+            $newEmployee->name = $request->focal_name;
             $newEmployee->client_id = $newClient->id;
             $newEmployee->email = $request->focal_email;
             $newEmployee->mobile = $request->focal_phone;
             $newEmployee->sector_id = $newSector->id;
+            $newEmployee->comp_id = $company->id;
             $newEmployee->emp_id = null;
             $newEmployee->employee_type = 2;
             $newEmployee->isCandidate = false;
@@ -169,8 +180,6 @@ class RegisterController extends Controller
             $newUser->user_type = "client";
             //is_active
             $newUser->is_active = true;
-            //phone
-            $newUser->phone = $request->focal_phone;
             $newUser->save();
             //create new focal point
             $newFocal = new FocalPoints();

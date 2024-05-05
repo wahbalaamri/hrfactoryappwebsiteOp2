@@ -40,9 +40,58 @@
                         </div>
                         <div class="card-body">
                             <form
-                                action="{{ route('clients.storeSurveyEmail',[$id,$type,$survey,$emailContet!=null?$emailContet->id:null]) }}"
+                                action="{{ route('clients.sendSurvey',[$id,$type,$survey]) }}"
                                 method="POST" enctype="multipart/form-data">
                                 @csrf
+                                <div class="row">
+                                    {{-- show all errors --}}
+                                    @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                    @endif
+                                </div>
+                                <div class="row">
+                                    {{-- select for client sectors --}}
+                                    <div class="form-group col-md-6 col-sm-12">
+                                        <label for="sector">{{ __('Select Sector') }}</label>
+                                        <select name="sector" id="sector" class="form-control">
+                                            <option value="">{{ __('Select Sector') }}</option>
+                                            @foreach ($client->sectors as $sector)
+                                            <option value="{{ $sector->id }}">
+                                                {{ $sector->name }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        @error('sector')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    {{-- select for client companies --}}
+                                    <div class="form-group col-md-6 col-sm-12">
+                                        <label for="company">{{ __('Select Company') }}</label>
+                                        <select name="company" id="company" class="form-control">
+                                            <option value="">{{ __('Select Company') }}</option>
+                                        </select>
+                                        @error('company')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    {{-- select for client department --}}
+                                    <div class="form-group col-md-6 col-sm-12">
+                                        <label for="department">{{ __('Select Department') }}</label>
+                                        <select name="department" id="department" class="form-control">
+                                            <option value="">{{ __('Select Department') }}</option>
+                                        </select>
+                                        @error('department')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="form-group col-md-6 col-sm-12">
                                         <label for="subject">{{ __('E-mail Title') }}(EN)</label>
@@ -69,22 +118,7 @@
                                             class="img-thumbnail" style="width: 100px;height:100px">
                                     </div>
                                     @endif
-                                    <div class="form-group col-md-6 col-sm-12">
-                                        <label for="survey_logo">{{ __('Survey Logo') }}</label>
-                                        <input type="file" name="survey_logo" id="survey_logo"
-                                            class="form-control form-control-file" placeholder="{{ __('Survey Logo') }}"
-                                            {{ $emailContet==null ? 'required': '' }}>
-                                        @error('survey_logo')
-                                        <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                    {{-- switch --}}
-                                    <div class="form-group col-md-6 col-sm-12">
-                                        <label for="status">{{ __('Email Status') }}</label>
-                                        <br>
-                                        <input type="checkbox" name="status" id="status" @if($emailContet!=null) @if($emailContet->status) checked @endif @else checked @endif checked data-bootstrap-switch
-                                            data-off-color="danger" data-on-color="success">
-                                    </div>
+
                                     @if($emailContet!=null)
                                     @if($emailContet->use_client_logo && $client->logo_path!=null)
                                     <div class="form-group col-md-6 col-sm-12" id="CLImage">
@@ -94,27 +128,13 @@
                                     </div>
                                     @endif
                                     @endif
-                                    <div class="form-group col-md-6 col-sm-12">
-                                        <label for="Client_logo_status">{{ __('Use Client Logo') }}</label>
-                                        <br>
-                                        <input type="checkbox" name="Client_logo_status" id="Client_logo_status"
-                                            data-bootstrap-switch data-off-color="danger" data-on-color="success" @if($emailContet!=null) @if($emailContet->use_client_logo) checked @endif  @endif>
-                                    </div>
-                                    {{-- upload client logo --}}
-                                    <div id="Upload_client_logo" class="form-group col-md-6 col-sm-12  @if($emailContet!=null)
-                                    @if(!$emailContet->use_client_logo || $client->logo_path!=null )d-none @endif @else d-none @endif">
-                                        <label for="client_logo">{{ __('Client Logo') }}</label>
-                                        <input type="file" name="client_logo" id="client_logo"
-                                            class="form-control form-control-file" placeholder="{{ __('Client Logo') }}"
-                                            @if($emailContet!=null) @if($emailContet->use_client_logo) required @endif @endif>
-                                        @error('client_logo')
-                                        <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+
+
                                     <div class="form-group col-md-7 col-sm-12">
                                         <label for="email_body">{{ __('E-mail Body') }}(EN)</label>
                                         <textarea name="email_body" id="email_body" class="form-control summernote"
-                                            placeholder="{{ __('E-mail Body') }}" required>{{ old('email_body',$emailContet!=null?$emailContet->body_header:'') }}</textarea>
+                                            placeholder="{{ __('E-mail Body') }}"
+                                            required>{{ old('email_body',$emailContet!=null?$emailContet->body_header:'') }}</textarea>
                                         @error('email_body')
                                         <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -131,7 +151,8 @@
                                     <div class="form-group col-md-7 col-sm-12">
                                         <label for="email_footer">{{ __('E-mail Footer') }}(EN)</label>
                                         <textarea name="email_footer" id="email_footer" class="form-control summernote"
-                                            placeholder="{{ __('E-mail Footer') }}" required>{{ old('email_footer',$emailContet!=null?$emailContet->body_footer:'') }}</textarea>
+                                            placeholder="{{ __('E-mail Footer') }}"
+                                            required>{{ old('email_footer',$emailContet!=null?$emailContet->body_footer:'') }}</textarea>
                                         @error('email_footer')
                                         <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -211,5 +232,54 @@
                 $('#client_logo').removeAttr('required');
             }
         });
+        $('#sector').on('change',function(){
+                var sector_id=$(this).val();
+                getCompanies(sector_id);
+            });
+            //on company selected
+            $('#company').on('change',function(){
+                var company_id=$(this).val();
+                getdepartments(company_id);
+            });
+            getdepartments=(id)=>{
+                url="{{ route('client.departments',':d') }}";
+                url=url.replace(':d',id);
+                if(id){
+                    $.ajax({
+                        url:url,
+                        type:"GET",
+                        success:function(data){
+                            $('#department').empty();
+                            $('#department').append('<option value="">Select Department</option>');
+                            $.each(data,function(index,department){
+                                $('#department').append('<option value="'+department.id+'">'+department.name+'</option>');
+                            });
+                        },
+                        error:function(error){
+                            console.log(error);
+                        }
+                    });
+                }
+            }
+            getCompanies=(id)=>{
+                url="{{ route('client.companies',':d') }}";
+                url=url.replace(':d',id);
+                if(id){
+                    $.ajax({
+                        url:url,
+                        type:"GET",
+                        success:function(data){
+                            $('#company').empty();
+                            $('#company').append('<option value="">Select Company</option>');
+                            $.each(data,function(index,company){
+                                $('#company').append('<option value="'+company.id+'">'+company.name+'</option>');
+                            });
+                        },
+                        error:function(error){
+                            console.log(error);
+                        }
+                    });
+                }
+            }
 </script>
 @endsection

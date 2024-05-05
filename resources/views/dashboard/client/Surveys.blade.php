@@ -49,6 +49,7 @@
                                                 <tr>
                                                     <th scope="">#</th>
                                                     <th scope="">{{ __('Survey Name') }}</th>
+                                                    <th scope="">{{ __('Service') }}</th>
                                                     <th scope="">{{ __('Plan') }}</th>
                                                     <th scope="">{{ __('Survey Status') }}</th>
                                                     <th scope="">{{ __('Survey Date') }}</th>
@@ -60,9 +61,16 @@
                                             </thead>
                                             <tbody>
                                                 @foreach ($client_survyes as $survey)
-                                                <tr role="button" onclick="window.open('{{ route('clients.surveyDetails',[$id,$type,$survey->id],'_blank')}}');">
+                                                <tr role="button" onclick="window.location.replace('{{ route('clients.surveyDetails',[$id,$type,$survey->id])}}');">
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $survey->survey_title }}</td>
+                                                    <td>
+                                                        @if ($survey->plans)
+                                                        {{ $survey->plans->service_->service_name }}
+                                                        @else
+                                                        {{ __('No service') }}
+                                                        @endif
+                                                    </td>
                                                     <td>
                                                         @if ($survey->plans)
                                                         {{ $survey->plans->name }}

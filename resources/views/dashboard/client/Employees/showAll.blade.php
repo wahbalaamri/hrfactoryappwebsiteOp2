@@ -44,7 +44,7 @@
                                     <i class="fas fa-arrow-left"></i>
                                 </a>
                                 {{-- create new Employee --}}
-                                <a href="javascript:void(0);" data-toggle="modal" data-target="#EmployeeModal"
+                                <a href="javascript:void(0);" id="addEmployee" data-toggle="modal" data-target="#EmployeeModal"
                                     class="btn btn-sm btn-tool {{ App()->getLocale()=='ar'? 'float-end':'float-start' }}">
                                     <i class="fas fa-plus"></i>
                                 </a>
@@ -52,7 +52,8 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="Employee-data" class="table table-hover table-striped table-bordered text-center text-sm">
+                                <table id="Employee-data"
+                                    class="table table-hover table-striped table-bordered text-center text-sm">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -60,12 +61,12 @@
                                             <th>{{__('Email')}}</th>
                                             <th>{{__('Phone')}}</th>
                                             <th>{{__('Employee Type')}}</th>
-                                            <th>{{__('Department')}}</th>
+                                            {{-- <th>{{__('Department')}}</th>
                                             <th>{{__('Company')}}</th>
                                             <th>{{__('Sector')}}</th>
                                             <th>{{__('HR Manager?')}}</th>
                                             <th>{{__('Is Active')}}</th>
-                                            <th>{{__('Actions')}}</th>
+                                            <th>{{__('Actions')}}</th> --}}
                                         </tr>
                                     </thead>
                                 </table>
@@ -86,25 +87,59 @@
     $(document).ready(function() {
             url="{{ route('clients.Employees',':d') }}";
             url=url.replace(':d',"{{$id}}");
-            console.log(url);
             $('#Employee-data').DataTable({
                 processing: true,
                 serverSide: true,
+                scrollX: true,
+                responsive: true,
                 ajax: url,
                 columns:[
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false,
+                    "render": function (data, type, row) {
+                return '<button class="btn btn-xs btn-success mr-3 ml-3 text-xs show-more" data-id="' + data.id + '"><i class="fa fa-eye"></i></button>'+data;
+            }},
                     {data: 'name', name: 'name'},
                     {data: 'email', name: 'email'},
                     {data: 'mobile', name: 'mobile'},
                     {data: 'type', name: 'type'},
-                    {data: 'department', name: 'department'},
-                    {data: 'company', name: 'company'},
-                    {data: 'sector', name: 'sector'},
-                    {data: 'hr', name: 'hr'},
-                    {data: 'active', name: 'active'},
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                    // {data: 'department', name: 'department'},
+                    // {data: 'company', name: 'company'},
+                    // {data: 'sector', name: 'sector'},
+                    // {data: 'hr', name: 'hr', orderable: false, searchable: false},
+                    // {data: 'active', name: 'active', orderable: false, searchable: false},
+                    // {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
+            //Employee-data width
+            $('#Employee-data').css('width','75%');
+            var table = $('#Employee-data').DataTable();
+
+// Add a button to each row that, when clicked, shows the additional info div
+$('#Employee-data tbody').on('click', 'button.show-more', function () {
+    var tr = $(this).closest('tr');
+    var row = table.row(tr);
+    var data = row.data();
+    if (row.child.isShown()) {
+        // This row is already open - close it
+        this.innerHTML = '<i class="fa fa-eye"></i>';
+        //change button color
+        this.classList.remove('btn-danger');
+        this.classList.add('btn-success');
+        row.child.hide('slow');
+        tr.removeClass('shown');
+    } else {
+        this.innerHTML = '<i class="fa fa-eye-slash"></i>';
+        //change button color
+        this.classList.remove('btn-success');
+        this.classList.add('btn-danger');
+        // Open this row
+        row.child('<div class="details-div"><table class="table table-striped-columns"><tr><th>Department</th><th>Company</th><th>Sector</th><th>HR Manager?</th><th>Status</th><th>Action</th></tr><tr><td>'
+            +data['department']+'</td><td>'+data['company']+'</td><td>'
+                +data['sector']+'</td><td>'+data['hr']+'</td><td>'
+                    +data['active']+'</td><td>'+data['action']+'</td></tr></table></div>').show('slow');
+        tr.addClass('shown');
+    }
+});
             //on sector selected
             $('#sector').on('change',function(){
                 var sector_id=$(this).val();
@@ -161,6 +196,19 @@
                         console.log(error);
                     }
                 });
+            });
+            //on addEmployee click
+            $("#addEmployee").click(function(){
+                $('#name').val('');
+                $('#email').val('');
+                $('#mobile').val('');
+                $('#type').val('');
+                $('#position').val('');
+                $('#department').val('');
+                $('#company').val('');
+                $('#sector').val('');
+                $('#SaveEmployee').data('Empid','');
+                $('#EmployeeModal').modal('show');
             });
             editEmp=(id)=>{
                 url="{{ route('clients.getEmployee',';d') }}";

@@ -2,9 +2,12 @@
 
 namespace App\Http;
 
+use App\Jobs\SendSurvey;
+use App\Models\PlansPrices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\{Clients, ClientSubscriptions, Functions, Services, FunctionPractices, Industry, Plans, PracticeQuestions, Sectors, Surveys, Companies, Departments, EmailContents, Employees, PrioritiesAnswers, Respondents, SurveyAnswers};
+use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 
 class SurveysPrepration
@@ -362,13 +365,20 @@ class SurveysPrepration
     {
         $client = Clients::find($id);
         $service_id = Services::select('id')->where('service_type', $type)->first()->id;
-        $plan = Plans::where("service", $service_id)->get();
+        $plans = Plans::where([["service", $service_id], ['is_active', true]])->get();
+        $plan = $plans->where('is_active', true)->first();
+        $plans_id=$plans->pluck('id')->toArray();
+        Log::info($id);
+        //get client active subscription
+        Log::info(json_encode(ClientSubscriptions::where([['client_id', $id], ['is_active', 1]])));
+        $client_subscription = ClientSubscriptions::where([['client_id', $id], ['is_active', 1]])->whereIn('plan_id',$plans_id)->first();
         $data = [
             'id' => $id,
             'type' => $type,
             'client' => $client,
-            'plans' => $plan,
-            'survey' => $survey
+            'plans' => $plans,
+            'survey' => $survey,
+            'client_subscription' => $client_subscription
         ];
         return view('dashboard.client.editSurvey')->with($data);
     }
@@ -379,7 +389,7 @@ class SurveysPrepration
                 $survey = new Surveys();
             }
             $survey->client_id = $user_id;
-            $survey->plan_id = $request->plan_id;
+            $survey->plan_id = $request->h_plan_id;
             $survey->survey_title = $request->survey_title;
             $survey->survey_des = $request->survey_des;
             $survey->survey_stat = $request->survey_stat != null;
@@ -532,6 +542,7 @@ class SurveysPrepration
                 if (
                     $request->is_hr == 1 || $request->is_hr == true || $request->is_hr == "true" || $request->is_hr == "1"
                     || $request->is_hr == "on" || $request->is_hr == "yes" || $request->is_hr == "checked" || $request->is_hr == "selected"
+                    || $request->is_hr != false || $request->is_hr != "false"
                 ) {
                     $is_hr = true;
                 }
@@ -718,44 +729,48 @@ class SurveysPrepration
     // Employees function
     function Employees(Request $request, $id, $by_admin = false)
     {
-        $client = Clients::find($id);
-        $data = [
-            'id' => $id,
-            'client' => $client
-        ];
-        if ($request->ajax()) {
-            //setup yajra datatable
+        try {
+            $client = Clients::find($id);
+            $data = [
+                'id' => $id,
+                'client' => $client
+            ];
             $employees = $client->employeesData()->get();
-            // $employees = Employees::where('client_id', $id)->get();
-            //log employees as an array
-            return DataTables::of($employees)
-                ->addIndexColumn()
-                ->addColumn('action', function ($employee) {
-                    $action = '<div class="row"><div class="col-md-6 col-sm-12 text-center"><a href="javascript:void(0);" onclick="editEmp(\'' . $employee->id . '\')" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a></div>';
-                    $action .= '<div class="col-md-6 col-sm-12 text-center"><a href="javascript:void(0);" onclick="deleteEmp(\'' . $employee->id . '\')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a></div></div>';
-                    return $action;
-                })
-                ->addColumn('type', function ($employee) {
-                    return $employee->employee_type == 1 ? __('HR Manager') : __('Normal Employee');
-                })
-                ->addColumn('sector', function ($employee) {
-                    return $employee->sector != null ? ($employee->sector->Name) : '-';
-                })
-                //hr
-                ->addColumn('hr', function ($employee) {
-                    return $employee->is_hr_manager ? '<span class="badge bg-success">' . __('HR Manager') . '</span>' : '<span class="badge bg-danger">' . __('Not HR Manager') . '</span>';
-                })
-                ->addColumn('company', function ($employee) {
-                    return $employee->company != null ? (App()->getLocale() == 'en' ? $employee->company->name_en : $employee->company->name_ar) : '-';
-                })
-                ->editColumn('department', function ($employee) {
-                    return $employee->department != null ? (App()->getLocale() == 'en' ? $employee->department->name_en : $employee->department->name_ar) : '-';
-                })
-                ->addColumn('active', function ($employee) {
-                    return $employee->active ? '<span class="badge bg-success">' . __('Active') . '</span>' : '<span class="badge bg-danger">' . __('Not Active') . '</span>';
-                })
-                ->rawColumns(['action', 'hr', 'active'])
-                ->make(true);
+            if ($request->ajax()) {
+                //setup yajra datatable
+
+                //log employees as an array
+                return DataTables::of($employees)
+                    ->addIndexColumn()
+                    ->addColumn('action', function ($employee) {
+                        $action = '<div class="row"><div class="col-md-6 col-sm-12 text-center"><a href="javascript:void(0);" onclick="editEmp(\'' . $employee->id . '\')" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a></div>';
+                        $action .= '<div class="col-md-6 col-sm-12 text-center"><a href="javascript:void(0);" onclick="deleteEmp(\'' . $employee->id . '\')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a></div></div>';
+                        return $action;
+                    })
+                    ->addColumn('type', function ($employee) {
+                        return $employee->employee_type == 1 ? __('HR Manager') : __('Normal Employee');
+                    })
+                    ->addColumn('sector', function ($employee) {
+                        return $employee->sector != null ? ($employee->sector->Name) : '-';
+                    })
+                    //hr
+                    ->addColumn('hr', function ($employee) {
+                        return $employee->is_hr_manager ? '<span class="badge bg-success">' . __('HR Manager') . '</span>' : '<span class="badge bg-danger">' . __('Not HR Manager') . '</span>';
+                    })
+                    ->addColumn('company', function ($employee) {
+                        return $employee->company != null ? (App()->getLocale() == 'en' ? $employee->company->name_en : $employee->company->name_ar) : '-';
+                    })
+                    ->editColumn('department', function ($employee) {
+                        return $employee->department != null ? (App()->getLocale() == 'en' ? $employee->department->name_en : $employee->department->name_ar) : '-';
+                    })
+                    ->addColumn('active', function ($employee) {
+                        return $employee->active ? '<span class="badge bg-success">' . __('Active') . '</span>' : '<span class="badge bg-danger">' . __('Not Active') . '</span>';
+                    })
+                    ->rawColumns(['action', 'hr', 'active', 'name'])
+                    ->make(true);
+            }
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
         }
         return view('dashboard.client.Employees.showAll')->with($data);
     }
@@ -914,10 +929,8 @@ class SurveysPrepration
     //manage function
     function manage($id, $by_admin = false)
     {
-        $data = [
-            'id' => $id
-        ];
-        return view('dashboard.client.manage')->with($data);
+
+        return view('dashboard.client.manage', compact('id'));
     }
     //viewSubscriptions function
     function viewSubscriptions($id, $by_admin = false)
@@ -940,12 +953,18 @@ class SurveysPrepration
                     return $action;
                 })
                 ->addColumn('service', function ($subscription) {
-                    return "55";
+                    return $subscription->plan->service_->service_name;
                 })
                 ->addColumn('plan', function ($subscription) {
-                    return "--";
+                    return $subscription->plan->plan_name;
                 })
-                ->rawColumns(['action'])
+                ->editColumn('period', function ($subscription) {
+                    return $subscription->period == 4 ? __('Annual') : __('Monthly');
+                })
+                ->editColumn('is_active', function ($subscription) {
+                    return $subscription->is_active ? '<span class="badge bg-success">' . __('Active') . '</span>' : '<span class="badge bg-danger">' . __('Not Active') . '</span>';
+                })
+                ->rawColumns(['action', 'is_active'])
                 ->make(true);
         }
         return view('dashboard.client.subscrip')->with($data);
@@ -953,31 +972,113 @@ class SurveysPrepration
     //saveSubscription function
     function saveSubscription(Request $request, $id, $by_admin = false)
     {
+        Log::info($request->id);
         try {
             //create new subscription
-            if ($request->id == null) {
+            if ($request->subscription == null) {
                 $subscription = new ClientSubscriptions();
             } else {
-                $subscription = ClientSubscriptions::find($request->id);
+                $subscription = ClientSubscriptions::find($request->subscription);
             }
-            //find client
-            $client = Clients::find($request->client_id);
-            //find service
-            $service = Services::find($request->service);
             //find plan
             $plan = Plans::find($request->plan);
+            //find client
+            $client = Clients::find($id);
+            //get plan price
+            $planPrices = PlansPrices::where('plan', $plan->id)->where('country', $client->country)->first();
+            $planPrices = $planPrices == null ? PlansPrices::where('plan', $plan->id)->where('country', 155)->first() : $planPrices;
+            $price = $request->period == 4 ? $planPrices->annual_price : $planPrices->monthly_price;
             $subscription->client_id = $id;
-            $subscription->service_id = $request->service;
             $subscription->plan_id = $request->plan;
+            $subscription->period = $request->period;
+            $subscription->paid_amount = $by_admin ? 0 : $price;
+            $subscription->discount = !$by_admin ? 0 : $price;
             $subscription->start_date = $request->start_date;
             $subscription->end_date = $request->end_date;
-            $subscription->is_active = $request->status != null;
+            $subscription->is_active = $request->status != null ? ($request->status == false ? false : true) : false;
             $subscription->save();
             //json response with status
             return response()->json(['status' => true, 'message' => 'Subscription created successfully', 'subscription' => $subscription]);
         } catch (\Exception $e) {
             //json response with status
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'error' => $e->getMessage()]);
+        }
+    }
+    //sendSurvey function
+    function showSendSurvey(Request $request, $id, $type, $survey_id, $by_admin = false)
+    {
+        try {
+            //show send survey view
+            $survey = Surveys::find($survey_id);
+            $client = Clients::find($id);
+            $emailContet = EmailContents::where([['survey_id', $survey_id], ['client_id', $id]])->first();
+            $data = [
+                'id' => $id,
+                'type' => $type,
+                'survey' => $survey,
+                'client' => $client,
+                'emailContet' => $emailContet
+            ];
+            return view('dashboard.client.sendSurvey')->with($data);
+        } catch (\Exception $e) {
+            //return back with error
+
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+    //sendSurvey function
+    function sendSurvey(Request $request, $id, $type, $survey_id, $by_admin = false)
+    {
+        try {
+            //find survey
+            $survey = Surveys::find($survey_id);
+            //find client
+            $client = Clients::find($id);
+            //find email content
+            $emailContent = EmailContents::where([['survey_id', $survey_id], ['client_id', $id]])->first();
+            //get all respondents of the survey and client
+            $respondents = Respondents::where('survey_id', $survey_id)->where('client_id', $id)->where('survey_type', $type)->get();
+            //build the where querey based on client selection of sector
+            $where = [];
+            if ($request->sector != null) {
+                $where[] = ['sector_id', $request->sector];
+            }
+            if ($request->company != null) {
+                $where[] = ['comp_id', $request->company];
+            }
+            if ($request->department != null) {
+                $where[] = ['dep_id', $request->department];
+            }
+            //get all employees based on the where querey and id of respondents
+            $employees = Employees::select('email', 'id')->where($where)->whereIn('id', $respondents->pluck('employee_id')->toArray())->get();
+            //create a collection of emails from $employees and ids from $respondents
+            $emails = collect();
+            foreach ($employees as $employee) {
+                $rid = $respondents->where('employee_id', $employee->id)->first()->id;
+                $emails->push(['email' => $employee->email, 'id' => $rid]);
+            }
+            //capsolate all information in $data
+            $data = [
+                'subject' => $emailContent->subject,
+                'subject_ar' => $emailContent->subject_ar,
+                'body_header' => $emailContent->body_header,
+                'body_footer' => $emailContent->body_footer,
+                'body_header_ar' => $emailContent->body_header_ar,
+                'body_footer_ar' => $emailContent->body_footer_ar,
+                'logo' => $emailContent->logo,
+                'client_logo' => $emailContent->use_client_logo ? $client->logo_path : null,
+            ];
+
+            $job = (new SendSurvey($emails, $data))->delay(now()->addSeconds(2));
+            dispatch($job);
+            //redirect to show surveys with success message
+            return redirect()->route('clients.surveyDetails', [$id, $type, $survey_id])->with('success', 'Survey sent successfully');
+        }
+        //return back with error
+        catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Log::error(json_encode($e));
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 }

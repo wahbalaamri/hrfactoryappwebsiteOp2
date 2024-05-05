@@ -49,5 +49,10 @@ class Employees extends Model
     {
         return $this->belongsToMany(Respondents::class, 'survey_employees', 'employee_id', 'survey_id');
     }
+    //check if employee is from hr department
+    public function getIsHrAttribute()
+    {
+        return $this->department->is_hr;
+    }
 
 }

@@ -18,6 +18,7 @@ use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\ServiceApproachesController;
 use App\Http\Controllers\ServiceFeaturesController;
 use App\Http\Controllers\ServicesController;
+use App\Http\Controllers\SurveysController;
 use App\Http\Controllers\TermsConditionsController;
 use App\Http\Controllers\TrainingController;
 use Illuminate\Support\Facades\Auth;
@@ -38,6 +39,8 @@ Route::get('/', [HomeController::class, 'index'])->name("Home");
 Route::get('/about-us', [HomeController::class, 'aboutus'])->name("Home.about-us");
 Route::get('/profile', [HomeController::class, 'profile'])->name("Home.profile");
 Route::get('/training', [TrainingController::class, 'index'])->name("Training");
+Route::get('/Surveys/takeSurvey/{id}', [SurveysController::class, 'takeSurvey'])->name("Surveys.takeSurvey");
+Route::post('/Surveys/SaveAnswers', [SurveysController::class, 'SaveAnswers'])->name("Surveys.SaveAnswers");
 //start up plan
 Route::get('/startup', [PlansController::class, 'startup'])->name("Plans.startup");
 Route::get('/manualBuilder', [PlansController::class, 'manualBuilder'])->name("Plans.manualBuilder");
@@ -55,6 +58,7 @@ Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/admin/dashboard', [HomeController::class, 'dashboard'])->name('admin.dashboard')->middleware('auth:web');
 Route::get('/client/dashboard', [HomeController::class, 'client'])->name('client.dashboard')->middleware('auth:web');
+Route::get('/client/manage', [HomeController::class, 'manage'])->name('client.manage')->middleware('auth:web');
 Route::post('Coupons/getCouponRate', [CouponsController::class, 'getCouponRate'])->name('coupon.getCouponRate');
 Route::get('tools/view/{id}', [HomeController::class, 'viewTool'])->name('tools.view');
 Route::post('register/newclient', [RegisterController::class, 'registerNewClient'])->name('register.newclient');
@@ -312,6 +316,8 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
     Route::post('clients/saveSurveyRespondents', [ClientsController::class, 'saveSurveyRespondents'])->name('clients.saveSurveyRespondents');
     Route::get('clients/view-Subscriptions/{id}', [ClientsController::class, 'viewSubscriptions'])->name('clients.viewSubscriptions');
     Route::post('clients/saveSubscription/{id}', [ClientsController::class, 'saveSubscription'])->name('clients.saveSubscription');
+    Route::get('clients/showSendSurvey/{id}/{type}/{survey}', [ClientsController::class, 'showSendSurvey'])->name('clients.showSendSurvey');
+    Route::post('clients/sendSurvey/{id}/{type}/{survey}', [ClientsController::class, 'sendSurvey'])->name('clients.sendSurvey');
     /*==================================================================================================================
   =                                                                                                                =
   =                                                                                                                =
@@ -322,4 +328,6 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
   =                                                                                                                =
   ==================================================================================================================*/
 });
-//group routes for client
+// //group routes for client
+// Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
+// });

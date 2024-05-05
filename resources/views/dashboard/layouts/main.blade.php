@@ -900,8 +900,17 @@
                             </a>
                         </li> --}}
                         @else
-                        <li class="nav-item"><a href="{{ route('Client.startup') }}" class="nav-link">
-                                <i class="fa fa-folder text-info"></i>
+                        <li class="nav-item">
+                            <a href="{{ route('client.manage') }}" class="nav-link">
+                                <i class="nav-icon fa fa-business-time"></i>
+                                <p>
+                                    {{ __('Manage') }}
+                                    {{-- <span class="right badge badge-danger">New</span> --}}
+                                </p>
+                            </a>
+                        </li>
+                        {{-- <li class="nav-item"><a href="{{ route('Client.startup') }}" class="nav-link">
+                                <i class="fa fa-folder"></i>
                                 <p>StartUp</p>
                             </a>
                         </li>
@@ -909,7 +918,7 @@
                                 <i class="fa fa-file-pdf text-info"></i>
                                 <p>Manual Builder</p>
                             </a>
-                        </li>
+                        </li> --}}
                         @endif
                     </ul>
                 </nav>
