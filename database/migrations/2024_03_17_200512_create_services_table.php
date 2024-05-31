@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->integer('country')->nullable()->references('id')->on('countries')->onDelete('cascade');
+            $table->integer('client')->nullable()->references('id')->on('clients')->onDelete('cascade');
             $table->string('name');
             $table->string('name_ar');
             $table->longText('objective')->nullable();

@@ -17,6 +17,13 @@ return new class extends Migration
             $table->integer('practice_id')->references('id')->on('function_practices')->onDelete('cascade');
             $table->string('question');
             $table->string('question_ar');
+            $table->string('question_in')->nullable();
+            $table->string('question_urdo')->nullable();
+            $table->string('question_fr')->nullable();
+            $table->string('question_sp')->nullable();
+            $table->string('question_bngla')->nullable();
+            $table->string('question_tr')->nullable();
+            $table->string('question_pr')->nullable();
             $table->integer('respondent');
             //description
             $table->text('description')->nullable();

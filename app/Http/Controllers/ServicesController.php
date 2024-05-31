@@ -6,6 +6,7 @@ use App\Http\Facades\TempURL;
 use App\Models\Services;
 use App\Http\Requests\StoreServicesRequest;
 use App\Http\Requests\UpdateServicesRequest;
+use App\Models\Clients;
 use App\Models\Countries;
 use App\Models\PartnerFocalPoint;
 use App\Models\Partnerships;
@@ -35,7 +36,8 @@ class ServicesController extends Controller
         $data = [
             //countries group by IsArabCountry
             'countries' => Countries::all()->groupBy('IsArabCountry'),
-            'service' => null
+            'service' => null,
+            'clients' => Clients::all()->count(),
         ];
         return view('dashboard.services.edit')->with($data);
     }
@@ -205,7 +207,8 @@ class ServicesController extends Controller
         $data = [
             //countries group by IsArabCountry
             'countries' => Countries::all()->groupBy('IsArabCountry'),
-            'service' => Services::find($id)
+            'service' => Services::find($id),
+            'clients' => Clients::all()->count(),
         ];
         return view('dashboard.services.edit')->with($data);
     }

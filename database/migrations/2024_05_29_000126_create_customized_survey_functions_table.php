@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('function_practices', function (Blueprint $table) {
+        Schema::create('customized_survey_functions', function (Blueprint $table) {
             $table->id();
-            $table->integer('function_id')->references('id')->on('functions')->onDelete('cascade');
+            $table->integer('client')->references('id')->on('clients')->onDelete('cascade');
+            $table->integer('survey')->references('id')->on('customized_surveys')->onDelete('cascade');
             $table->string('title');
             $table->string('title_ar');
             $table->string('title_in')->nullable();
@@ -23,10 +24,10 @@ return new class extends Migration
             $table->string('title_bngla')->nullable();
             $table->string('title_tr')->nullable();
             $table->string('title_pr')->nullable();
-            $table->text('description')->nullable();
-            $table->text('description_ar')->nullable();
-            $table->boolean('status')->default(1);
-            $table->softDeletes();
+            $table->text('respondent');
+            $table->boolean('status');
+            $table->boolean('IsDefault')->default(1);
+            $table->boolean('IsDriver')->default(1);
             $table->timestamps();
         });
     }
@@ -36,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('function_practices');
+        Schema::dropIfExists('customized_survey_functions');
     }
 };

@@ -13,18 +13,23 @@ return new class extends Migration
     {
         Schema::create('functions', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('title_ar');
-            $table->text('description')->nullable();
-            $table->text('description_ar')->nullable();
             //cascading on service delete
             $table->integer('service_id')->references('id')->on('services')->onDelete('cascade');
+            $table->string('title');
+            $table->string('title_ar');
+            $table->string('title_in')->nullable();
+            $table->string('title_urdo')->nullable();
+            $table->string('title_fr')->nullable();
+            $table->string('title_sp')->nullable();
+            $table->string('title_bngla')->nullable();
+            $table->string('title_tr')->nullable();
+            $table->string('title_pr')->nullable();
+            $table->text('description')->nullable();
+            $table->text('description_ar')->nullable();
             $table->text('respondent');
             $table->boolean('status');
             $table->boolean('IsDefault')->default(1);
             $table->boolean('IsDriver')->default(1);
-            $table->boolean('is_client')->default(0);
-            $table->integer('client_id')->nullable()->references('id')->on('clients')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

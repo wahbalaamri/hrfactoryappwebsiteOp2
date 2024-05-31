@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('customized_surveys', function (Blueprint $table) {
             $table->id();
             $table->integer('client')->references('id')->on('clients')->onDelete('cascade');
-            $table->integer('plan_id')->references('id')->on('plans')->onDelete('cascade');
+            $table->integer('plan_id')->nullable()->references('id')->on('plans')->onDelete('cascade');
             $table->integer('subscription_plan_id')->nullable()->references('id')->on('client_subscriptions')->onDelete('cascade');
             $table->string('survey_title');
             $table->text('survey_des')->nullable();

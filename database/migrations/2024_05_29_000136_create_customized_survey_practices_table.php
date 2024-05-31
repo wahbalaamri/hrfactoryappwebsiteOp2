@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('function_practices', function (Blueprint $table) {
+        Schema::create('customized_survey_practices', function (Blueprint $table) {
             $table->id();
-            $table->integer('function_id')->references('id')->on('functions')->onDelete('cascade');
+            $table->integer('function_id')->references('id')->on('customized_survey_functions')->onDelete('cascade');
             $table->string('title');
             $table->string('title_ar');
             $table->string('title_in')->nullable();
@@ -26,7 +26,6 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->text('description_ar')->nullable();
             $table->boolean('status')->default(1);
-            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -36,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('function_practices');
+        Schema::dropIfExists('customized_survey_practices');
     }
 };
