@@ -14,6 +14,7 @@ class PlansPolicy
     public function viewAny(User $user): bool
     {
         //
+        return $user->isAdmin||$user->user_type == 'partner';
     }
 
     /**
@@ -22,6 +23,7 @@ class PlansPolicy
     public function view(User $user, Plans $plans): bool
     {
         //
+        return $user->isAdmin||$user->user_type == 'partner';
     }
 
     /**
@@ -30,7 +32,7 @@ class PlansPolicy
     public function create(User $user): bool
     {
         //
-        return $user->isAdmin || $user->user_type == 'partner';
+        return $user->isAdmin;
     }
 
     /**
@@ -39,6 +41,7 @@ class PlansPolicy
     public function update(User $user, Plans $plans): bool
     {
         //
+        return $user->isAdmin;
     }
 
     /**
@@ -47,6 +50,7 @@ class PlansPolicy
     public function delete(User $user, Plans $plans): bool
     {
         //
+        return $user->isAdmin;
     }
 
     /**
@@ -55,6 +59,7 @@ class PlansPolicy
     public function restore(User $user, Plans $plans): bool
     {
         //
+        return $user->isAdmin;
     }
 
     /**
@@ -63,5 +68,6 @@ class PlansPolicy
     public function forceDelete(User $user, Plans $plans): bool
     {
         //
+        return $user->isAdmin;
     }
 }

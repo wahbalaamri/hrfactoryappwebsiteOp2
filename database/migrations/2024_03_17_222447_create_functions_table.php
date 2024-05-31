@@ -18,11 +18,13 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->text('description_ar')->nullable();
             //cascading on service delete
-            $table->integer('service_id')->constrained()->onDelete('cascade');
+            $table->integer('service_id')->references('id')->on('services')->onDelete('cascade');
             $table->text('respondent');
             $table->boolean('status');
             $table->boolean('IsDefault')->default(1);
             $table->boolean('IsDriver')->default(1);
+            $table->boolean('is_client')->default(0);
+            $table->integer('client_id')->nullable()->references('id')->on('clients')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

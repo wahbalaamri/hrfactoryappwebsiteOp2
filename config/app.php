@@ -185,6 +185,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+        'TempURL'=>App\Http\Facades\TempURLFacade::class,
     ])->toArray(),
 
 ];

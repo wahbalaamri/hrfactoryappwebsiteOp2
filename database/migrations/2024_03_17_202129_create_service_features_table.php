@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('service_features', function (Blueprint $table) {
             $table->id();
             //cascading on service delete
-            $table->integer('service')->constrained()->onDelete('cascade');
+            $table->integer('service')->references('id')->on('services')->onDelete('cascade');
             $table->string('feature');
             $table->string('feature_ar');
             //is_active

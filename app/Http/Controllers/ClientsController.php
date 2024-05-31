@@ -34,7 +34,7 @@ class ClientsController extends Controller
         //get all undeleted clients
         $clients = Clients::all();
         $data = [
-            'clients' => $clients
+            'clients' => $clients,
         ];
         return view('dashboard.client.allClients')->with($data);
     }
@@ -88,19 +88,19 @@ class ClientsController extends Controller
     }
 
     //subscriptions function
-    public function manage(SurveysPrepration $surveysPrepration,$id)
+    public function manage(SurveysPrepration $surveysPrepration, $id)
     {
-       return $surveysPrepration->manage($id);
+        return $surveysPrepration->manage($id);
     }
     //viewSubscriptions function
     public function viewSubscriptions(SurveysPrepration $surveysPrepration, $id)
     {
-        return $surveysPrepration->viewSubscriptions($id,true);
+        return $surveysPrepration->viewSubscriptions($id, true);
     }
     //saveSubscription function
-    public function saveSubscription(Request $request, SurveysPrepration $surveysPrepration,$id)
+    public function saveSubscription(Request $request, SurveysPrepration $surveysPrepration, $id)
     {
-        return $surveysPrepration->saveSubscription($request,$id, true);
+        return $surveysPrepration->saveSubscription($request, $id, true);
     }
     //ShowEmployeeEngagment function
     public function ShowSurveys(SurveysPrepration $surveysPrepration, $id, $type)
@@ -115,7 +115,6 @@ class ClientsController extends Controller
     //storeSurvey function
     public function storeSurvey(Request $request, SurveysPrepration $surveysPrepration, $id, $type, $survey_id = null)
     {
-
         if ($survey_id != null) {
             $survey = Surveys::find($survey_id);
             return $surveysPrepration->CreateOrUpdateSurvey($request, $id, $type, true, $survey);
@@ -167,9 +166,9 @@ class ClientsController extends Controller
         return $surveysPrepration->getClientLogo($id, true);
     }
     //storeSurveyEmail function
-    public function storeSurveyEmail(Request $request, SurveysPrepration $surveysPrepration, $id, $type, $survey_id,$emailid=null)
+    public function storeSurveyEmail(Request $request, SurveysPrepration $surveysPrepration, $id, $type, $survey_id, $emailid = null)
     {
-        return $surveysPrepration->storeSurveyEmail($request, $id, $type, $survey_id,$emailid, true);
+        return $surveysPrepration->storeSurveyEmail($request, $id, $type, $survey_id, $emailid, true);
     }
     //orgChart function
     public function orgChart(Request $request, SurveysPrepration $surveysPrepration, $id)
@@ -220,5 +219,42 @@ class ClientsController extends Controller
     public function sendSurvey(Request $request, SurveysPrepration $surveysPrepration, $id, $type, $survey_id)
     {
         return $surveysPrepration->sendSurvey($request, $id, $type, $survey_id, true);
+    }
+    //SurveyResults function
+    public function SurveyResults(SurveysPrepration $surveysPrepration, $Client_id, $Service_type, $survey_id, $vtype, $vtype_id = null)
+    {
+        try {
+            return $surveysPrepration->SurveyResults($Client_id, $Service_type, $survey_id, $vtype, $vtype_id, true);
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+            Log::info($e);
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+    //saveSurveyCandidates function
+    public function saveSurveyCandidates(Request $request, SurveysPrepration $surveysPrepration)
+    {
+        return $surveysPrepration->saveSurveyCandidates($request, true);
+    }
+    //getRaters function
+    public function getRaters(Request $request, SurveysPrepration $surveysPrepration, $id, $survey, $type = null)
+    {
+
+        return $surveysPrepration->getRaters($request, $id, $survey, $type, true);
+    }
+    //SaveRaters function
+    public function SaveRaters(Request $request, SurveysPrepration $surveysPrepration)
+    {
+        return $surveysPrepration->SaveRaters($request, true);
+    }
+    //candidates function
+    public function candidates(Request $request, SurveysPrepration $surveysPrepration)
+    {
+        return $surveysPrepration->candidates($request,  true);
+    }
+    //schedule360 function
+    public function schedule360(Request $request, SurveysPrepration $surveysPrepration)
+    {
+        return $surveysPrepration->schedule360($request,  true);
     }
 }

@@ -14,6 +14,7 @@ class ServiceFeaturesPolicy
     public function viewAny(User $user): bool
     {
         //
+        return $user->isAdmin||$user->user_type == 'partner';
     }
 
     /**
@@ -22,7 +23,7 @@ class ServiceFeaturesPolicy
     public function view(User $user, ServiceFeatures $serviceFeatures): bool
     {
         //
-        return true;
+        return $user->isAdmin||$user->user_type == 'partner';
     }
 
     /**
@@ -49,6 +50,7 @@ class ServiceFeaturesPolicy
     public function delete(User $user, ServiceFeatures $serviceFeatures): bool
     {
         //
+        return $user->isAdmin;
     }
 
     /**
@@ -57,6 +59,7 @@ class ServiceFeaturesPolicy
     public function restore(User $user, ServiceFeatures $serviceFeatures): bool
     {
         //
+        return $user->isAdmin;
     }
 
     /**
@@ -65,5 +68,6 @@ class ServiceFeaturesPolicy
     public function forceDelete(User $user, ServiceFeatures $serviceFeatures): bool
     {
         //
+        return $user->isAdmin;
     }
 }

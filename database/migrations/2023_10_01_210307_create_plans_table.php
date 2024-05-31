@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
             // cascading service delete
-            $table->integer('service')->constrained()->onDelete('cascade');
+            $table->integer('service')->references('id')->on('services')->onDelete('cascade');
             $table->string('name');
             $table->string('name_ar');
-            $table->longText('delivery_mode');
-            $table->longText('delivery_mode_ar');
-            $table->longText('limitations');
-            $table->longText('limitations_ar');
+            $table->longText('delivery_mode')->nullable();
+            $table->longText('delivery_mode_ar')->nullable();
+            $table->longText('limitations')->nullable();
+            $table->longText('limitations_ar')->nullable();
             $table->string('sample_report');
             //is_active
             $table->boolean('is_active')->default(0);

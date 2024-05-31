@@ -53,7 +53,7 @@
                                                     <th scope="">{{ __('Plan') }}</th>
                                                     <th scope="">{{ __('Survey Status') }}</th>
                                                     <th scope="">{{ __('Survey Date') }}</th>
-
+                                                    <th scope="">{{ __('Start') }}</th>
                                                     <th colspan="3" scope="">{{ __('Survey
                                                         Actions') }}
                                                     </th>
@@ -61,7 +61,9 @@
                                             </thead>
                                             <tbody>
                                                 @foreach ($client_survyes as $survey)
-                                                <tr role="button" onclick="window.location.replace('{{ route('clients.surveyDetails',[$id,$type,$survey->id])}}');">
+                                                <tr {{--role="button"
+                                                    onclick="window.location.replace('{{ route('clients.surveyDetails',[$id,$type,$survey->id])}}');"
+                                                    --}}>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $survey->survey_title }}</td>
                                                     <td>
@@ -85,17 +87,22 @@
                                                                 id="flexSwitchCheckChecked{{ $survey->id }}" {{
                                                                 $survey->survey_stat?
                                                             'checked':'' }}
-                                                            onchange="ChangeCheck(this,'{{ $id }}','{{ $type }}','{{$survey->id}}')" >
+                                                            onchange="ChangeCheck(this,'{{ $id }}','{{ $type
+                                                            }}','{{$survey->id}}')" >
                                                         </div>
                                                     </td>
                                                     <td>{{ $survey->created_at->format('d-m-Y')
                                                         }}</td>
-
+                                                    <td><a href="{{ route('clients.surveyDetails',[$id,$type,$survey->id])}}"
+                                                            class="btn btn-info btn-sm m-1"><i
+                                                                class="fa fa-eye"></i></a></td>
                                                     <td><a href="{{ route('clients.editSurvey', [$id,$type,$survey->id])}}"
                                                             class="edit btn btn-primary btn-sm m-1"><i
                                                                 class="fa fa-edit"></i></a></td>
+
                                                     <td>
-                                                        <form action="{{route('clients.destroySurvey', [$id,$type,$survey->id])}}"
+                                                        <form
+                                                            action="{{route('clients.destroySurvey', [$id,$type,$survey->id])}}"
                                                             method="POST" class="delete_form" style="display:inline">
                                                             <input type="hidden" name="_method"
                                                                 value="DELETE">@csrf<button type="submit"

@@ -11,6 +11,8 @@ use App\Models\Countries;
 use App\Models\DefaultMB;
 use App\Models\DocFile;
 use App\Models\Industry;
+use App\Models\PartnerFocalPoint;
+use App\Models\Partnerships;
 use App\Models\PlanFeatures;
 use App\Models\Plans;
 use App\Models\PlansPrices;
@@ -262,11 +264,30 @@ class PlansController extends Controller
         $data = [
             'service' => $service,
             'countries' => Countries::all()->groupBy('IsArabCountry'),
+            'plan' => null,
+            'features' => null,
+        ];
+        return view('dashboard.services.plans.create')->with($data);
+    }
+    function edit($id)
+    {
+        //get service
+        //get plan
+        $plan = Plans::find($id);
+        //get service
+        $service = Services::find($plan->service);
+        $data = [
+            'service' => $service,
+            'countries' => Countries::all()->groupBy('IsArabCountry'),
+            'plan' => $plan,
+            'features' => $plan->features_obj->pluck('feature_id')->toArray(),
         ];
         return view('dashboard.services.plans.create')->with($data);
     }
     function store(Request $request, $id)
     {
+
+
         if (Auth::user()->can('create', new Plans)) {
             $pfInputs = request()->only(
                 collect(request()->all())->filter(function ($value, $key) {
@@ -304,7 +325,10 @@ class PlansController extends Controller
                 $sample_report_name = "";
             }
             //create a new plan
-            $plan = new Plans();
+            if ($request->plan_id)
+                $plan = Plans::find($request->plan_id);
+            else
+                $plan = new Plans();
             $plan->service = $id;
             $plan->name = $request->name;
             $plan->name_ar = $request->name_ar;
@@ -312,11 +336,16 @@ class PlansController extends Controller
             $plan->delivery_mode_ar = $request->delivery_mode_ar;
             $plan->limitations = $request->limitations;
             $plan->limitations_ar = $request->limitations_ar;
-            $plan->sample_report = $sample_report_name;
+            if ($request->plan_id && $sample_report_name == "");
+            else
+                $plan->sample_report = $request->sample_report;
             $plan->is_active = $request->is_active != null ? true : false;
             $plan->save();
+            if ($request->plan_id)
+                PlanFeatures::where('plan', $plan->id)->delete();
             //create a new plan features
             for ($i = 0; $i < count($keys); $i++) {
+
                 $plan_feature = new PlanFeatures();
                 $plan_feature->plan = $plan->id;
                 $plan_feature->feature_id = $keys[$i];
@@ -324,14 +353,16 @@ class PlansController extends Controller
             }
             //create new plan pricing
             $plan_price = new PlansPrices();
-            $plan_price->plan = $plan->id;
-            $plan_price->country = $request->valid_in;
-            $plan_price->monthly_price = $request->monthly_price;
-            $plan_price->annual_price = $request->annual_price;
-            $plan_price->currency = $request->currency;
-            $plan_price->payment_methods = json_encode($PM_keys);
-            $plan_price->is_active = true;
-            $plan_price->save();
+            if (!$request->plan_id) {
+                $plan_price->plan = $plan->id;
+                $plan_price->country = $request->valid_in;
+                $plan_price->monthly_price = $request->monthly_price;
+                $plan_price->annual_price = $request->annual_price;
+                $plan_price->currency = $request->currency;
+                $plan_price->payment_methods = json_encode($PM_keys);
+                $plan_price->is_active = true;
+                $plan_price->save();
+            }
             //return back to the service show page
             return redirect()->route('services.show', $id);
         } else {
@@ -356,17 +387,36 @@ class PlansController extends Controller
             $price->currency_sy = $price->currency_symbol;
             $price->payment_methods = json_decode($price->payment_methods);
         }
+        //get plan terms and conditions
+        $terms = $plan->termsConditions;
+
+        //if auth usertype partner
+        if (Auth()->user()->user_type == 'partner') {
+            //find the partner focal point
+            $partner_id = PartnerFocalPoint::where('Email', Auth()->user()->email)->first()->partner_id;
+            //get countries id in partnerships
+            $Countries_id = Partnerships::where('partner_id', $partner_id)->pluck('country_id')->toArray();
+            //get countries
+            $countries = Countries::whereIn('id', $Countries_id)->get()->append('country_name');
+        }
+        //if auth usertype admin
+        else {
+            //get all countries
+            $countries = Countries::all()->groupBy('IsArabCountry')->append('country_name');
+        }
         $data = [
             'plan' => $plan,
             'features' => $features,
             'prices' => $prices,
-            'features_id' => $features_id
+            'features_id' => $features_id,
+            'terms' => $terms,
+            'countries' => $countries,
         ];
         //return json response
         return response()->json($data);
     }
     //getPlan function
-    function getPlan(Request $request,$id)
+    function getPlan(Request $request, $id)
     {
         try {
             //find service with type $id
@@ -377,7 +427,7 @@ class PlansController extends Controller
             }
             //get plans of service id
             $plans = Plans::where('service', $service->id)->get()->append('planName');
-            $plans_ids=$plans->pluck('id')->toArray();
+            $plans_ids = $plans->pluck('id')->toArray();
             //get all plans prices where country is $request->country
             $plans_prices = PlansPrices::whereIn('plan', $plans_ids)->where('country', $request->country)->get();
             //return json response
@@ -385,7 +435,22 @@ class PlansController extends Controller
         } catch (\Exception $e) {
             //return error
             Log::error($e->getMessage());
-            return response()->json(['status'=>false, 'error' => $e->getMessage()]);
+            return response()->json(['status' => false, 'error' => $e->getMessage()]);
         }
+    }
+    //destroy plan
+    function destroy($id)
+    {
+        //get plan
+        $plan = Plans::find($id);
+        //delete plan features
+        PlanFeatures::where('plan', $plan->id)->delete();
+        //delete plan prices
+        PlansPrices::where('plan', $plan->id)->delete();
+
+        //delete plan
+        $plan->delete();
+        //return back
+        return back();
     }
 }

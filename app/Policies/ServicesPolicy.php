@@ -16,6 +16,7 @@ class ServicesPolicy
     public function viewAny(User $user): bool
     {
         //
+        return $user->isAdmin||$user->user_type == 'partner';
     }
 
     /**
@@ -24,6 +25,7 @@ class ServicesPolicy
     public function view(User $user, Services $services): bool
     {
         //
+        return $user->isAdmin||$user->user_type == 'partner';
     }
 
     /**
@@ -41,6 +43,7 @@ class ServicesPolicy
     public function update(User $user, Services $services): bool
     {
         //
+        return $user->isAdmin;
     }
 
     /**
@@ -49,6 +52,7 @@ class ServicesPolicy
     public function delete(User $user, Services $services): bool
     {
         //
+        return $user->isAdmin;
     }
 
     /**
@@ -57,6 +61,7 @@ class ServicesPolicy
     public function restore(User $user, Services $services): bool
     {
         //
+        return $user->isAdmin;
     }
 
     /**
@@ -65,5 +70,6 @@ class ServicesPolicy
     public function forceDelete(User $user, Services $services): bool
     {
         //
+        return $user->isAdmin;
     }
 }

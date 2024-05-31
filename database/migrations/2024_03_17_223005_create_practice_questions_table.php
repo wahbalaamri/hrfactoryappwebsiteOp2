@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('practice_questions', function (Blueprint $table) {
             $table->id();
             //cascading on practice delete
-            $table->integer('practice_id')->constrained()->onDelete('cascade');
+            $table->integer('practice_id')->references('id')->on('function_practices')->onDelete('cascade');
             $table->string('question');
             $table->string('question_ar');
             $table->integer('respondent');

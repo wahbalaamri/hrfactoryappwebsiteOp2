@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
             //cascading on sector id on delete
-            $table->unsignedBigInteger('sector_id')->constrained()->onDelete('cascade');
-            $table->unsignedBigInteger('client_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('sector_id')->references('id')->on('sectors')->onDelete('cascade');
+            $table->unsignedBigInteger('client_id')->references('id')->on('clients')->onDelete('cascade');
             // company name in english
             $table->string('name_en');
             // company name in arabic

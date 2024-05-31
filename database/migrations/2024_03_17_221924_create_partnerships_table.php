@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('partnerships', function (Blueprint $table) {
             $table->id();
             // cascading on partner delete
-            $table->integer('partner_id')->constrained()->onDelete('cascade');
+            $table->integer('partner_id')->references('id')->on('partners')->onDelete('cascade');
             // cascading on country delete
-            $table->integer('country_id')->constrained()->onDelete('cascade');
+            $table->integer('country_id')->references('id')->on('countries')->onDelete('cascade');
             $table->date('start_date');
             $table->date('end_date');
             //is_Exclusive

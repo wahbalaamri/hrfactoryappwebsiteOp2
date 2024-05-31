@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('function_practices', function (Blueprint $table) {
             $table->id();
-            $table->integer('function_id')->constrained()->onDelete('cascade');
+            $table->integer('function_id')->references('id')->on('functions')->onDelete('cascade');
             $table->string('title');
             $table->string('title_ar');
             //description

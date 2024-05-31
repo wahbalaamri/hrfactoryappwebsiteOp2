@@ -105,4 +105,8 @@ class Leader360ReviewController extends Controller
     {
         return $this->survey->destroyFunction($request, $id, $this->service_type);
     }
+    function survey(Request $request ,$id)
+    {
+        return $this->survey->survey360($request, $id, $this->service_type);
+    }
 }

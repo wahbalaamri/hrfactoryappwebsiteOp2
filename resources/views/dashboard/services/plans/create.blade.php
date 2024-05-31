@@ -27,11 +27,12 @@
         <div class="container-fluid">
             <div class="card card-lightblue">
                 <div class="card-header">
-                    <h3 class="card-title">{{ __('New Plan') }}</h3>
+                    <h3 class="card-title">{{$plan?__('Edit Plan'): __('New Plan') }}</h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <form action="{{ route('service-plans.store',$service->id) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('service-plans.store',$service->id) }}" method="POST"
+                        enctype="multipart/form-data">
                         @csrf
                         <div class="bs-stepper linear">
                             <div class="bs-stepper-header" role="tablist">
@@ -51,6 +52,7 @@
                                         <span class="bs-stepper-label">{{ __('Plan Feature') }}</span>
                                     </button>
                                 </div>
+                                @if(!$plan)
                                 <div class="line"></div>
                                 <div class="step" data-target="#plan-price">
                                     <button type="button" class="step-trigger" role="tab" aria-controls="plan-price"
@@ -59,6 +61,7 @@
                                         <span class="bs-stepper-label">{{ __('Plan Price') }}</span>
                                     </button>
                                 </div>
+                                @endif
                             </div>
                             <div class="bs-stepper-content">
 
@@ -75,11 +78,12 @@
                                         <div class="w-75">
                                             <div class="row">
                                                 {{-- name --}}
+                                                <input type="hidden" name="plan_id" value="{{ $plan?$plan->id:null }}">
                                                 <div class="form-group col-md-5 col-sm-12">
                                                     <label for="name">{{ __('Plan Name (English)') }}</label>
                                                     <input type="text" name="name" id="name" class="form-control"
                                                         placeholder="{{ __('Plan Name in English') }}"
-                                                        value="{{ old('name') }}">
+                                                        value="{{ old('name' ,$plan?$plan->name:null) }}">
                                                     {{-- validation --}}
                                                     @error('name')
                                                     <span class="text-danger">{{ $message }}</span>
@@ -90,7 +94,7 @@
                                                     <label for="name_ar">{{ __('Plan Name (Arabic)') }}</label>
                                                     <input type="text" name="name_ar" id="name_ar" class="form-control"
                                                         placeholder="{{ __('Plan Name in Arabic') }}"
-                                                        value="{{ old('name_ar') }}">
+                                                        value="{{ old('name_ar',$plan?$plan->name_ar:null) }}">
                                                     {{-- validation --}}
                                                     @error('name_ar')
                                                     <span class="text-danger">{{ $message }}</span>
@@ -111,18 +115,20 @@
                                                     <label for="is_active">{{ __('Plan Status') }}</label>
                                                     <div class="custom-control custom-switch">
                                                         <input type="checkbox" class="custom-control-input"
-                                                            id="is_active" name="is_active" checked>
+                                                            id="is_active" name="is_active" @if($plan) @if($plan->is_active) checked @endif @else
+                                                             checked @endif>
                                                         <label class="custom-control-label" for="is_active">{{
                                                             __('Active') }}</label>
                                                     </div>
                                                 </div>
                                                 {{-- delivery_mode --}}
                                                 <div class="form-group col-md-6 col-sm-12">
-                                                    <label for="delivery_mode">{{ __('delivery_mode (English)') }}</label>
+                                                    <label for="delivery_mode">{{ __('delivery_mode (English)')
+                                                        }}</label>
                                                     <textarea name="delivery_mode" id="delivery_mode"
                                                         class="form-control summernote"
                                                         placeholder="{{ __('delivery_mode in English') }}"
-                                                        rows="3">{{ old('delivery_mode') }}</textarea>
+                                                        rows="3">{{ old('delivery_mode',$plan?$plan->delivery_mode:null) }}</textarea>
                                                     {{-- validation --}}
                                                     @error('delivery_mode')
                                                     <span class="text-danger">{{ $message }}</span>
@@ -130,11 +136,12 @@
                                                 </div>
                                                 {{-- delivery_mode arabic --}}
                                                 <div class="form-group col-md-6 col-sm-12">
-                                                    <label for="delivery_mode_ar">{{ __('delivery_mode (Arabic)') }}</label>
+                                                    <label for="delivery_mode_ar">{{ __('delivery_mode (Arabic)')
+                                                        }}</label>
                                                     <textarea name="delivery_mode_ar" id="delivery_mode_ar"
                                                         class="form-control summernote"
                                                         placeholder="{{ __('delivery_mode in Arabic') }}"
-                                                        rows="3">{{ old('delivery_mode_ar') }}</textarea>
+                                                        rows="3">{{ old('delivery_mode_ar',$plan?$plan->delivery_mode_ar:null) }}</textarea>
                                                     {{-- validation --}}
                                                     @error('delivery_mode_ar')
                                                     <span class="text-danger">{{ $message }}</span>
@@ -146,7 +153,7 @@
                                                     <textarea name="limitations" id="limitations"
                                                         class="form-control summernote"
                                                         placeholder="{{ __('Limitations in English') }}"
-                                                        rows="3">{{ old('limitations') }}</textarea>
+                                                        rows="3">{{ old('limitations',$plan?$plan->limitations:null) }}</textarea>
                                                     {{-- validation --}}
                                                     @error('limitations')
                                                     <span class="text-danger">{{ $message }}</span>
@@ -158,7 +165,7 @@
                                                     <textarea name="limitations_ar" id="limitations_ar"
                                                         class="form-control summernote"
                                                         placeholder="{{ __('Limitations in Arabic') }}"
-                                                        rows="3">{{ old('limitations_ar') }}</textarea>
+                                                        rows="3">{{ old('limitations_ar',$plan?$plan->limitations_ar:null) }}</textarea>
                                                     {{-- validation --}}
                                                     @error('limitations_ar')
                                                     <span class="text-danger">{{ $message }}</span>
@@ -180,12 +187,14 @@
                                                 <div class="form-group col-sm-12">
                                                     <label for="features">{{ __('Features') }}</label>
                                                     {{-- checkbox input --}}
+
                                                     <div class="row">
                                                         @foreach ( $service->features as $feature)
                                                         <div class="form-check col-md-4 col-sm-12">
                                                             <input class="form-check-input" type="checkbox"
-                                                                name="pf-{{ $feature->id }}"
-                                                                id="pf-{{ $feature->id }}">
+                                                                name="pf-{{ $feature->id }}" id="pf-{{ $feature->id }}" @if($plan) @if (in_array($feature->id,$features))
+                                                                    checked
+                                                                @endif @endif>
                                                             <label class="form-check-label" for="pf-{{ $feature->id }}">
                                                                 {{ $feature->feature }}
                                                             </label>
@@ -199,9 +208,14 @@
                                     </div>
                                     <a href="javascript:void(0)" class="btn btn-primary float-left"
                                         onclick="stepper.previous()">Previous</a>
+                                    @if($plan)
+                                    <button type="submit" class="btn btn-primary float-right">Submit</button>
+                                    @else
                                     <a href="javascript:void" class="btn btn-primary float-right"
                                         onclick="stepper.next()">Next</a>
+                                    @endif
                                 </div>
+                                @if(!$plan)
                                 <div id="plan-price" class="content" role="tabpanel"
                                     aria-labelledby="plan-price-trigger">
                                     <div class="row justify-content-center">
@@ -302,32 +316,28 @@
                                                     <div class="row">
                                                         <div class="form-check col-md-6 col-sm-12">
                                                             <input class="form-check-input" type="checkbox"
-                                                                name="PM-online" value="0"
-                                                                id="PM-online">
+                                                                name="PM-online" value="0" id="PM-online">
                                                             <label class="form-check-label" for="PM-online">
                                                                 {{ __('Online') }}
                                                             </label>
                                                         </div>
                                                         <div class="form-check col-md-6 col-sm-12">
                                                             <input class="form-check-input" type="checkbox"
-                                                                name="PM-offline" value="0"
-                                                                id="PM-offline">
+                                                                name="PM-offline" value="0" id="PM-offline">
                                                             <label class="form-check-label" for="PM-offline">
                                                                 {{ __('offline') }}
                                                             </label>
                                                         </div>
                                                         <div class="form-check col-md-6 col-sm-12">
                                                             <input class="form-check-input" type="checkbox"
-                                                                name="PM-perscope" value="0"
-                                                                id="PM-perscope">
+                                                                name="PM-perscope" value="0" id="PM-perscope">
                                                             <label class="form-check-label" for="PM-perscope">
                                                                 {{ __('Per-scope') }}
                                                             </label>
                                                         </div>
                                                         <div class="form-check col-md-6 col-sm-12">
                                                             <input class="form-check-input" type="checkbox"
-                                                                name="PM-other" value="0"
-                                                                id="PM-other">
+                                                                name="PM-other" value="0" id="PM-other">
                                                             <label class="form-check-label" for="PM-other">
                                                                 {{ __('Other') }}
                                                             </label>
@@ -341,6 +351,9 @@
                                         </div>
                                     </div>
                                 </div>
+                                @endif
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>

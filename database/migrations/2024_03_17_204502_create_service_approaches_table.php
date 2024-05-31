@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('service_approaches', function (Blueprint $table) {
             $table->id();
             //cascading on service delete
-            $table->integer('service')->constrained()->onDelete('cascade');
+            $table->integer('service')->references('id')->on('services')->onDelete('cascade');
             $table->longText('approach');
             $table->longText('approach_ar');
             // icon

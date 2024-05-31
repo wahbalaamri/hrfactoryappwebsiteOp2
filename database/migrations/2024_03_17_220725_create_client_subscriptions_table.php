@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('client_subscriptions', function (Blueprint $table) {
             $table->id();
             //cascading on client delete
-            $table->integer('client_id')->constrained()->onDelete('cascade');
+            $table->integer('client_id')->references('id')->on('clients')->onDelete('cascade');
             //cascading on plan delete
-            $table->integer('plan_id')->constrained()->onDelete('cascade');
+            $table->integer('plan_id')->references('id')->on('plans')->onDelete('cascade');
             //cascading on subscription_period delete
             $table->integer('period');
             $table->date('start_date');

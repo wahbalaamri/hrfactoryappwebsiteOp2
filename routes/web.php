@@ -12,15 +12,18 @@ use App\Http\Controllers\Leader360ReviewController;
 use App\Http\Controllers\ManageEmployeeEngagmentController;
 use App\Http\Controllers\ManageHrDiagnosisController;
 use App\Http\Controllers\MigrationConrtoller;
+use App\Http\Controllers\PartnersController;
 use App\Http\Controllers\PlansController;
 use App\Http\Controllers\PracticeQuestionsController;
 use App\Http\Controllers\SectionsController;
+use App\Http\Controllers\SectorsController;
 use App\Http\Controllers\ServiceApproachesController;
 use App\Http\Controllers\ServiceFeaturesController;
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\SurveysController;
 use App\Http\Controllers\TermsConditionsController;
 use App\Http\Controllers\TrainingController;
+use App\Http\Facades\TempURLFacade;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -36,11 +39,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name("Home");
+
+Route::get('/SetupNameRev', [HomeController::class, 'SetupNameRev'])->name("SetupNameRev");
 Route::get('/about-us', [HomeController::class, 'aboutus'])->name("Home.about-us");
 Route::get('/profile', [HomeController::class, 'profile'])->name("Home.profile");
 Route::get('/training', [TrainingController::class, 'index'])->name("Training");
 Route::get('/Surveys/takeSurvey/{id}', [SurveysController::class, 'takeSurvey'])->name("Surveys.takeSurvey");
+Route::get('Surveys/survey/{id}', [Leader360ReviewController::class, 'survey'])->name('Surveys.survey');
 Route::post('/Surveys/SaveAnswers', [SurveysController::class, 'SaveAnswers'])->name("Surveys.SaveAnswers");
+Route::post('/Surveys/save360Answer', [SurveysController::class, 'save360Answer'])->name("Surveys.save360Answer");
 //start up plan
 Route::get('/startup', [PlansController::class, 'startup'])->name("Plans.startup");
 Route::get('/manualBuilder', [PlansController::class, 'manualBuilder'])->name("Plans.manualBuilder");
@@ -69,6 +76,8 @@ Route::get('lang/{locale}', function () {
 //get all industries route
 Route::get('/industries/all/{id}', [IndustryController::class, 'allIndustries'])->name('industries.all');
 Route::post('clients/saveSCD', [ClientsController::class, 'saveSCD'])->name('clients.saveSCD');
+Route::get('client/sectors/{id}', [SectorsController::class, 'sectors'])->name('sector.sectors');
+Route::get('client/getRaters/{id}/{survey}/{type?}', [ClientsController::class, 'getRaters'])->name('sector.getRaters');
 Route::get('client/companies/{id}', [ClientsController::class, 'companies'])->name('client.companies');
 Route::get('client/departments/{id}', [ClientsController::class, 'departments'])->name('client.departments');
 Route::get('client/getdep/{id}', [ClientsController::class, 'getDepartment'])->name('client.getDep');
@@ -81,113 +90,118 @@ Route::get('plans/getPlan/{id}', [PlansController::class, 'getPlan'])->name('sub
 Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('admin.dashboard');
     /*==================================================================================================================
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                  SERVICE ROUTES START                                          =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  ==================================================================================================================*/
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                  SERVICE ROUTES START                                          =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
     Route::resource('services', ServicesController::class);
     /*==================================================================================================================
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                  SERVICE ROUTES END                                            =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  ==================================================================================================================*/
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                  SERVICE ROUTES END                                            =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
     /*==================================================================================================================
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                         SERVICE FEATURES ROUTES START                                          =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  ==================================================================================================================*/
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                         SERVICE FEATURES ROUTES START                                          =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
     Route::resource('service-features', ServiceFeaturesController::class);
     /*==================================================================================================================
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                         SERVICE FEATURES ROUTES END                                            =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  ==================================================================================================================*/
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                         SERVICE FEATURES ROUTES END                                            =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
     /*==================================================================================================================
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                        SERVICE APPROACHES ROUTES START                                         =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  ==================================================================================================================*/
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                        SERVICE APPROACHES ROUTES START                                         =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
     Route::resource('service-approaches', ServiceApproachesController::class);
     /*==================================================================================================================
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                        SERVICE APPROACHES ROUTES END                                           =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  ==================================================================================================================*/
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                        SERVICE APPROACHES ROUTES END                                           =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
+
+
     /*==================================================================================================================
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                        SERVICE PLANS ROUTES START                                              =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  ==================================================================================================================*/
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                        SERVICE PLANS ROUTES START                                              =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
     Route::get('service-plans/create/{id}', [PlansController::class, 'create'])->name('service-plans.create');
     Route::post('service-plans/store/{id}', [PlansController::class, 'store'])->name('service-plans.store');
     Route::get('service-plans/show/{id}', [PlansController::class, 'show'])->name('service-plans.show');
+    Route::get('service-plans/edit/{id}', [PlansController::class, 'edit'])->name('service-plans.edit');
+    Route::delete('service-plans/destroy/{id}', [PlansController::class, 'destroy'])->name('service-plans.destroy');
+    Route::get('service-plans/getCountriesPerPlan/{id}/{type}', [PlansController::class, 'getCountriesPerPlan'])->name('Service-planes.countries');
     /*==================================================================================================================
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                        SERVICE PLANS ROUTES END                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  ==================================================================================================================*/
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                        SERVICE PLANS ROUTES END                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
     /*==================================================================================================================
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                        SERVICE Terms Conditions ROUTES START                                              =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  ==================================================================================================================*/
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                        SERVICE Terms Conditions ROUTES START                                              =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
     Route::get('termsconditions/create/{id}', [TermsConditionsController::class, 'create'])->name('termsconditions.create');
     Route::post('termsconditions/store/{id?}', [TermsConditionsController::class, 'store'])->name('termsconditions.store');
     Route::get('termsconditions/show/{id}', [TermsConditionsController::class, 'show'])->name('termsconditions.show');
     /*==================================================================================================================
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                        SERVICE PLANS ROUTES END                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  ==================================================================================================================*/
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                        SERVICE PLANS ROUTES END                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
     /*==================================================================================================================
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                        SERVICE ManageHrDiagnosis ROUTES START                                              =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  ==================================================================================================================*/
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                        SERVICE ManageHrDiagnosis ROUTES START                                              =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
     Route::get('ManageHrDiagnosis/index', [ManageHrDiagnosisController::class, 'index'])->name('ManageHrDiagnosis.index');
     Route::get('ManageHrDiagnosis/createFunction', [ManageHrDiagnosisController::class, 'createFunction'])->name('ManageHrDiagnosis.createFunction');
     Route::post('ManageHrDiagnosis/storeFunction', [ManageHrDiagnosisController::class, 'storeFunction'])->name('ManageHrDiagnosis.storeFunction');
@@ -207,23 +221,23 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
     Route::delete('ManageHrDiagnosis/deleteQuestion/{id}', [ManageHrDiagnosisController::class, 'deleteQuestion'])->name('ManageHrDiagnosis.deleteQuestion');
     Route::put('ManageHrDiagnosis/updatePractice/{id}', [ManageHrDiagnosisController::class, 'updatePractice'])->name('ManageHrDiagnosis.updatePractice');
     /*==================================================================================================================
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                        SERVICE ManageHrDiagnosis ROUTES END                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  ==================================================================================================================*/
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                        SERVICE ManageHrDiagnosis ROUTES END                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
     /*==================================================================================================================
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                        SERVICE Leader360Review ROUTES START                                              =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  ==================================================================================================================*/
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                        SERVICE Leader360Review ROUTES START                                              =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
     Route::get('Leader360Review/index', [Leader360ReviewController::class, 'index'])->name('Leader360Review.index');
     Route::get('Leader360Review/createFunction', [Leader360ReviewController::class, 'createFunction'])->name('Leader360Review.createFunction');
     Route::post('Leader360Review/storeFunction', [Leader360ReviewController::class, 'storeFunction'])->name('Leader360Review.storeFunction');
@@ -242,24 +256,25 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
     Route::put('Leader360Review/updateQuestion/{id}', [Leader360ReviewController::class, 'updateQuestion'])->name('Leader360Review.updateQuestion');
     Route::delete('Leader360Review/deleteQuestion/{id}', [Leader360ReviewController::class, 'deleteQuestion'])->name('Leader360Review.deleteQuestion');
     Route::put('Leader360Review/updatePractice/{id}', [Leader360ReviewController::class, 'updatePractice'])->name('Leader360Review.updatePractice');
+
     /*==================================================================================================================
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                        SERVICE Leader360Review ROUTES END                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  ==================================================================================================================*/
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                        SERVICE Leader360Review ROUTES END                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
     /*==================================================================================================================
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                        SERVICE EmployeeEngagment ROUTES START                                              =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  ==================================================================================================================*/
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                        SERVICE EmployeeEngagment ROUTES START                                              =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
     Route::get('EmployeeEngagment/index', [ManageEmployeeEngagmentController::class, 'index'])->name('EmployeeEngagment.index');
     Route::get('EmployeeEngagment/createFunction', [ManageEmployeeEngagmentController::class, 'createFunction'])->name('EmployeeEngagment.createFunction');
     Route::post('EmployeeEngagment/storeFunction', [ManageEmployeeEngagmentController::class, 'storeFunction'])->name('EmployeeEngagment.storeFunction');
@@ -279,23 +294,23 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
     Route::delete('EmployeeEngagment/deleteQuestion/{id}', [ManageEmployeeEngagmentController::class, 'deleteQuestion'])->name('EmployeeEngagment.deleteQuestion');
     Route::put('EmployeeEngagment/updatePractice/{id}', [ManageEmployeeEngagmentController::class, 'updatePractice'])->name('EmployeeEngagment.updatePractice');
     /*==================================================================================================================
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                        SERVICE EmployeeEngagment ROUTES END                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  ==================================================================================================================*/
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                        SERVICE EmployeeEngagment ROUTES END                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
     /*==================================================================================================================
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                        SERVICE Clients ROUTES START                                              =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  ==================================================================================================================*/
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                        SERVICE Clients ROUTES START                                              =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
     Route::get('clients/index', [ClientsController::class, 'index'])->name('clients.index');
     Route::get('clients/manage/{id}', [ClientsController::class, 'manage'])->name('clients.manage');
     Route::get('clients/ShowSurveys/{id}/{type}', [ClientsController::class, 'ShowSurveys'])->name('clients.ShowSurveys');
@@ -314,19 +329,49 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
     Route::post('clients/storeEmployee', [ClientsController::class, 'storeEmployee'])->name('clients.storeEmployee');
     Route::get('clients/getEmployee/{id}', [ClientsController::class, 'getEmployee'])->name('clients.getEmployee');
     Route::post('clients/saveSurveyRespondents', [ClientsController::class, 'saveSurveyRespondents'])->name('clients.saveSurveyRespondents');
+    Route::post('clients/saveSurveyCandidates', [ClientsController::class, 'saveSurveyCandidates'])->name('clients.saveSurveyCandidates');
     Route::get('clients/view-Subscriptions/{id}', [ClientsController::class, 'viewSubscriptions'])->name('clients.viewSubscriptions');
     Route::post('clients/saveSubscription/{id}', [ClientsController::class, 'saveSubscription'])->name('clients.saveSubscription');
     Route::get('clients/showSendSurvey/{id}/{type}/{survey}', [ClientsController::class, 'showSendSurvey'])->name('clients.showSendSurvey');
+    // Route::get('clients/showSendSurvey/{id}/{type}/{survey}', [ClientsController::class, 'showSendSurvey'])->name('clients.showSendSurvey');
     Route::post('clients/sendSurvey/{id}/{type}/{survey}', [ClientsController::class, 'sendSurvey'])->name('clients.sendSurvey');
+    Route::post('clients/SurveyResults/{id}/{type}/{survey}/{vtype}/{vtype_id?}', [ClientsController::class, 'SurveyResults'])->name('clients.SurveyResults');
+    Route::post('clients/SaveRaters', [ClientsController::class, 'SaveRaters'])->name('clients.SaveRaters');
+    Route::post('clients/candidates', [ClientsController::class, 'candidates'])->name('client.candidates');
+    Route::post('clients/schedule360', [ClientsController::class, 'schedule360'])->name('client.schedule360');
     /*==================================================================================================================
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                        SERVICE Clients ROUTES END                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  =                                                                                                                =
-  ==================================================================================================================*/
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                        SERVICE Clients ROUTES END                                              =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
+    /*==================================================================================================================
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                        Partners ROUTES Start                                                   =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
+    Route::resource('partners', PartnersController::class);
+    Route::post('partners/edit', [PartnersController::class, 'SavePartner'])->name('partner.edit');
+    Route::get('partners/FocalPoints/{id}', [PartnersController::class, 'FocalPoints'])->name('partner.FocalPoints');
+    Route::post('partners/SaveFocalPoint/{id}', [PartnersController::class, 'SaveFocalPoint'])->name('partner.SaveFocalPoint');
+    Route::get('partners/Partnerships/{id}', [PartnersController::class, 'Partnerships'])->name('partner.Partnerships');
+    Route::post('partners/SavePartnership/{id}', [PartnersController::class, 'SavePartnership'])->name('partner.SavePartnership');
+    /*==================================================================================================================
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                        Partners ROUTES End                                                     =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
 });
 // //group routes for client
 // Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {

@@ -16,9 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('name_ar')->nullable();
             $table->integer('country');
-            $table->integer('industry');
-            $table->string('logo_path');
-            $table->string('webiste');
+            $table->string('logo_path')->nullable();
+            $table->string('webiste')->nullable();
             //is_active
             $table->boolean('is_active')->default(0);
             $table->softDeletes();

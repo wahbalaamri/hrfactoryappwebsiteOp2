@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('terms_conditions', function (Blueprint $table) {
             $table->id();
             //cascade on plan delete
-            $table->integer('plan_id')->default(0)->constrained()->onDelete('cascade');
+            $table->integer('plan_id')->default(0)->references('id')->on('plans')->onDelete('cascade');
             // cascade on country delete
-            $table->integer('country_id')->constrained()->onDelete('cascade');
+            $table->integer('country_id')->references('id')->on('countries')->onDelete('cascade');
             $table->integer('period');
             $table->longText('arabic_text');
             $table->longText('english_text');

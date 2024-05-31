@@ -13,15 +13,14 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
+            $table->integer('country')->nullable()->references('id')->on('countries')->onDelete('cascade');
             $table->string('name');
             $table->string('name_ar');
             $table->longText('objective')->nullable();
             $table->longText('objective_ar')->nullable();
             $table->longText('description');
             $table->longText('description_ar');
-            //service slug
             $table->string('slug');
-            //service slug_ar
             $table->string('slug_ar');
             $table->integer('service_user');
             $table->string('service_icon');
@@ -33,9 +32,9 @@ return new class extends Migration
             $table->boolean('service_uploaded_video')->default(false);
             $table->string('service_media_path');
             $table->integer('service_type');
-            $table->integer('country')->nullable()->constrained()->onDelete('cascade');
-            //is_active
-            $table->boolean('is_active')->default(0);
+            $table->boolean('is_active')->default(false);
+            $table->boolean('candidate_raters_model')->default(false);
+            $table->boolean('public_availability')->default(true);
             $table->softDeletes();
             $table->timestamps();
         });

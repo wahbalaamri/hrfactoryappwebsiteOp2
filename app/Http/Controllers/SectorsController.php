@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Sectors;
 use App\Http\Requests\StoreSectorsRequest;
 use App\Http\Requests\UpdateSectorsRequest;
+use App\Models\Employees;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class SectorsController extends Controller
 {
@@ -62,5 +65,20 @@ class SectorsController extends Controller
     public function destroy(Sectors $sectors)
     {
         //
+    }
+    //sectors function
+    public function sectors($id)
+    {
+        try {
+            $data = [
+                'status' => true,
+                'message' => 'Sectors fetched successfully',
+                'sectors' => Sectors::where('client_id', Employees::find($id)->client->id)->get()->append('name')
+            ];
+            return response()->json($data, 200);
+        } catch (Exception $e) {
+            Log::info($e->getMessage());
+            return response()->json(['message' => 'Error: ' . $e->getMessage(), 'status' => false], 500);
+        }
     }
 }

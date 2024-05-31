@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('departments', function (Blueprint $table) {
             $table->id();
             //cascading on company id on delete
-            $table->unsignedBigInteger('company_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('company_id')->references('id')->on('companies')->onDelete('cascade');
             // department name in english
             $table->string('name_en');
             // department name in arabic
@@ -23,7 +23,7 @@ return new class extends Migration
             // bool is HR department
             $table->boolean('is_hr')->default(false);
             // department parent
-            $table->unsignedBigInteger('parent_id')->nullable()->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('parent_id')->nullable()->references('id')->on('departments')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

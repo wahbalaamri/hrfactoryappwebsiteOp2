@@ -186,7 +186,7 @@
                     </div>
 
                     <div class="col-4">
-                        <div class="row user-area list-inline float-end margin-0px text-white padding-tb-10px">
+                        {{-- <div class="row user-area list-inline float-end margin-0px text-white padding-tb-10px">
                             @guest
                             <div class="col-4"><a href="{{ route('login') }}">{{ __('Login') }}</a></div>
                             <div class="col-4"><a href="{{ route('register') }}">{{ __('Register') }}</a></div>
@@ -201,7 +201,7 @@
                                     @csrf</form>
                             </div>
                             @endguest
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -213,7 +213,7 @@
                                 src="{{ asset('assets/img/logo-1.png')}}" alt=""></a> <a
                             class="mobile-toggle padding-15px background-main-color" href="#"><i
                                 class="fas fa-bars"></i></a> </div>
-                    <div class="col-xl-3 col-lg-3 margin-tb-25px">
+                    {{-- <div class="col-xl-3 col-lg-3 margin-tb-25px">
                         <div class="text-center">
 
 
@@ -261,7 +261,7 @@
                             </ul>
 
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -947,6 +947,7 @@
                 // console.log(oe_qeustions_ans);
             }
             var reply = [{
+                "type": "{{ $type }}",
                 "survey_id": '{{ $SurveyId }}',
                 "PlanID": '{{ $plan_id }}',
                 "priorities":  null,
@@ -960,7 +961,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "{{ route('Surveys.SaveAnswers') }}",
+                    url: "{{ route('Surveys.SaveAnswers')}}",
                     data: {
                         "_token": "{{ csrf_token() }}",
                         "reply": reply

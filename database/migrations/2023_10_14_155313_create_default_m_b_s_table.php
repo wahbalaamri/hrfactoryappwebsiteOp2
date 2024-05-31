@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('default_m_b_s', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->integer('country_id')->constrained()->onDelete('cascade');
+            $table->integer('country_id')->references('id')->on('countries')->onDelete('cascade');
             $table->integer('ordering')->nullable();
-            $table->integer('paren_id')->nullable()->constrained()->onDelete('cascade');
+            $table->integer('paren_id')->nullable()->references('id')->on('default_m_b_s')->onDelete('cascade');
             $table->longText('description')->nullable();
             $table->longText('content')->nullable();
             $table->integer('user_id')->nullable();

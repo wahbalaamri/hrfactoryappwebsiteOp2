@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->integer('client_id')->nullable()->constrained()->onDelete('cascade');
-            $table->integer('sector_id')->nullable()->constrained()->onDelete('cascade');
-            $table->integer('comp_id')->nullable()->constrained()->onDelete('cascade');
-            $table->integer('dep_id')->nullable()->constrained()->onDelete('cascade');
+            $table->integer('client_id')->nullable()->references('id')->on('clients')->onDelete('cascade');
+            $table->integer('partner_id')->nullable()->references('id')->on('clients')->onDelete('cascade');
+            $table->integer('sector_id')->nullable()->references('id')->on('sectors')->onDelete('cascade');
+            $table->integer('comp_id')->nullable()->references('id')->on('companies')->onDelete('cascade');
+            $table->integer('dep_id')->nullable()->references('id')->on('departments')->onDelete('cascade');
             $table->string('user_type');
             $table->string('emp_id')->nullable();
             $table->boolean('is_main')->default(false);

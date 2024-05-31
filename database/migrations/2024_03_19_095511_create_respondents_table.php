@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('respondents', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->integer('survey_id')->constrained()->onDelete('cascade');
-            $table->integer('client_id')->constrained()->onDelete('cascade');
+            $table->integer('survey_id')->references('id')->on('surveys')->onDelete('cascade');
+            $table->integer('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->uuid('employee_id');
+            $table->uuid('rater_id')->nullable()->references('id')->on('raters')->onDelete('cascade');
+            $table->uuid('candidate_id')->nullable()->references('id')->on('employees')->onDelete('cascade');
             $table->integer('survey_type')->nullable();
             $table->boolean('send_status')->default(false);
             $table->dateTime('sent_date')->nullable();

@@ -141,10 +141,12 @@
                                     </a>
                                 </h5>
                             </div>
+                            @can('create',new App\Models\ServiceFeatures)
                             <div class="col-md-3 col-sm-12 text-right">
                                 <a href="javascript:void(0)" data-toggle="modal" data-target="#addEditFeature"
                                     class="btn bg-olive btn-sm float-right"><i class="fa fa-plus"></i></a>
                             </div>
+                            @endcan
                         </div>
                     </div>
                     <div id="collapseTwo" class="collapse" data-parent="#accordion" style="">
@@ -152,11 +154,26 @@
                             <div class="row justify-content-center">
                                 <div class="list-group list-group-horizontal-md row">
                                     @foreach ($service->features as $feature)
-                                    <div class="list-group-item col-lg-3 mt-1 mb-1"
-                                        ondblclick="showEdit('{{ $feature->id }}')">
+                                    <div class="list-group-item col-lg-3 mt-1 mb-1 custom-hover">
                                         <h6>
                                             {{ $feature->feature }}
                                         </h6>
+                                        <div class="row custom-btn-hover">
+                                            @can('update',$feature)
+                                            <div class="col-md-6 col-sm-12 text-center"><a href="javascript:void(0)"
+                                                    class="btn btn-warning btn-sm"
+                                                    onclick="showEdit('{{ $feature->id }}')"><i
+                                                        class="fa fa-edit"></i></a>
+                                            </div>
+                                            @endcan
+                                            @can('delete',$feature)
+                                            <div class="col-md-6 col-sm-12 text-center"><a href="javascript:void(0)"
+                                                    class="btn btn-danger btn-sm"
+                                                    onclick="showEdit('{{ $feature->id }}')"><i
+                                                        class="fa fa-trash"></i></a>
+                                            </div>
+                                            @endcan
+                                        </div>
                                     </div>
                                     @endforeach
                                 </div>
@@ -175,12 +192,14 @@
                                     </a>
                                 </h5>
                             </div>
+                            @can('create', new App\Models\ServiceApproaches)
                             <div class="col-md-3 col-sm-12 text-right">
                                 <a href="javascript:void(0)" data-toggle="modal" data-target="#addEditApproach"
                                     class="btn bg-olive btn-sm float-right">
                                     <i class="fa fa-plus"></i>
                                 </a>
                             </div>
+                            @endcan
                         </div>
                     </div>
                     <div id="collapseThree" class="collapse" data-parent="#accordion" style="">
@@ -189,7 +208,7 @@
                                 @foreach ( $service->approaches as $approache)
                                 <div class="col-md-3 col-sm-12">
                                     <div class="card">
-                                        <div class="card-body">
+                                        <div class="card-body custom-hover">
                                             <div class="row">
                                                 {{-- image --}}
                                                 <div class="col-12 text-center">
@@ -208,6 +227,20 @@
                                                 <div class="col-12 text-center">
                                                     <h6>{!! $approache->approach_ar !!}</h6>
                                                 </div>
+                                            </div>
+                                            <div class="row custom-btn-hover">
+                                                @can('update',$approache)
+                                                <div class="col-md-6 col-sm-12 text-center"><a href="javascript:void(0)"
+                                                        class="btn btn-warning btn-sm mt-5"><i
+                                                            class="fa fa-edit"></i></a>
+                                                </div>
+                                                @endcan
+                                                @can('delete',$approache)
+                                                <div class="col-md-6 col-sm-12 text-center"><a href="javascript:void(0)"
+                                                        class="btn btn-danger btn-sm mt-5"><i
+                                                            class="fa fa-trash"></i></a>
+                                                </div>
+                                                @endcan
                                             </div>
                                         </div>
                                     </div>
@@ -228,12 +261,14 @@
                                     </a>
                                 </h5>
                             </div>
+                            @can('create', new App\Models\Plans)
                             <div class="col-md-3 col-sm-12 text-right">
                                 <a href="{{ route('service-plans.create', $service->id) }}"
                                     class="btn bg-olive btn-sm float-right">
                                     <i class="fa fa-plus"></i>
                                 </a>
                             </div>
+                            @endcan
                         </div>
                     </div>
                     <div id="collapseFour" class="collapse" data-parent="#accordion" style="">
@@ -260,21 +295,25 @@
                                         {{-- footer --}}
                                         <div class="card-footer">
                                             <div class="row">
+                                                @can('view',$plan)
                                                 <div class="col-md-4 col-sm-12 text-center">
                                                     <a href="javascript:void(0)" class="btn btn-sm btn-info"
                                                         onclick="showPlan('{{ $plan->id }}')">
                                                         {{ __('Show') }}
                                                     </a>
                                                 </div>
+                                                @endcan
+                                                @can('update',$plan)
                                                 <div class="col-md-4 col-sm-12 text-center">
-                                                    <a href="{{-- {{ route('service-plans.edit', $plan->id) }} --}}"
+                                                    <a href="{{ route('service-plans.edit', $plan->id) }}"
                                                         class="btn btn-sm btn-warning">
                                                         {{ __('Edit') }}
                                                     </a>
                                                 </div>
+                                                @endcan
+                                                @can('delete',$plan)
                                                 <div class="col-md-4 col-sm-12 text-center">
-                                                    <form
-                                                        action="{{-- {{ route('service-plans.destroy', $plan->id) }} --}}"
+                                                    <form action="{{ route('service-plans.destroy', $plan->id) }}"
                                                         method="post">
                                                         @csrf
                                                         @method('DELETE')
@@ -283,6 +322,7 @@
                                                         </button>
                                                     </form>
                                                 </div>
+                                                @endcan
                                             </div>
                                         </div>
                                     </div>
@@ -331,9 +371,15 @@
                                                         <div class="card card-warning card-outline">
                                                             <div class="card-header">
                                                                 <h5 class="card-title">{{ ('Plan Terms') }}</h5>
+                                                                <div class="card-tools">
+                                                                    <button type="button" class="btn btn-tool"
+                                                                        data-target="#editTerms" data-toggle="modal"><i
+                                                                            class="fas fa-plus"></i>
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                             <div class="card-body">
-                                                                
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -378,14 +424,19 @@
                                                                         class="table table-bordered table-hover text-xs">
                                                                         <thead>
                                                                             <tr>
+                                                                                <td colspan="5">add</td>
+                                                                            </tr>
+                                                                            <tr>
                                                                                 <th>#</th>
                                                                                 <th>{{ __('Country') }}</th>
                                                                                 <th>{{ __('Monthly Price') }}</th>
                                                                                 <th>{{ __('Annual Price') }}</th>
+                                                                                <th>{{ __('Edit') }}</th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody id="PriceTable">
                                                                             <tr>
+                                                                                <td></td>
                                                                                 <td></td>
                                                                                 <td></td>
                                                                                 <td></td>
@@ -411,151 +462,14 @@
     </section>
 </div>
 {{-- modal to add_edit feature --}}
-<div class="modal fade" id="addEditFeature" tabindex="-1" aria-labelledby="addEditFeatureLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addEditFeatureLabel">Add Feature</h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="" method="post">
-                    {{-- featur in English --}}
-                    <input type="hidden" name="Fid" id="Fid">
-                    <input type="hidden" name="Sid" id="Sid" value="{{ $service->id }}">
-                    <div class="form-group col-12">
-                        <label for="feature">{{ __('Feature') }}</label>
-                        <input type="text" name="feature" id="feature" class="form-control" placeholder="Feature">
-                    </div>
-                    {{-- featur in Arabic --}}
-                    <div class="form-group col-12">
-                        <label for="feature_ar">{{ __('Feature Arabic') }}</label>
-                        <input type="text" name="feature_ar" id="feature_ar" class="form-control"
-                            placeholder="Feature Arabic">
-                    </div>
-                    {{-- feature status --}}
-                    <div class="form-group col-12">
-                        <label for="status">{{ __('Status') }}</label>
-                        {{-- switch --}}
-                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                            <input type="checkbox" class="custom-control-input" id="status" checked>
-                            <label class="custom-control-label" for="status">{{ __('Active') }}</label>
-                        </div>
-                    </div>
-                    <div class="form-group col-12">
-                        <a type="submit" class="btn btn-sm btn-success float-right" id="FeatureSave">{{ __('Save')
-                            }}</a>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+@include('dashboard.services.modals.editFeature')
 {{-- modal to add_edit approach --}}
-<div class="modal fade" id="addEditApproach" tabindex="-1" aria-labelledby="addEditApproachLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addEditApproachLabel">Add Approach
-                </h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                {{-- form to add new approach --}}
-                <form action="" method="post" enctype="multipart/form-data">
-                    @csrf
-                    <div class="row p-2">
-                        <input type="hidden" name="Sid" value="{{ $service->id }}">
-                        <input type="hidden" name="Aid" value="">
-                        {{-- approach in English --}}
-                        <div class="form-group col-12">
-                            <label for="approach">{{ __('Approach') }}</label>
-                            <textarea name="approach" class="form-control summernote" placeholder="Approach"></textarea>
-                        </div>
-                        {{-- approach in Arabic --}}
-                        <div class="form-group col-12">
-                            <label for="approach_ar">{{ __('Approach Arabic') }}</label>
-                            <textarea name="approach_ar" class="form-control summernote"
-                                placeholder="Approach Arabic"></textarea>
-                        </div>
-                        {{-- icon --}}
-                        <div class="form-group col-12">
-                            <label for="icon">{{ __('Icon') }}</label>
-                            <input type="file" name="icon" class="form-control">
-                        </div>
-                        {{-- save button --}}
-                        <div class="form-group col-12">
-                            <a type="submit" class="btn btn-sm btn-success float-right" id="ApproachSave">{{ __('Save')
-                                }}</a>
-                        </div>
-                    </div>
-            </div>
-        </div>
-    </div>
-</div>
+@include('dashboard.services.modals.editApproach')
 {{-- show terms and Conditions Modal --}}
-<div class="modal fade" id="showTerms" tabindex="-1" aria-labelledby="showTermsLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="showTermsLabel">
-                </h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row p-2">
-                    <div class="col-12">
-                        <p id="TermsP"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+@include('dashboard.services.modals.showTermsAndCondtions')
 {{-- Edit terms and condtions modal --}}
-<div class="modal fade" id="editTerms" tabindex="-1" aria-labelledby="editTermsLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editTermsLabel">
-                </h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="">
-                    <div class="row p-2">
-                        <input type="hidden" name="Pid" id="Pid">
-                        <div class="form-group col-md-6 col-sm-12">
-                            <label for="terms_title">{{ __('Terms & Condtions Title') }} (EN)</label>
-                            <input type="text" name="terms_title" id="terms_title" class="form-control"
-                                placeholder="Terms & Condtions Title">
-                        </div>
-                        <div class="form-group col-md-6 col-sm-12">
-                            <label for="terms_title_ar">{{ __('Terms & Condtions Title') }} (AR)</label>
-                            <input type="text" name="terms_title_ar" id="terms_title_ar" class="form-control"
-                                placeholder="Terms & Condtions Title">
-                        </div>
-                        <div class="form-group col-12">
-                            <label for="terms">{{ __('Terms & Condtions') }} (EN)</label>
-                            <textarea name="terms" id="terms" class="form-control summernote"
-                                placeholder="Terms & Condtions"></textarea>
-                        </div>
-                        <div class="form-group col-12">
-                            <label for="terms_ar">{{ __('Terms & Condtions') }} (AR)</label>
-                            <textarea name="terms_ar" id="terms_ar" class="form-control summernote"
-                                placeholder="Terms & Condtions"></textarea>
-                        </div>
-                        {{-- save button  --}}
-                        <div class="form-group col-12">
-                            <a href="javascript:void(0)" class="btn btn-sm btn-success float-right" id="TermsSave">{{ __('Save')
-                                }}</a>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+@include('dashboard.services.modals.editTermsAndCondtions')
+@include('dashboard.services.modals.editPlanPrice')
 @endsection
 @section('scripts')
 <script>
@@ -651,6 +565,7 @@ function showEdit(id) {
             $('#Fid').val(data.id);
             $('#feature').val(data.feature);
             $('#feature_ar').val(data.feature_ar);
+
             if(data.is_active == 1){
                 $('#status').prop('checked', true);
                 $('#status').next().text('Active');
@@ -677,15 +592,22 @@ function showPlan(id) {
         success: function (data) {
             // clear table
             $('#PriceTable').html('');
-            data.prices.forEach((price, index) => {
+            let loopIndex=1;
+            data.prices.forEach(price=> {
                 $('#PriceTable').append(`
                     <tr>
-                        <td>${index + 1}</td>
+                        <td>${loopIndex++}</td>
                         <td>${price.Country_name}</td>
                         <td>${price.monthly_price} ${price.currency_sy}</td>
                         <td>${price.annual_price} ${price.currency_sy}</td>
+                        <td><a href="javascript:void(0)" id="EditPlanPricebtn-${price.id}" class="btn btn-warning btn-xs" data-target="#editPlanPrice" data-toggle="modal"><i class="fa fa-edit"></i></a></td>
                     </tr>
                 `);
+                //find "EditPlanPricebtn-${price.id}"
+                button=document.getElementById(`EditPlanPricebtn-${price.id}`)
+                button.addEventListener('click',function(){
+                    ShowEditPP(price)
+                });
             });
             //clear features_P
             $('#features_P').html('');
@@ -713,10 +635,94 @@ function showPlan(id) {
                 $('#terms').html(data.plan.termsConditions.english_terms);
                 $('#terms_ar').html(data.plan.termsConditions.arabic_terms);
             }
-
             $('.d-none').removeClass('d-none');
+            isPartner="{{ Auth()->user()->user_type == 'partner' }}"
+            if(data.countries.length>0)
+            {
+                //ppvalid_in
+           //set up Terms_Countries
+           $('#ppvalid_in').html('');
+                $('#ppvalid_in').append(`<option value="">Select</option>`);
+                if(isPartner)
+                {
+                    data.countries.forEach((country, index) => {
+                    $('#ppvalid_in').append(`<option value="${country.id}">${country.country_name}</option>`);
+                });
+            }
+            else{
+                $('#ppvalid_in').html('');
+                $('#ppvalid_in').append(`<option value="">Select</option>`);
+                //add option group
+                $('#ppvalid_in').append(`<optgroup label="{{ __('Arab Countries') }}">`);
+                data.countries[1].forEach((country, index) => {
+                    $('#ppvalid_in').append(`<option value="${country.id}">${country.country_name}</option>`);
+                });
+                $('#ppvalid_in').append(`</optgroup>`);
+                // //add option group
+                $('#ppvalid_in').append(`<optgroup label="{{ __('Other') }}">`);
+                data.countries[0].forEach((country, index) => {
+                    $('#ppvalid_in').append(`<option value="${country.id}">${country.country_name}</option>`);
+                });
+                $('#ppvalid_in').append(`</optgroup>`);
+            }
+            $("#eplan_id").val(id);
+            }
+            else{
+                console.log('there is no data');
+            }
+            if(data.countries.length>0)
+            {
+                //set up Terms_Countries
+                $('#Terms_Countries').html('');
+                $('#Terms_Countries').append(`<option value="">Select</option>`);
+                if(isPartner)
+                {
+                    data.countries.forEach((country, index) => {
+                    $('#Terms_Countries').append(`<option value="${country.id}">${country.country_name}</option>`);
+                });
+            }
+            else{
+                $('#Terms_Countries').html('');
+                $('#Terms_Countries').append(`<option value="">Select</option>`);
+                //add option group
+                $('#Terms_Countries').append(`<optgroup label="{{ __('Arab Countries') }}">`);
+                data.countries[1].forEach((country, index) => {
+                    $('#Terms_Countries').append(`<option value="${country.id}">${country.country_name}</option>`);
+                });
+                $('#Terms_Countries').append(`</optgroup>`);
+                // //add option group
+                $('#Terms_Countries').append(`<optgroup label="{{ __('Other') }}">`);
+                data.countries[0].forEach((country, index) => {
+                    $('#Terms_Countries').append(`<option value="${country.id}">${country.country_name}</option>`);
+                });
+                $('#Terms_Countries').append(`</optgroup>`);
+            }
+            $("#eplan_id").val(id);
+            }
+            else{
+                console.log('there is no data');
+            }
+
         }
     });
+}
+//ShowEdit function
+function ShowEditPP(price){
+    console.log(price);
+// to edit plan price
+$('#eplan_id').val(price.plan_id);
+$('#plan_price_id').val(price.id);
+$('#ppvalid_in').val(price.country.id).trigger("change");
+//set selection of ppvalid in
+
+$('#monthly_price').val(price.monthly_price);
+$('#annual_price').val(price.annual_price);
+$('#currency').val(price.currency).trigger("change");
+PMs=price.payment_methods
+//set payment methods
+PMs.forEach(item=>{
+    $(`#PM-${item}`).prop('checked',true);
+});
 }
 </script>
 @endsection

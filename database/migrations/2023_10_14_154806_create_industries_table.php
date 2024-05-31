@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('name_ar');
             $table->boolean('system_create');
-            $table->integer('client_id')->nullable()->constrained()->onDelete('cascade');
+            $table->integer('client_id')->nullable()->references('id')->on('clients')->onDelete('cascade');
             //is_active
             $table->boolean('is_active')->default(0);
             $table->softDeletes();

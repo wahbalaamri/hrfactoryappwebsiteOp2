@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('companies_sizes', function (Blueprint $table) {
             $table->id();
-            $table->integer('country')->nullable()->constrained()->onDelete('cascade');
+            $table->integer('country')->nullable()->references('id')->on('countries')->onDelete('cascade');
             $table->string('label');
             $table->string('label_ar');
             $table->boolean('is_active')->default(0);

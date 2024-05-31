@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\SurveysPrepration;
 use App\Jobs\SetupUsersIdInUsersOldSections;
 use App\Models\Content;
+use App\Models\FunctionPractices;
+use App\Models\Functions;
+use App\Models\PracticeQuestions;
 use App\Models\Services;
 use App\Models\User;
 use App\Models\UserPlans;
@@ -52,7 +55,10 @@ class HomeController extends Controller
     {
         if (Auth()->check()); {
             //redirect to some route
-            return Auth()->user()->isAdmin == 1 ? redirect()->route('admin.dashboard') : redirect()->route('client.dashboard');
+            if (Auth()->user()->isAdmin == 1 || Auth()->user()->user_type == 'partner')
+                return redirect()->route('admin.dashboard');
+            else
+                return redirect()->route('client.dashboard');
         }
     }
     function dashboard()
@@ -102,5 +108,107 @@ class HomeController extends Controller
     {
         //get all surveys
         return $surveysPrepration->manage(Auth()->user()->client_id);
+    }
+    public function SetupNameRev()
+    {
+        ini_set('max_execution_time', 420);
+        //find service of type 6
+        $service = Services::where('service_type', 5)->first();
+        //read functions from https://hrtools.hrfactoryapp.com/GetFunctions
+        $urlf = "https://hrtools.hrfactoryapp.com/GetFunctions";
+        $jsonf = file_get_contents($urlf);
+        $dataf = json_decode($jsonf, true);
+        //loop through functions
+        foreach ($dataf as $function) {
+            //check if function exists
+            $function1 = Functions::where('title', $function['FunctionTitle'])->whereIn('service_id', function ($query) {
+                $query->select('id')
+                    ->from('services')
+                    ->where('service_type', 5);
+            })->get();
+            if ($function1->count() < 0) {
+                //create function
+                Log::info($function);
+                $f = new Functions();
+                $f->title = $function['FunctionTitle'];
+                $f->title_ar = $function['FunctionTitleAr'];
+                $f->respondent = $function['Respondent'];
+                $f->service_id = $service->id;
+                $f->status = 1;
+                $f->IsDefault =  $function['IsDefault'] == 1 ? true : false;
+                $f->IsDriver =  $function['IsDriver'] == 1 ? true : false;
+                $f->save();
+                //read practices from https://hrtools.hrfactoryapp.com/GetPractices/
+                $urlp = "https://hrtools.hrfactoryapp.com/GetPractices/" . $function['id'];
+                $jsonp = file_get_contents($urlp);
+                $datap = json_decode($jsonp, true);
+                //loop through practices
+                foreach ($datap as $practice) {
+                    if (!FunctionPractices::where('title', $practice['PracticeTitle'])->exists()) {
+                        //create practice
+                        $p = new FunctionPractices();
+                        $p->title = $practice['PracticeTitle'];
+                        $p->title_ar = $practice['PracticeTitleAr'];
+                        $p->status = true;
+                        $p->function_id = $f->id;
+                        $p->save();
+                        //read surveys from https://hrtools.hrfactoryapp.com/GetQuestion/
+                        $urls = "https://hrtools.hrfactoryapp.com/GetQuestion/" . $practice['id'];
+                        $jsons = file_get_contents($urls);
+                        $datas = json_decode($jsons, true);
+                        //loop through surveys
+                        foreach ($datas as $question) {
+                            //create survey
+                            if (PracticeQuestions::where('question', $question['Question'])->doesntExist()) {
+                                $s = new PracticeQuestions();
+                                $s->question = $question['Question'];
+                                $s->question_ar = $question['QuestionAr'];
+                                $s->respondent = $question['Respondent'];
+                                $s->IsENPS = $question['IsENPS'];
+                                $s->practice_id = $p->id;
+                                $s->status = true;
+                                $s->save();
+                            }
+                        }
+                    }
+                }
+            } else {
+                Log::info($function);
+                //read practices from https://hrtools.hrfactoryapp.com/GetPractices/
+                $urlp = "https://hrtools.hrfactoryapp.com/GetPractices/" . $function['id'];
+                $jsonp = file_get_contents($urlp);
+                $datap = json_decode($jsonp, true);
+                //loop through practices
+                foreach ($datap as $practice) {
+                    if (!FunctionPractices::where('title', $practice['PracticeTitle'])->where('function_id', $function1->first()->id)->exists()) {
+                        //create practice
+                        $p = new FunctionPractices();
+                        $p->title = $practice['PracticeTitle'];
+                        $p->title_ar = $practice['PracticeTitleAr'];
+                        $p->status = true;
+                        $p->function_id = $function1->first()->id;
+                        $p->save();
+                        //read surveys from https://hrtools.hrfactoryapp.com/GetQuestion/
+                        $urls = "https://hrtools.hrfactoryapp.com/GetQuestion/" . $practice['id'];
+                        $jsons = file_get_contents($urls);
+                        $datas = json_decode($jsons, true);
+                        //loop through surveys
+                        foreach ($datas as $question) {
+                            //create survey
+                            if (PracticeQuestions::where('question', $question['Question'])->where('practice_id', $p->id)->doesntExist()) {
+                                $s = new PracticeQuestions();
+                                $s->question = $question['Question'];
+                                $s->question_ar = $question['QuestionAr'];
+                                $s->respondent = $question['Respondent'];
+                                $s->IsENPS = $question['IsENPS'];
+                                $s->practice_id = $p->id;
+                                $s->status = true;
+                                $s->save();
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

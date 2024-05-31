@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('partner_focal_points', function (Blueprint $table) {
             $table->id();
-            $table->integer('partner_id')->constrained()->onDelete('cascade');
+            $table->integer('partner_id')->references('id')->on('partners')->onDelete('cascade');
             $table->string('name')->nullable();
             $table->string('name_ar')->nullable();
             $table->string('Email')->nullable();

@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('user_sections', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->integer('country_id')->constrained()->onDelete('cascade');
+            $table->integer('country_id');/* ->constrained()->onDelete('cascade'); */
             $table->integer('ordering')->nullable();
-            $table->integer('paren_id')->nullable()->constrained()->onDelete('cascade');
+            $table->integer('paren_id')->nullable()->references('id')->on('user_sections')->onDelete('cascade');
             $table->longText('description')->nullable();
             $table->longText('content')->nullable();
-            $table->integer('user_id')->constrained()->onDelete('cascade');
+            $table->integer('user_id')->references('id')->on('clients')->onDelete('cascade');
             $table->string('language');
             $table->integer('default_MB_id');
             $table->integer('company_size');

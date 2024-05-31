@@ -82,7 +82,7 @@
                                     <div class="form-group col-md-6 col-sm-12">
                                         <label for="status">{{ __('Email Status') }}</label>
                                         <br>
-                                        <input type="checkbox" name="status" id="status" @if($emailContet!=null) @if($emailContet->status) checked @endif @else checked @endif checked data-bootstrap-switch
+                                        <input type="checkbox" name="status" id="status" @if($emailContet!=null) @if($emailContet->status) checked @endif @else checked @endif data-bootstrap-switch
                                             data-off-color="danger" data-on-color="success">
                                     </div>
                                     @if($emailContet!=null)

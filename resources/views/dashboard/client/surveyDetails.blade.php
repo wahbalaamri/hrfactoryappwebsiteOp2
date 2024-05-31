@@ -125,7 +125,7 @@
                                         <div class="icon">
                                             <i class="ion ion-stats-bars"></i>
                                         </div>
-                                        <a href="#" class="small-box-footer">
+                                        <a href="{{ route('clients.SurveyResults',[$id,$type,$survey->id,'all']) }}" class="small-box-footer">
                                             {{ __('Start') }}<i class="fas fa-arrow-circle-right"></i>
                                         </a>
                                     </div>

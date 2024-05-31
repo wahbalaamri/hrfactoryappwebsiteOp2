@@ -143,6 +143,21 @@
 
                                     <div class="small-box bg-success">
                                         <div class="inner" style="min-height: 123px">
+                                            <h3 style="font-size: 1.2rem">{{ __('360 Leader Review Customized') }}</h3>
+                                            <p class="w-75">{{ __('Assess Your Leaders From 360 Degree') }}</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fas fa-user-tie"></i>
+                                        </div>
+                                        <a href="{{route('clients.ShowSurveys',[$id,6])}}" class="small-box-footer">
+                                            {{ __('Get Started') }} <i class="fas fa-arrow-circle-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-6">
+
+                                    <div class="small-box bg-danger">
+                                        <div class="inner" style="min-height: 123px">
                                             <h3 style="font-size: 1.2rem">{{ ('HR Templates') }}</h3>
                                             <p class="w-75">{{ ("Access Most Used HR Templates") }}</p>
                                         </div>

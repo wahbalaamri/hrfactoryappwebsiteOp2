@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('plans_prices', function (Blueprint $table) {
             $table->id();
-            $table->integer('plan')->constrained()->onDelete('cascade');
+            $table->integer('plan')->references('id')->on('plans')->onDelete('cascade');
             //country
-            $table->integer('country')->constrained()->onDelete('cascade');
+            $table->integer('country')->references('id')->on('countries')->onDelete('cascade');
             $table->double('annual_price');
             $table->double('monthly_price');
             $table->string('currency');

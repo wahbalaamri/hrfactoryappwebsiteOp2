@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Services;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class UpdateServicesRequest extends FormRequest
 {
@@ -11,7 +14,8 @@ class UpdateServicesRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        Log::info($this->route('service'));
+        return Auth::user()->can('update', Services::find($this->route('service')));
     }
 
     /**

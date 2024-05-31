@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('raters', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->integer('survey_id')->constrained()->onDelete('cascade');
+            $table->integer('survey_id')->references('id')->on('surveys')->onDelete('cascade');
             //candidate uuid
             $table->uuid('candidate_id');
             $table->uuid('rater_id');

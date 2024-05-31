@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('surveys', function (Blueprint $table) {
             $table->id();
-            $table->integer('client_id')->constrained()->onDelete('cascade');
-            $table->integer('plan_id')->constrained()->onDelete('cascade');
-            $table->integer('subscription_plan_id')->nullable()->constrained()->onDelete('cascade');
+            $table->integer('client_id')->references('id')->on('clients')->onDelete('cascade');
+            $table->integer('plan_id')->references('id')->on('plans')->onDelete('cascade');
+            $table->integer('subscription_plan_id')->nullable()->references('id')->on('client_subscriptions')->onDelete('cascade');
             $table->string('survey_title');
             $table->text('survey_des')->nullable();
             $table->boolean('survey_stat')->default(0);

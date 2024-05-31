@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('plan_features', function (Blueprint $table) {
             $table->id();
             // cascading on plan delete
-            $table->integer('plan')->constrained()->onDelete('cascade');
+            $table->integer('plan')->references('id')->on('plans')->onDelete('cascade');
             $table->integer('feature_id');
             $table->softDeletes();
             $table->timestamps();

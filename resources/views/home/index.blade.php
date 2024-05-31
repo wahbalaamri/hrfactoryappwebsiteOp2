@@ -119,6 +119,9 @@
                     </div>
                     <div class="row ">
                         @foreach ($services as $service)
+                        @if ($service->service_type != 6)
+                            
+                        @endif
                         <div class="col-lg-4 col-md-6 sm-mb-30px wow fadeInUp padding-bottom-42px">
                             <div class="blog-item thum-hover background-white hvr-float hvr-sh2 ">
                                 <div class="position-relative">
