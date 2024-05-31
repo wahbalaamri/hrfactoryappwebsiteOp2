@@ -768,44 +768,48 @@ class SurveysPrepration
     // Employees function
     function Employees(Request $request, $id, $by_admin = false)
     {
-        $client = Clients::find($id);
-        $data = [
-            'id' => $id,
-            'client' => $client
-        ];
-        if ($request->ajax()) {
-            //setup yajra datatable
+        try {
+            $client = Clients::find($id);
+            $data = [
+                'id' => $id,
+                'client' => $client,
+            ];
             $employees = $client->employeesData()->get();
-            // $employees = Employees::where('client_id', $id)->get();
-            //log employees as an array
-            return DataTables::of($employees)
-                ->addIndexColumn()
-                ->addColumn('action', function ($employee) {
-                    $action = '<div class="row"><div class="col-md-6 col-sm-12 text-center"><a href="javascript:void(0);" onclick="editEmp(\'' . $employee->id . '\')" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a></div>';
-                    $action .= '<div class="col-md-6 col-sm-12 text-center"><a href="javascript:void(0);" onclick="deleteEmp(\'' . $employee->id . '\')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a></div></div>';
-                    return $action;
-                })
-                ->addColumn('type', function ($employee) {
-                    return $employee->employee_type == 1 ? __('HR Manager') : __('Normal Employee');
-                })
-                ->addColumn('sector', function ($employee) {
-                    return $employee->sector != null ? ($employee->sector->Name) : '-';
-                })
-                //hr
-                ->addColumn('hr', function ($employee) {
-                    return $employee->is_hr_manager ? '<span class="badge bg-success">' . __('HR Manager') . '</span>' : '<span class="badge bg-danger">' . __('Not HR Manager') . '</span>';
-                })
-                ->addColumn('company', function ($employee) {
-                    return $employee->company != null ? (App()->getLocale() == 'en' ? $employee->company->name_en : $employee->company->name_ar) : '-';
-                })
-                ->editColumn('department', function ($employee) {
-                    return $employee->department != null ? (App()->getLocale() == 'en' ? $employee->department->name_en : $employee->department->name_ar) : '-';
-                })
-                ->addColumn('active', function ($employee) {
-                    return $employee->active ? '<span class="badge bg-success">' . __('Active') . '</span>' : '<span class="badge bg-danger">' . __('Not Active') . '</span>';
-                })
-                ->rawColumns(['action', 'hr', 'active'])
-                ->make(true);
+            if ($request->ajax()) {
+                //setup yajra datatable
+
+                //log employees as an array
+                return DataTables::of($employees)
+                    ->addIndexColumn()
+                    ->addColumn('action', function ($employee) {
+                        $action = '<div class="row"><div class="col-md-6 col-sm-12 text-center"><a href="javascript:void(0);" onclick="editEmp(\'' . $employee->id . '\')" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a></div>';
+                        $action .= '<div class="col-md-6 col-sm-12 text-center"><a href="javascript:void(0);" onclick="deleteEmp(\'' . $employee->id . '\')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a></div></div>';
+                        return $action;
+                    })
+                    ->addColumn('type', function ($employee) {
+                        return $employee->employee_type == 1 ? __('HR Manager') : __('Normal Employee');
+                    })
+                    ->addColumn('sector', function ($employee) {
+                        return $employee->sector != null ? $employee->sector->Name : '-';
+                    })
+                    //hr
+                    ->addColumn('hr', function ($employee) {
+                        return $employee->is_hr_manager ? '<span class="badge bg-success">' . __('HR Manager') . '</span>' : '<span class="badge bg-danger">' . __('Not HR Manager') . '</span>';
+                    })
+                    ->addColumn('company', function ($employee) {
+                        return $employee->company != null ? (App()->getLocale() == 'en' ? $employee->company->name_en : $employee->company->name_ar) : '-';
+                    })
+                    ->editColumn('department', function ($employee) {
+                        return $employee->department != null ? (App()->getLocale() == 'en' ? $employee->department->name_en : $employee->department->name_ar) : '-';
+                    })
+                    ->addColumn('active', function ($employee) {
+                        return $employee->active ? '<span class="badge bg-success">' . __('Active') . '</span>' : '<span class="badge bg-danger">' . __('Not Active') . '</span>';
+                    })
+                    ->rawColumns(['action', 'hr', 'active', 'name'])
+                    ->make(true);
+            }
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
         }
         return view('dashboard.client.Employees.showAll')->with($data);
     }
