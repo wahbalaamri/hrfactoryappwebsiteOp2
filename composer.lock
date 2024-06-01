@@ -1154,6 +1154,7 @@
         },
         {
             "name": "laravel/framework",
+<<<<<<< Updated upstream
             "version": "v10.48.12",
             "source": {
                 "type": "git",
@@ -1164,6 +1165,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/framework/zipball/590afea38e708022662629fbf5184351fa82cf08",
                 "reference": "590afea38e708022662629fbf5184351fa82cf08",
+=======
+            "version": "v10.48.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/framework.git",
+                "reference": "91e2b9e218afa4e5c377510faa11957042831ba3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/91e2b9e218afa4e5c377510faa11957042831ba3",
+                "reference": "91e2b9e218afa4e5c377510faa11957042831ba3",
+>>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -1357,6 +1370,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
+<<<<<<< Updated upstream
             "time": "2024-05-28T15:46:19+00:00"
         },
         {
@@ -1371,6 +1385,22 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/prompts/zipball/9bc4df7c699b0452c6b815e64a2d84b6d7f99400",
                 "reference": "9bc4df7c699b0452c6b815e64a2d84b6d7f99400",
+=======
+            "time": "2024-04-30T12:52:59+00:00"
+        },
+        {
+            "name": "laravel/prompts",
+            "version": "v0.1.21",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/prompts.git",
+                "reference": "23ea808e8a145653e0ab29e30d4385e49f40a920"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/prompts/zipball/23ea808e8a145653e0ab29e30d4385e49f40a920",
+                "reference": "23ea808e8a145653e0ab29e30d4385e49f40a920",
+>>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -1413,9 +1443,15 @@
             "description": "Add beautiful and user-friendly forms to your command-line applications.",
             "support": {
                 "issues": "https://github.com/laravel/prompts/issues",
+<<<<<<< Updated upstream
                 "source": "https://github.com/laravel/prompts/tree/v0.1.23"
             },
             "time": "2024-05-27T13:53:20+00:00"
+=======
+                "source": "https://github.com/laravel/prompts/tree/v0.1.21"
+            },
+            "time": "2024-04-30T12:46:16+00:00"
+>>>>>>> Stashed changes
         },
         {
             "name": "laravel/sanctum",
@@ -6164,6 +6200,7 @@
         },
         {
             "name": "laravel/pint",
+<<<<<<< Updated upstream
             "version": "v1.16.0",
             "source": {
                 "type": "git",
@@ -6174,6 +6211,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/pint/zipball/1b3a3dc5bc6a81ff52828ba7277621f1d49d6d98",
                 "reference": "1b3a3dc5bc6a81ff52828ba7277621f1d49d6d98",
+=======
+            "version": "v1.15.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/pint.git",
+                "reference": "3600b5d17aff52f6100ea4921849deacbbeb8656"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/pint/zipball/3600b5d17aff52f6100ea4921849deacbbeb8656",
+                "reference": "3600b5d17aff52f6100ea4921849deacbbeb8656",
+>>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -6184,11 +6233,19 @@
                 "php": "^8.1.0"
             },
             "require-dev": {
+<<<<<<< Updated upstream
                 "friendsofphp/php-cs-fixer": "^3.57.1",
                 "illuminate/view": "^10.48.10",
                 "larastan/larastan": "^2.9.6",
                 "laravel-zero/framework": "^10.4.0",
                 "mockery/mockery": "^1.6.12",
+=======
+                "friendsofphp/php-cs-fixer": "^3.54.0",
+                "illuminate/view": "^10.48.8",
+                "larastan/larastan": "^2.9.5",
+                "laravel-zero/framework": "^10.3.0",
+                "mockery/mockery": "^1.6.11",
+>>>>>>> Stashed changes
                 "nunomaduro/termwind": "^1.15.1",
                 "pestphp/pest": "^2.34.7"
             },
@@ -6226,7 +6283,11 @@
                 "issues": "https://github.com/laravel/pint/issues",
                 "source": "https://github.com/laravel/pint"
             },
+<<<<<<< Updated upstream
             "time": "2024-05-21T18:08:25+00:00"
+=======
+            "time": "2024-04-30T15:02:26+00:00"
+>>>>>>> Stashed changes
         },
         {
             "name": "laravel/sail",
@@ -8050,6 +8111,7 @@
         },
         {
             "name": "spatie/flare-client-php",
+<<<<<<< Updated upstream
             "version": "1.6.0",
             "source": {
                 "type": "git",
@@ -8060,6 +8122,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/spatie/flare-client-php/zipball/220a7c8745e9fa427d54099f47147c4b97fe6462",
                 "reference": "220a7c8745e9fa427d54099f47147c4b97fe6462",
+=======
+            "version": "1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/flare-client-php.git",
+                "reference": "9aa60f6ded35a774554e7a5256dca12b72693b78"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/flare-client-php/zipball/9aa60f6ded35a774554e7a5256dca12b72693b78",
+                "reference": "9aa60f6ded35a774554e7a5256dca12b72693b78",
+>>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -8107,7 +8181,11 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/flare-client-php/issues",
+<<<<<<< Updated upstream
                 "source": "https://github.com/spatie/flare-client-php/tree/1.6.0"
+=======
+                "source": "https://github.com/spatie/flare-client-php/tree/1.5.0"
+>>>>>>> Stashed changes
             },
             "funding": [
                 {
@@ -8115,6 +8193,7 @@
                     "type": "github"
                 }
             ],
+<<<<<<< Updated upstream
             "time": "2024-05-22T09:45:39+00:00"
         },
         {
@@ -8129,6 +8208,22 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/spatie/ignition/zipball/5e11c11f675bb5251f061491a493e04a1a571532",
                 "reference": "5e11c11f675bb5251f061491a493e04a1a571532",
+=======
+            "time": "2024-05-02T13:18:42+00:00"
+        },
+        {
+            "name": "spatie/ignition",
+            "version": "1.14.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/ignition.git",
+                "reference": "80385994caed328f6f9c9952926932e65b9b774c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/ignition/zipball/80385994caed328f6f9c9952926932e65b9b774c",
+                "reference": "80385994caed328f6f9c9952926932e65b9b774c",
+>>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -8198,7 +8293,11 @@
                     "type": "github"
                 }
             ],
+<<<<<<< Updated upstream
             "time": "2024-05-29T08:10:20+00:00"
+=======
+            "time": "2024-04-26T08:45:51+00:00"
+>>>>>>> Stashed changes
         },
         {
             "name": "spatie/laravel-ignition",
