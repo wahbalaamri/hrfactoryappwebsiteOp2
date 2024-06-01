@@ -169,7 +169,22 @@
                                         </a>
                                     </div>
                                 </div>
+                                <div class="col-lg-3 col-6">
 
+                                    <div class="small-box bg-info">
+                                        <div class="inner" style="min-height: 123px">
+                                            <h3 style="font-size: 1.2rem">Customized surveys</h3>
+                                            <p class="w-75">Build your own customized survey</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fas fa-file-alt"></i>
+                                        </div>
+                                        <a href="{{ route('clients.createCustomizedSurvey',[$id,7]) }}"
+                                            class="small-box-footer">
+                                            Get Started <i class="fas fa-arrow-circle-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

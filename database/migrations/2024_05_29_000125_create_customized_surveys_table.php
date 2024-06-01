@@ -33,7 +33,6 @@ return new class extends Migration
             $table->time('reminder_start_time')->nullable();
             //is it mandatory to collect answers from all respondents?
             $table->boolean('mandatory_stat')->default(0);
-            $table->boolean('survey_stat')->default(0);
             $table->timestamps();
         });
     }

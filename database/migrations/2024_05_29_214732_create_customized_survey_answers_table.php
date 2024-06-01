@@ -19,7 +19,6 @@ return new class extends Migration
             $table->integer('cycle_number');
             $table->uuid('answered_by');
             $table->timestamps();
-            $table->foreign('candidate')->references('id')->on('employees')->onDelete('cascade');
             $table->foreign('answered_by')->references('id')->on('respondents')->onDelete('cascade');
         });
     }

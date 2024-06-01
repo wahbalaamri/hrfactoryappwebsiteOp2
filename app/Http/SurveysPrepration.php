@@ -25,7 +25,6 @@ class SurveysPrepration
                 'functions' => $functions,
                 'service_type' => $service_type,
             ];
-            Log::info($data);
             return view('dashboard.ManageHrDiagnosis.index')->with($data);
         } catch (\Exception $e) {
             Log::info($e->getMessage());
@@ -391,7 +390,6 @@ class SurveysPrepration
         $plans = Plans::where([['service', $service_id], ['is_active', true]])->get();
         $plan = $plans->where('is_active', true)->first();
         $plans_id = $plans->pluck('id')->toArray();
-        Log::info($id);
         //get client active subscription
         Log::info(json_encode(ClientSubscriptions::where([['client_id', $id], ['is_active', 1]])));
         $client_subscription = ClientSubscriptions::where([['client_id', $id], ['is_active', 1]])
@@ -473,6 +471,7 @@ class SurveysPrepration
         $survey = Surveys::find($survey_id);
         $client = Clients::find($id);
         $survey_type = $survey->plans->service_->service_type;
+        $is_candidate_raters = $survey->plans->service_->candidate_raters_model;
         $data = [
             'id' => $id,
             'type' => $type,
@@ -480,13 +479,14 @@ class SurveysPrepration
             'client' => $client,
             'survey_type' => $survey_type,
             'survey_id' => $survey_id,
+            'is_candidate_raters' => $is_candidate_raters,
         ];
         //if request is ajax
         if ($request->ajax()) {
             $respondents_ids = $survey->respondents->pluck('employee_id')->toArray();
             $candidate = Raters::where('survey_id', $survey_id)->get()->pluck('candidate_id')->toArray();
             //setup yajra datatable
-            if ($survey_type == 5 || $survey_type == 6) {
+            if ($is_candidate_raters) {
                 $employees = $client->employeesData()->where('employee_type', 1)->get();
             } else {
                 $employees = $client->employeesData()->get();
@@ -512,6 +512,9 @@ class SurveysPrepration
                 })
                 ->addColumn('service_type', function ($employee) use ($survey_type) {
                     return $survey_type;
+                })
+                ->addColumn('is_candidate_raters', function ($employee) use ($is_candidate_raters) {
+                    return $is_candidate_raters;
                 })
                 ->addColumn('isAddedAsCandidate', function ($employee) use ($candidate) {
                     return in_array($employee->id, $candidate) ? true : false;
@@ -2726,6 +2729,42 @@ class SurveysPrepration
     //schedule360 public function
     public function schedule360(Request $request,  $type = null)
     {
-
+    }
+    //createCustomizedSurvey function
+    function editCustomizedSurvey($id, $type, $survey = null, $is_admin = false)
+    {
+        $client = Clients::find($id);
+        $service = Services::select('id')->where('service_type', $type)->first();
+        if (!$service) {
+            // $data = [
+            //     'id' => null,
+            //     'type' => $type,
+            //     'client' => $client,
+            //     'plans' => null,
+            //     'survey' => $survey,
+            //     'client_subscription' => null,
+            //     'error'=>'Service is not available yet please check it'
+            // ];
+            // return view('dashboard.client.editCustomizedSurvey')->with($data);
+            return redirect()->route('services.index');
+        }
+        $service_id = $service->id;
+        $plans = Plans::where([['service', $service_id], ['is_active', true]])->get();
+        $plan = $plans->where('is_active', true)->first();
+        $plans_id = $plans->pluck('id')->toArray();
+        //get client active subscription
+        Log::info(json_encode(ClientSubscriptions::where([['client_id', $id], ['is_active', 1]])));
+        $client_subscription = ClientSubscriptions::where([['client_id', $id], ['is_active', 1]])
+            ->whereIn('plan_id', $plans_id)
+            ->first();
+        $data = [
+            'id' => $id,
+            'type' => $type,
+            'client' => $client,
+            'plans' => $plans,
+            'survey' => $survey,
+            'client_subscription' => $client_subscription,
+        ];
+        return view('dashboard.client.editCustomizedSurvey')->with($data);
     }
 }

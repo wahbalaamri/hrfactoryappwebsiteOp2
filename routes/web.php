@@ -317,6 +317,9 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
     Route::get('clients/createSurvey/{id}/{type}', [ClientsController::class, 'createSurvey'])->name('clients.createSurvey');
     Route::get('clients/editSurvey/{id}/{type}/{survey}', [ClientsController::class, 'editSurvey'])->name('clients.editSurvey');
     Route::post('clients/storeSurvey/{id}/{type}/{survey?}', [ClientsController::class, 'storeSurvey'])->name('clients.storeSurvey');
+    Route::get('clients/createCustomizedSurvey/{id}/{type}', [ClientsController::class, 'createCustomizedSurvey'])->name('clients.createCustomizedSurvey');
+    Route::get('clients/editCustomizedSurvey/{id}/{type}/{survey}', [ClientsController::class, 'editCustomizedSurvey'])->name('clients.editCustomizedSurvey');
+    Route::post('clients/storeCustomizedSurvey/{id}/{type}/{survey?}', [ClientsController::class, 'storeCustomizedSurvey'])->name('clients.storeCustomizedSurvey');
     Route::delete('clients/destroySurvey/{id}/{type}/{survey}', [ClientsController::class, 'destroySurvey'])->name('clients.destroySurvey');
     Route::post('clients/changeSurveyStat/{id}/{type}/{survey}', [ClientsController::class, 'changeSurveyStat'])->name('clients.changeSurveyStat');
     Route::get('clients/surveyDetails/{id}/{type}/{survey}', [ClientsController::class, 'surveyDetails'])->name('clients.surveyDetails');

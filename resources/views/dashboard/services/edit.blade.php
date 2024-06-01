@@ -141,8 +141,8 @@
                                                             <label for="public_availability">{{ __('Service
                                                                 Availability') }}
                                                                 {{ __('public') }} /{{ __('private') }}</label>
-                                                            <div class="col-12 text-center">
-                                                                <input type="checkbox" name="public_availability" 
+                                                            <div class="col-12">
+                                                                <input type="checkbox" name="public_availability"
                                                                 @if($service) @checked($service->FW_uploaded_video)
                                                                 @else checked @endif
                                                                 data-bootstrap-switch="" data-off-color="danger"
@@ -152,10 +152,10 @@
                                                         <div class="form-group col-md-6 col-sm-12">
                                                             <label for="candidate_raters_model">
                                                                 {{ __('Candidate Raters Model') }}
-                                                            <div class="col-12 text-center">
-                                                                <input type="checkbox" name="candidate_raters_model" 
+                                                            <div class="col-12">
+                                                                <input type="checkbox" name="candidate_raters_model"
                                                                 @if($service) @checked($service->FW_uploaded_video)
-                                                                @else checked @endif
+                                                                 @endif
                                                                 data-bootstrap-switch="" data-off-color="danger"
                                                                 data-on-color="success" value="1">
                                                             </div>
@@ -217,7 +217,7 @@
 
                                                                 <optgroup label="{{ __('Arab Countries') }}">
                                                                     @foreach ($countries[1] as $country)
-                                                                    <option value="{{ $country->id }}" 
+                                                                    <option value="{{ $country->id }}"
                                                                         @if(old('valid_in', $service ? $service->country :
                                                                         null) == $country->id) selected @endif>
                                                                         {{ $country->name }}
@@ -226,7 +226,7 @@
                                                                 </optgroup>
                                                                 <optgroup label="{{ __('Other') }}">
                                                                     @foreach ($countries[0] as $country)
-                                                                    <option value="{{ $country->id }}" 
+                                                                    <option value="{{ $country->id }}"
                                                                         @if(old('valid_in', $service ? $service->country :
                                                                         null) == $country->id) selected @endif>
                                                                         {{ $country->name }}
@@ -324,7 +324,7 @@
                                                                 {{ __('Upload') }} <i class="fa fa-upload"></i>/{{
                                                                 __('YouTube') }} <i class="fa fa-youtube"></i></label>
                                                             <div class="col-12 text-center">
-                                                                <input type="checkbox" name="Framework_video_type" 
+                                                                <input type="checkbox" name="Framework_video_type"
                                                                 @if($service) @checked($service->FW_uploaded_video)
                                                                 @else checked @endif
                                                                 data-bootstrap-switch="" data-off-color="danger"
@@ -605,7 +605,7 @@
             child.text("Not Available for public");
             //get parent of parent
             parent.parent().css("width", "187px");
-            parent.css("width", "337px")
+            parent.css("width", "338px")
             //get parent of public_availability
             let parent1 = $("[name='candidate_raters_model']").parent();
             //get child of parent with class bootstrap-switch-handle-on
@@ -620,8 +620,8 @@
             child1.text("Respondents Model");
             //get parent of parent
             parent1.parent().css("width", "187px");
-            parent1.css("width", "337px")
-
+            parent1.css("width", "346px")
+            CandidateRatersModelChange();
             hasService = "{{ $service ? true : false }}";
             if (hasService) {
                 FrameworkVideoTypeChange();
@@ -841,7 +841,7 @@
                 $("[name='candidate_raters_model']").val(1);
             } else {
                 //set left-margin to -68px
-                $("[name='candidate_raters_model']").parent().css("margin-left", "-152px");
+                $("[name='candidate_raters_model']").parent().css("margin-left", "-157px");
                 //hide candidate raters model div
                 $("#candidateRatersModel").addClass("d-none");
                 //change value of candidate_raters_model to 0

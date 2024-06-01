@@ -37,7 +37,7 @@ class HomeController extends Controller
         $contents = Content::where('page', '=', 'home')->get();
         $data = [
             'contents' => $contents,
-            'services' => Services::all()
+            'services' => Services::where('public_availability', true)->get()
         ];
         return view('home.index')->with($data);
     }
