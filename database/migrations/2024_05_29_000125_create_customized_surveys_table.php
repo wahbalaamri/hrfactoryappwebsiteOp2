@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('subscription_plan_id')->nullable()->references('id')->on('client_subscriptions')->onDelete('cascade');
             $table->string('survey_title');
             $table->text('survey_des')->nullable();
+            $table->boolean('candidate_raters_model')->default(false);
             $table->boolean('survey_stat')->default(0);
             //does it have cycles?
             $table->boolean('cycle_stat')->default(0);

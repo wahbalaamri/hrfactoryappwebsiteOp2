@@ -24,8 +24,9 @@
                                 <option value="4">{{ __('HR Diagnosis') }}</option>
                                 <option value="5">{{ __('360 Review') }}</option>
                                 <option value="6">{{ __('360 Review - Nama') }}</option>
-                                <option value="7">{{ __('Chat-bot') }}</option>
-                                <option value="8">{{ __('Calculator') }}</option>
+                                <option value="7">{{ __('Customized surveys') }}</option>
+                                <option value="8">{{ __('Chat-bot') }}</option>
+                                <option value="9">{{ __('Calculator') }}</option>
                             </select>
                         </div>
                         <div class="form-group col-md-10">

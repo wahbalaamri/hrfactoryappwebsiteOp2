@@ -6,7 +6,7 @@ use App\Jobs\SendSurvey;
 use App\Models\PlansPrices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Models\{Clients, ClientSubscriptions, Functions, Services, FunctionPractices, Industry, Plans, PracticeQuestions, Sectors, Surveys, Companies, Departments, EmailContents, Employees, PrioritiesAnswers, Respondents, SurveyAnswers, Raters};
+use App\Models\{Clients, ClientSubscriptions, Functions, Services, FunctionPractices, Industry, Plans, PracticeQuestions, Sectors, Surveys, Companies, CustomizedSurvey, Departments, EmailContents, Employees, PrioritiesAnswers, Respondents, SurveyAnswers, Raters};
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -2729,6 +2729,31 @@ class SurveysPrepration
     //schedule360 public function
     public function schedule360(Request $request,  $type = null)
     {
+    }
+    //ShowCustomizedSurveys function
+    function ShowCustomizedSurveys($id, $type, $by_admin = false)
+    {
+        $client = Clients::find($id);
+        $departments = $client->departments();
+        $service_id = Services::select('id')->where('service_type', $type)->first();
+        //check if service_id is null
+        if ($service_id == null) {
+            return redirect()->route('services.index')->with('error', 'Service not found');
+        }
+        $service_id = $service_id->id;
+        $plan_id = Plans::where('service', $service_id)->pluck('id')->toArray();
+        $client_survyes = CustomizedSurvey::where('client', $client->id)
+            ->whereIn('plan_id', $plan_id)
+            ->get();
+
+        $data = [
+            'id' => $id,
+            'type' => $type,
+            'client' => $client,
+            'departments' => $departments,
+            'client_survyes' => $client_survyes,
+        ];
+        return view('dashboard.client.CustomizedSurveys')->with($data);
     }
     //createCustomizedSurvey function
     function editCustomizedSurvey($id, $type, $survey = null, $is_admin = false)

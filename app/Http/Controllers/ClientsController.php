@@ -257,6 +257,11 @@ class ClientsController extends Controller
     {
         return $surveysPrepration->schedule360($request,  true);
     }
+    //ShowCustomizedSurveys function
+    public function ShowCustomizedSurveys(SurveysPrepration $surveysPrepration, $id, $type)
+    {
+        return $surveysPrepration->ShowCustomizedSurveys($id, $type, true);
+    }
     //createCustomizedSurvey function
     public function createCustomizedSurvey(SurveysPrepration $surveysPrepration, $id, $type, $survey = null)
     {

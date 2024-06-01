@@ -179,7 +179,7 @@
                                         <div class="icon">
                                             <i class="fas fa-file-alt"></i>
                                         </div>
-                                        <a href="{{ route('clients.createCustomizedSurvey',[$id,7]) }}"
+                                        <a href="{{ route('clients.ShowCustomizedSurveys',[$id,7]) }}"
                                             class="small-box-footer">
                                             Get Started <i class="fas fa-arrow-circle-right"></i>
                                         </a>
