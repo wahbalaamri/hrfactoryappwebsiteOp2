@@ -77,6 +77,7 @@ class SurveysController extends Controller
     {
         //from the id get the survey id
         $respondent = Respondents::find($id);
+        Log::info("message");
         //if not found return 404
         if (!$respondent) {
             return abort(404);
@@ -119,6 +120,42 @@ class SurveysController extends Controller
             ];
             return view('surveys.employeeEngagment')->with($data);
         }
+        if ($plan->service_->service_type == 4) {
+            //setLocale ar
+            // App()->setLocale('ar');
+            $functions = Functions::where('service_id', $plan->service_->id)->get();
+            $user = Employees::where('id', $respondent->employee_id)->first();
+            $user_type = $user->employee_type;
+            $can_ansewer_to_priorities = false;
+            foreach ($functions as $function) {
+                if ($user->department->is_hr) {
+                    if ($function->Respondent == 1 || $function->Respondent == 4 || $function->Respondent == 6 || $function->Respondent == 7 || $function->Respondent == 8) {
+                        $can_ansewer_to_priorities = true;
+                    }
+                    $user_type = 2;
+                } elseif ($user->employee_type == 1) {
+                    if ($function->Respondent == 3 || $function->Respondent == 5 || $function->Respondent == 6 || $function->Respondent == 7 || $function->Respondent == 8) {
+                        $can_ansewer_to_priorities = true;
+                    }
+                    $user_type = 1;
+                } else {
+                    if ($function->Respondent == 2 || $function->Respondent == 4 || $function->Respondent == 5 || $function->Respondent == 7 || $function->Respondent == 8) {
+                        $can_ansewer_to_priorities = true;
+                    }
+                    $user_type = 3;
+                }
+            }
+            $data = [
+                'functions' => $functions,
+                'user_type' => $user_type,
+                'can_ansewer_to_priorities' => $can_ansewer_to_priorities,
+                'SurveyId' => $survey->id,
+                'email_id' => $id,
+                'plan_id' => $plan->id,
+                'open_end_q' => []
+            ];
+            return view('surveys.hrdiagnosis')->with($data);
+        }
     }
     // SaveAnswers function the id is the respondent id
     public function SaveAnswers(Request $request)
@@ -132,7 +169,7 @@ class SurveysController extends Controller
         $oe_ans = $reply[0]['oe_ans'];
         $gender = $reply[0]['gender'];
         $agegroup = $reply[0]['agegroup'];
-        $type= $reply[0]['type'];
+        $type = $reply[0]['type'];
         $ansAva = SurveyAnswers::where([['answered_by', $EmailId], ['survey_id', $SurveyId]])->get();
         if ($SurveyId == null) {
             // $Count = freeSurveyAnswers::select('SurveyId')->distinct('SurveyId')->count('SurveyId');
@@ -187,7 +224,7 @@ class SurveysController extends Controller
             }
             //update emails with agegroup and gender
             //find respondent
-            $respondent = Respondents::select('employee_id')->where('id',$EmailId)->first();
+            $respondent = Respondents::select('employee_id')->where('id', $EmailId)->first();
             $email = Employees::find($respondent->employee_id);
             $email->age_generation = $agegroup;
             $email->gender = $gender;
@@ -200,7 +237,8 @@ class SurveysController extends Controller
         ];
         return response()->json($data);
     }
-    function save360Answer(Request $request){
+    function save360Answer(Request $request)
+    {
         $reply = ($request->reply);
         $QuestionAnswers = $reply[0]['answers'];
         $SurveyId = $reply[0]['survey_id'];
