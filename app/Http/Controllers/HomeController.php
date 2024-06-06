@@ -111,7 +111,7 @@ class HomeController extends Controller
     }
     public function SetupNameRev()
     {
-        $service_type = 5; //HR Diagnosis =4, 360 reviwe =5 , 360 reviwe name =6
+        $service_type = 6; //HR Diagnosis =4, 360 reviwe =5 , 360 reviwe name =6
         ini_set('max_execution_time', 420);
         //find service of type 6
         $service = Services::where('service_type',  $service_type)->first();
