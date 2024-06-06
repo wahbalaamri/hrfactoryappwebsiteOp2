@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('client')->references('id')->on('clients')->onDelete('cascade');
             $table->integer('survey')->references('id')->on('customized_surveys')->onDelete('cascade');
+            $table->integer('system_function')->nullable();
             $table->string('title');
             $table->string('title_ar');
             $table->string('title_in')->nullable();
@@ -24,6 +25,8 @@ return new class extends Migration
             $table->string('title_bngla')->nullable();
             $table->string('title_tr')->nullable();
             $table->string('title_pr')->nullable();
+            $table->string('title_ru')->nullable();
+            $table->string('title_ch')->nullable();
             $table->text('respondent');
             $table->boolean('status');
             $table->boolean('IsDefault')->default(1);

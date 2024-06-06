@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('customized_survey_practices', function (Blueprint $table) {
             $table->id();
             $table->integer('function_id')->references('id')->on('customized_survey_functions')->onDelete('cascade');
+            $table->integer('system_practice')->nullable();
             $table->string('title');
             $table->string('title_ar');
             $table->string('title_in')->nullable();
@@ -23,6 +24,8 @@ return new class extends Migration
             $table->string('title_bngla')->nullable();
             $table->string('title_tr')->nullable();
             $table->string('title_pr')->nullable();
+            $table->string('title_ru')->nullable();
+            $table->string('title_ch')->nullable();
             $table->text('description')->nullable();
             $table->text('description_ar')->nullable();
             $table->boolean('status')->default(1);

@@ -24,6 +24,8 @@ return new class extends Migration
             $table->string('title_bngla')->nullable();
             $table->string('title_tr')->nullable();
             $table->string('title_pr')->nullable();
+            $table->string('title_ru')->nullable();
+            $table->string('title_ch')->nullable();
             $table->text('description')->nullable();
             $table->text('description_ar')->nullable();
             $table->text('respondent');

@@ -67,15 +67,15 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $survey->survey_title }}</td>
                                                     <td>
-                                                        @if ($survey->plans)
-                                                        {{ $survey->plans->service_->service_name }}
+                                                        @if ($survey->plan)
+                                                        {{ $survey->plan->service_->service_name }}
                                                         @else
                                                         {{ __('No service') }}
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        @if ($survey->plans)
-                                                        {{ $survey->plans->name }}
+                                                        @if ($survey->plan)
+                                                        {{ $survey->plan->name }}
                                                         @else
                                                         {{ __('No Plan') }}
                                                         @endif
@@ -93,7 +93,7 @@
                                                     </td>
                                                     <td>{{ $survey->created_at->format('d-m-Y')
                                                         }}</td>
-                                                    <td><a href="{{ route('clients.surveyDetails',[$id,$type,$survey->id])}}"
+                                                    <td><a href="{{ route('clients.surveyCustomizedDetails',[$id,$type,$survey->id])}}"
                                                             class="btn btn-info btn-sm m-1"><i
                                                                 class="fa fa-eye"></i></a></td>
                                                     <td><a href="{{ route('clients.editSurvey', [$id,$type,$survey->id])}}"

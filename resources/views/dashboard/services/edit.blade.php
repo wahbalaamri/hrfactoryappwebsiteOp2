@@ -143,7 +143,7 @@
                                                                 {{ __('public') }} /{{ __('private') }}</label>
                                                             <div class="col-12">
                                                                 <input type="checkbox" name="public_availability"
-                                                                @if($service) @checked($service->FW_uploaded_video)
+                                                                @if($service) @checked($service->public_availability)
                                                                 @else checked @endif
                                                                 data-bootstrap-switch="" data-off-color="danger"
                                                                 data-on-color="success" value="1">
@@ -154,7 +154,7 @@
                                                                 {{ __('Candidate Raters Model') }}
                                                             <div class="col-12">
                                                                 <input type="checkbox" name="candidate_raters_model"
-                                                                @if($service) @checked($service->FW_uploaded_video)
+                                                                @if($service) @checked($service->candidate_raters_model)
                                                                  @endif
                                                                 data-bootstrap-switch="" data-off-color="danger"
                                                                 data-on-color="success" value="1">

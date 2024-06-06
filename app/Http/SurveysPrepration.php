@@ -3,10 +3,12 @@
 namespace App\Http;
 
 use App\Jobs\SendSurvey;
+use App\Models\CustomizedSurveyFunctions;
+use App\Models\CustomizedSurveyPractices;
 use App\Models\PlansPrices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Models\{Clients, ClientSubscriptions, Functions, Services, FunctionPractices, Industry, Plans, PracticeQuestions, Sectors, Surveys, Companies, CustomizedSurvey, Departments, EmailContents, Employees, PrioritiesAnswers, Respondents, SurveyAnswers, Raters};
+use App\Models\{Clients, ClientSubscriptions, Functions, Services, FunctionPractices, Industry, Plans, PracticeQuestions, Sectors, Surveys, Companies, CustomizedSurvey, CustomizedSurveyQuestions, CustomizedSurveyRaters, CustomizedSurveyRespondents, Departments, EmailContents, Employees, PrioritiesAnswers, Respondents, SurveyAnswers, Raters};
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -391,7 +393,6 @@ class SurveysPrepration
         $plan = $plans->where('is_active', true)->first();
         $plans_id = $plans->pluck('id')->toArray();
         //get client active subscription
-        Log::info(json_encode(ClientSubscriptions::where([['client_id', $id], ['is_active', 1]])));
         $client_subscription = ClientSubscriptions::where([['client_id', $id], ['is_active', 1]])
             ->whereIn('plan_id', $plans_id)
             ->first();
@@ -723,7 +724,6 @@ class SurveysPrepration
             }
         } catch (\Exception $e) {
             Log::info($e->getMessage());
-            Log::info(print_r($e));
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -830,7 +830,6 @@ class SurveysPrepration
     function storeEmployee(Request $request, $by_admin = false)
     {
         try {
-            Log::info($request->all());
             //create new employee
             if ($request->id == null) {
                 $employee = new Employees();
@@ -857,9 +856,6 @@ class SurveysPrepration
             $employee->added_by = 0;
             //save employee
             $employee->save();
-            Log::info('ssss');
-            Log::info($employee->id);
-            Log::info($employee);
             //json response with status
             return response()->json(['status' => true, 'message' => 'Employee created successfully', 'employee' => $employee]);
         } catch (\Exception $e) {
@@ -1028,7 +1024,7 @@ class SurveysPrepration
     //saveSubscription function
     function saveSubscription(Request $request, $id, $by_admin = false)
     {
-        Log::info($request->id);
+
         try {
             //create new subscription
             if ($request->subscription == null) {
@@ -1193,13 +1189,9 @@ class SurveysPrepration
             } else {
                 $data = $this->get_GroupResult($Service_type, $survey_id, $vtype, $vtype_id);
             }
-            // Log::info($data);
-            // $test = collect($data);
-            // return $data;
             return view('dashboard.client.EESurveyresults')->with($data);
         } catch (\Exception $e) {
             Log::info($e->getMessage());
-            Log::info($e);
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -1246,20 +1238,14 @@ class SurveysPrepration
                     //get
                     //get Emails id for a company
                     $employees_id = Employees::where('comp_id', $type_id)->pluck('id')->all();
-                    Log::info($employees_id);
                     $Emails = Respondents::where('survey_id', $this->id)
                         ->whereIn('employee_id', $employees_id)
                         ->pluck('id')
                         ->all();
-                    Log::info($Emails);
-                    Log::info($this->id);
-                    Log::info('  practice->questions->first()->id' . $practice->questions->first()->id);
-                    Log::info(json_encode($practice->questions));
                     $Favorable_result = SurveyAnswers::selectRaw('COUNT(answer_value) as count, SUM(answer_value) as sum')
                         ->where([['survey_id', $this->id], ['answer_value', '>', 3], ['question_id', $practice->questions->first()->id]])
                         ->whereIn('answered_by', $Emails)
                         ->first();
-                    Log::info($Favorable_result);
                 }
                 //sector
                 elseif ($type == 'sec') {
@@ -1293,7 +1279,6 @@ class SurveysPrepration
                         ->where([['survey_id', $this->id], ['answer_value', '<=', 2], ['question_id', $practice->questions->first()->id]])
                         ->whereIn('answered_by', $Emails)
                         ->first();
-                    Log::info("UnFavorable_result: $UnFavorable_result");
                 }
                 //sector
                 elseif ($type == 'sec') {
@@ -1326,7 +1311,6 @@ class SurveysPrepration
                         ->where([['survey_id', $this->id], ['answer_value', 3], ['question_id', $practice->questions->first()->id]])
                         ->whereIn('answered_by', $Emails)
                         ->first();
-                    Log::info("Nuetral_result: $Nuetral_result");
                 }
                 //sector
                 elseif ($type == 'sec') {
@@ -1471,7 +1455,6 @@ class SurveysPrepration
                     $sum_answer_value_Nuetral_result = SurveyAnswers::selectRaw('COUNT(answer_value) as count, SUM(answer_value) as sum')
                         ->where([['survey_id', $this->id], ['answer_value', 3], ['question_id', $practice->questions->first()->id]])
                         ->first();
-                    Log::info($sum_answer_value_Nuetral_result);
                 } elseif ($type == 'comp') {
                     $sum_answer_value_Nuetral_result = SurveyAnswers::selectRaw('COUNT(answer_value) as count, SUM(answer_value) as sum')
                         ->where([['survey_id', $this->id], ['answer_value', 3], ['question_id', $practice->questions->first()->id]])
@@ -1766,7 +1749,7 @@ class SurveysPrepration
     }
     public function get_SectorResult($service_type, $id, $type, $type_id)
     {
-        Log::info("tfgfgf: service_type: $service_type, id: $id, type: $type, type_id: $type_id");
+
         $data = [];
         $service = Services::where('service_type', $service_type)->first()->id;
         $functions = Functions::where('service_id', $service)->get();
@@ -1799,7 +1782,6 @@ class SurveysPrepration
                 array_push($practices, $practice);
             }
         }
-        // Log::info($driver_functions);
         foreach ($functions as $function) {
             if ($function->IsDriver) {
                 $function_results = [
@@ -2778,7 +2760,6 @@ class SurveysPrepration
         $plan = $plans->where('is_active', true)->first();
         $plans_id = $plans->pluck('id')->toArray();
         //get client active subscription
-        Log::info(json_encode(ClientSubscriptions::where([['client_id', $id], ['is_active', 1]])));
         $client_subscription = ClientSubscriptions::where([['client_id', $id], ['is_active', 1]])
             ->whereIn('plan_id', $plans_id)
             ->first();
@@ -2791,5 +2772,435 @@ class SurveysPrepration
             'client_subscription' => $client_subscription,
         ];
         return view('dashboard.client.editCustomizedSurvey')->with($data);
+    }
+    //storeCustomizedSurvey function
+    function storeCustomizedSurvey(Request $request, $id, $type, $survey_id = null, $is_admin = false)
+    {
+        //collect data and save
+        if ($survey_id != null)
+            $survey = CustomizedSurvey::find($survey_id);
+        else
+            $survey = new CustomizedSurvey();
+        $survey->client = $id;
+        $survey->plan_id = $request->h_plan_id;
+        $survey->subscription_plan_id = $request->h_splan_id;
+        $survey->survey_title = $request->survey_title;
+        $survey->survey_des = $request->survey_des;
+        $survey->candidate_raters_model = $request->candidate_raters_model != null ? true : false;
+        $survey->survey_stat = $request->survey_stat != null ? true : false;
+        if ($request->cycle_stat != null) {
+            $survey->cycle_stat = true;
+            $survey->cycle_duration = $request->cycle_id;
+            $survey->start_date = $request->start_date;
+            $survey->start_time = $request->start_time;
+            $survey->end_date = $request->end_date;
+        } else {
+            $survey->cycle_stat = false;
+            $survey->cycle_duration = null;
+            $survey->start_date = null;
+            $survey->start_time = null;
+            $survey->end_date = null;
+        }
+        if ($request->reminder_stat != null) {
+            $survey->reminder_stat = true;
+            $survey->reminder_duration_type = $request->reminder_duration_type;
+            $survey->reminder_start_date = $request->reminder_start_date;
+            $survey->reminder_start_time = $request->reminder_start_time;
+        } else {
+            $survey->reminder_stat = false;
+            $survey->reminder_duration_type = null;
+            $survey->reminder_start_date = null;
+            $survey->reminder_start_time = null;
+        }
+        $survey->mandatory_stat = $request->mandatory_stat != null ? true : false;
+        $survey->save();
+        return redirect()->route('clients.ShowCustomizedSurveys', ['id' => $id, 'type' => $type])->with('success', 'Survey saved successfully');
+    }
+    //surveyCustomizedDetails function
+    function surveyCustomizedDetails($id, $type, $survey_id, $is_admin = false)
+    {
+        $client = Clients::find($id);
+        $survey = CustomizedSurvey::find($survey_id);
+        $data = [
+            'id' => $id,
+            'type' => $type,
+            'client' => $client,
+            'survey' => $survey,
+        ];
+        return view('dashboard.client.surveyCustomizedDetails')->with($data);
+    }
+    //CustomizedsurveyQuestions function
+    function CustomizedsurveyQuestions($id, $type, $survey_id, $is_admin = false)
+    {
+        //get questions for the customized survey
+        $client = Clients::find($id);
+        $survey = CustomizedSurvey::find($survey_id);
+
+        //datatable
+        if (request()->ajax()) {
+            $funcions_id = CustomizedSurveyFunctions::where('survey', $survey->id)->get()->pluck('id')->all();
+            $practices_id = CustomizedSurveyPractices::whereIn('function_id', $funcions_id)->get()->pluck('id')->toArray();
+            $questions = CustomizedSurveyQuestions::whereIn('practice_id', $practices_id)->get();
+            return DataTables::of($questions)
+                ->addIndexColumn()
+                ->editColumn('title', function ($row) {
+                    return $row->translated_title;
+                })
+                ->addColumn('function', function ($row) {
+                    return $row->practice->function->translated_title;
+                })
+                ->addColumn('practice', function ($row) {
+                    return $row->practice->translated_title;
+                })
+                ->addColumn('fid', function ($row) {
+                    return $row->practice->function->id;
+                })
+                ->addColumn('editCol', function ($row) {
+                    $btn = '<div class="row"><a href="#" class="btn btn-sm btn-warning m-2" data-target="#EditCustomizedQuestionModal" data-toggel="modal"><i class="fa fa-edit"></i></a></div>';
+                    return $btn;
+                })
+                ->addColumn('deleteCol', function ($row) {
+                    $btn = '<div class="row"><a href="#" class="btn btn-sm btn-danger m-2" data-target="#EditCustomizedQuestionModal" data-toggel="modal"><i class="fa fa-trash"></i></a></div>';
+                    return $btn;
+                })
+                ->rawColumns(['editCol', 'deleteCol'])
+                ->make(true);
+        }
+        $data = [
+            'id' => $id,
+            'type' => $type,
+            'client' => $client,
+            'survey' => $survey,
+        ];
+        return view('dashboard.client.CustomizedsurveyQuestions')->with($data);
+    }
+    //CreateCustomizedsurveyQuestions function
+    function CreateCustomizedsurveyQuestions($id, $type, $survey_id, $is_admin = false)
+    {
+        $client = Clients::find($id);
+        $survey = CustomizedSurvey::find($survey_id);
+        $questions = $survey->questions;
+        $data = [
+            'id' => $id,
+            'type' => $type,
+            'client' => $client,
+            'survey' => $survey,
+            'questions' => $questions,
+        ];
+        return view('dashboard.client.editCustomizedsurveyQuestions')->with($data);
+    }
+    //GetOtherSurveysQuestions function
+    function GetOtherSurveysQuestions(Request $request, $sid, $fid = null, $pid = null, $is_admin)
+    {
+        try {
+            if (request()->ajax()) {
+                //get service id from Services using $sid
+                $service_id = Services::select('id')->where('service_type', $sid)->first();
+                //check if service_id is null
+                if ($service_id == null) {
+                    return response()->json(['error' => 'Service is not available yet please check it'], 404);
+                }
+                $service_id = $service_id->id;
+                //get functions ids
+                $functions = Functions::where('service_id', $service_id)->pluck('id')->toArray();
+                //get parctices ids
+                if ($fid == null || $fid == 'null')
+                    $practices = FunctionPractices::whereIn('function_id', $functions)->pluck('id')->toArray();
+                else
+                    $practices = FunctionPractices::where('function_id', $fid)->pluck('id')->toArray();
+                //get questions
+                if ($pid == null || $pid == 'null')
+                    $questions =  PracticeQuestions::whereIn('practice_id', $practices)->get();
+                else
+                    $questions = PracticeQuestions::where('practice_id', $pid)->get();
+                return DataTables::of($questions)
+                    ->addIndexColumn()
+                    ->editColumn('title', function ($row) {
+                        $row->translated_title;
+                    })
+                    ->addColumn('function', function ($row) {
+                        return $row->practice->function->translated_title;
+                    })
+                    ->addColumn('practice', function ($row) {
+                        return $row->practice->translated_title;
+                    })
+                    ->addColumn('fid', function ($row) {
+                        return $row->practice->function->id;
+                    })
+                    ->make(true);
+            }
+        } catch (\Exception $e) {
+            Log::error($e);
+            return response()->json(['error' => 'Error getting questions'], 500);
+        }
+    }
+    //GetFunctions function
+    function GetFunctions($sid, $is_admin)
+    {
+        try {
+            //get service id from Services using $sid
+            $service_id = Services::select('id')->where('service_type', $sid)->first();
+            //check if service_id is null
+            if ($service_id == null) {
+                return response()->json(['error' => 'Service is not available yet please check it', 'stat' => false], 404);
+            }
+            $service_id = $service_id->id;
+            //get functions ids
+            $functions = Functions::where('service_id', $service_id)->get()->append('translated_title');
+            return response()->json(['functions' => $functions, 'stat' => true], 200);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return response()->json(['error' => 'Error getting functions', 'stat' => false], 500);
+        }
+    }
+    //GetPractices function
+    function GetPractices($fid, $is_admin)
+    {
+        try {
+            //get practices ids
+            $practices = FunctionPractices::where('function_id', $fid)->get()->append('translated_title');
+            return response()->json(['practices' => $practices, 'stat' => true], 200);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return response()->json(['error' => 'Error getting practices', 'stat' => false], 500);
+        }
+    }
+    //SubmitCustomizedQuestions function
+    function SubmitCustomizedQuestions(Request $request, $id, $type, $is_admin = false)
+    {
+        try {
+            $client_id = $id;
+            $survey_id = $request->survey;
+            //check if $request->selectedQuestions is not empty
+            if (is_array($request->selectedQuestions)) {
+                if (count($request->selectedQuestions) > 0) {
+                    //convert $request->selectedQuestions into collection
+                    $selectedQuestions = collect($request->selectedQuestions);
+                    //extract qid into an array
+                    $qids = $selectedQuestions->pluck('qid')->toArray();
+                    foreach ($qids as $qid) {
+                        $question = PracticeQuestions::find($qid);
+                        //get question practice id
+                        $practice_id = $question->practice_id;
+                        //get question function id
+                        $function_id = $question->practice->function_id;
+                        //check if customized function is already exist
+                        $customized_function_id = $this->CustomizedFunctionId($function_id, $survey_id, $client_id);
+                        //check if customized practice is already exist
+                        $customized_practice_id = $this->CustomizedPracticeId($customized_function_id, $practice_id);
+                        //create new customized question
+                        $this->CustomizedQuestions($customized_practice_id, $qid);
+                    }
+                } else {
+                }
+            } else {
+            }
+            //check if $request->data is not empty
+            if (count($request->data) > 0) {
+                $data = $request->data;
+                foreach ($data as $function) {
+                    if ($function['function_'] != null) {
+                        $title = $function['function_'];
+                        $function_r = $function['function_r'];
+                        //create new custome function
+                        $customized_function = new CustomizedSurveyFunctions();
+                        $customized_function->system_function = null;
+                        $customized_function->survey = $survey_id;
+                        $customized_function->client = $client_id;
+                        $customized_function->title = $title;
+                        $customized_function->title_ar = $title;
+                        $customized_function->respondent = $function_r;
+                        $customized_function->status = true;
+                        $customized_function->save();
+                        $customized_function_id = $customized_function->id;
+                        foreach ($function['practices'] as $practice) {
+                            //check if $pr has key practice
+                            if (array_key_exists('practice', $practice)) {
+                                $practice_title = $practice['practice'];
+                                //create new custome practice
+                                $customized_practice = new CustomizedSurveyPractices();
+                                $customized_practice->system_practice = null;
+                                $customized_practice->function_id = $customized_function_id;
+                                $customized_practice->title = $practice_title;
+                                $customized_practice->title_ar = $practice_title;
+                                $customized_practice->save();
+                                $customized_practice_id = $customized_practice->id;
+
+                                foreach ($practice['questions'] as $question) {
+                                    $question_ = $question['question'];
+                                    $respondent = ($question['respondent']);
+                                    $customized_question = new CustomizedSurveyQuestions();
+                                    $customized_question->practice_id = $customized_practice_id;
+                                    $customized_question->question = $question_;
+                                    $customized_question->question_ar = $question_;
+                                    $customized_question->respondent = $respondent;
+                                    $customized_question->status = true;
+                                    $customized_question->save();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return response()->json(['message' => 'Questions saved successfully', 'stat' => true], 200);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return response()->json(['message' => 'Error saving Questions', 'stat' => false], 500);
+        }
+    }
+    private function CustomizedFunctionId($function_id, $survey_id, $client_id)
+    {
+        $customized_function = CustomizedSurveyFunctions::where('system_function', $function_id)->where('survey', $survey_id)->where('client', $client_id)->first();
+        if (!$customized_function) {
+            //find system function
+            $function = Functions::find($function_id);
+            //create new customized function
+            $customized_function = new CustomizedSurveyFunctions();
+            $customized_function->system_function = $function_id;
+            $customized_function->survey = $survey_id;
+            $customized_function->client = $client_id;
+            $customized_function->title = $function->title;
+            $customized_function->title_ar = $function->title_ar;
+            $customized_function->title_in = $function->title_in;
+            $customized_function->title_urdo = $function->title_urdo;
+            $customized_function->title_fr = $function->title_fr;
+            $customized_function->title_sp = $function->title_sp;
+            $customized_function->title_bngla = $function->title_bngla;
+            $customized_function->title_tr = $function->title_tr;
+            $customized_function->title_pr = $function->title_pr;
+            // $customized_function->title_ru = $function->title_ru;
+            // $customized_function->title_ch = $function->title_ch;
+            $customized_function->respondent = $function->respondent;
+            $customized_function->status = $function->status;
+            $customized_function->IsDefault = $function->IsDefault;
+            $customized_function->IsDriver = $function->IsDriver;
+            $customized_function->save();
+            return $customized_function->id;
+        }
+        return $customized_function->id;
+    }
+    private function CustomizedPracticeId($function_id, $systemPractice_id)
+    {
+        $customized_practice = CustomizedSurveyPractices::where('system_practice', $systemPractice_id)->where('function_id', $function_id)->first();
+        if (!$customized_practice) {
+            //find system practice
+            $systemPractice = FunctionPractices::find($systemPractice_id);
+            //create new customized practice
+            $customized_practice = new CustomizedSurveyPractices();
+            $customized_practice->system_practice = $systemPractice->id;
+            $customized_practice->function_id = $function_id;
+            $customized_practice->title = $systemPractice->title;
+            $customized_practice->title_ar = $systemPractice->title_ar;
+            $customized_practice->title_in = $systemPractice->title_in;
+            $customized_practice->title_urdo = $systemPractice->title_urdo;
+            $customized_practice->title_fr = $systemPractice->title_fr;
+            $customized_practice->title_sp = $systemPractice->title_sp;
+            $customized_practice->title_bngla = $systemPractice->title_bngla;
+            $customized_practice->title_tr = $systemPractice->title_tr;
+            $customized_practice->title_pr = $systemPractice->title_pr;
+            // $customized_practice->title_ru = $systemPractice->title_ru;
+            // $customized_practice->title_ch = $systemPractice->title_ch;
+            $customized_practice->description = $systemPractice->description;
+            $customized_practice->description_ar = $systemPractice->description_ar;
+            $customized_practice->status = $systemPractice->status;
+            $customized_practice->save();
+            return $customized_practice->id;
+        }
+        return $customized_practice->id;
+    }
+    private function CustomizedQuestions($practice_id, $system_question_id)
+    {
+        $customized_question = CustomizedSurveyQuestions::where('system_question', $system_question_id)->where('practice_id', $practice_id)->first();
+        if (!$customized_question) {
+            //find system question
+            $systemQuestion = PracticeQuestions::find($system_question_id);
+            //create new customized question
+            $customized_question = new CustomizedSurveyQuestions();
+            $customized_question->system_question = $systemQuestion->id;
+            $customized_question->practice_id = $practice_id;
+            $customized_question->question = $systemQuestion->question;
+            $customized_question->question_ar = $systemQuestion->question_ar;
+            $customized_question->question_in = $systemQuestion->question_in;
+            $customized_question->question_urdo = $systemQuestion->question_urdo;
+            $customized_question->question_fr = $systemQuestion->question_fr;
+            $customized_question->question_sp = $systemQuestion->question_sp;
+            $customized_question->question_bngla = $systemQuestion->question_bngla;
+            $customized_question->question_tr = $systemQuestion->question_tr;
+            $customized_question->question_pr = $systemQuestion->question_pr;
+            // $customized_question->question_ru = $systemQuestion->question_ru;
+            // $customized_question->question_ch = $systemQuestion->question_ch;
+            $customized_question->description = $systemQuestion->description;
+            $customized_question->description_ar = $systemQuestion->description_ar;
+            $customized_question->status = $systemQuestion->status;
+            $customized_question->IsENPS = $systemQuestion->IsENPS;
+            $customized_question->respondent = $systemQuestion->respondent;
+            $customized_question->save();
+            return $customized_question->id;
+        }
+        return $customized_question->id;
+    }
+    //CustomizedsurveyRespondents function
+    function CustomizedsurveyRespondents(Request $request, $id, $type, $survey_id, $is_admin = false)
+    {
+        $survey = CustomizedSurvey::find($survey_id);
+        $client = Clients::find($id);
+        $is_candidate_raters = $survey->candidate_raters_model;
+        $data = [
+            'id' => $id,
+            'type' => $type,
+            'survey' => $survey,
+            'client' => $client,
+            'survey_id' => $survey_id,
+            'is_candidate_raters' => $is_candidate_raters,
+        ];
+        //if request is ajax
+        if ($request->ajax()) {
+            $respondents_ids = CustomizedSurveyRespondents::where('survey_id',$survey_id)->get()->pluck('employee_id')->toArray();
+            $candidate = /* CustomizedSurvey */Raters::where('survey_id', $survey_id)->get()->pluck('candidate_id')->toArray();
+
+            //setup yajra datatable
+            if ($is_candidate_raters) {
+                $employees = Employees::where('client_id',$id)->where('employee_type', 1)->get();
+            } else {
+                $employees = Employees::where('client_id',$id)->get();
+            }
+            // $employees = Employees::where('client_id', $id)->get();
+            //log employees as an array
+            return DataTables::of($employees)
+                ->addIndexColumn()
+                ->addColumn('action', function ($employee) {
+                    $action = '<div class="row"><div class="col-md-6 col-sm-12 text-center"><a href="javascript:void(0);" onclick="deleteEmp(\'' . $employee->id . '\')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a></div></div>';
+                    return $action;
+                })
+                //hr
+                ->addColumn('hr', function ($employee) {
+                    return $employee->is_hr_manager ? '<span class="badge bg-success">' . __('HR Manager') . '</span>' : '<span class="badge bg-danger">' . __('Not HR Manager') . '</span>';
+                })
+                ->addColumn('raters', function ($employee) use ($candidate) {
+                    //button to show modal of Addraters
+                    return in_array($employee->id, $candidate) ? '<a href="javascript:void(0);" onclick="AddRaters(\'' . $employee->id . '\')" class="btn btn-info btn-xs" data-toggle="modal" data-target="#ratersModal">' . __('Raters') : '<span class="badge bg-danger">' . __('Not Added') . '</span>';
+                })
+                ->addColumn('result', function ($employee) use ($candidate) {
+                    return in_array($employee->id, $candidate) ? '<a href="javascript:void(0);" class="btn btn-info btn-xs">' . __('Result') . '<i class="fa fa-eye"></i></a>' : '<span class="badge bg-danger">' . __('Not Added') . '</span>';
+                })
+                ->addColumn('is_candidate_raters', function ($employee) use ($is_candidate_raters) {
+                    return $is_candidate_raters;
+                })
+                ->addColumn('isAddedAsCandidate', function ($employee) use ($candidate) {
+                    return in_array($employee->id, $candidate) ? true : false;
+                })
+                ->addColumn('isAddAsRespondent', function ($employee) use ($respondents_ids) {
+                    return in_array($employee->id, $respondents_ids) ? true : false;
+                })
+                ->addColumn('SendSurvey', function ($employee) use ($respondents_ids, $survey_id) {
+                    return in_array($employee->id, $respondents_ids) ? '<a href="javascript:void(0);" onclick="SendSurvey(\'' . $employee->id . '\',\'' . $survey_id . '\')" class="btn btn-info btn-xs"><i class="fa fa-paper-plane"></i></a>' : '<span class="badge bg-danger">' . __('Not Added') . '</span>';
+                })
+                ->addColumn('SendReminder', function ($employee) use ($respondents_ids, $survey_id) {
+                    return in_array($employee->id, $respondents_ids) ? '<a href="javascript:void(0);" onclick="SendReminder(\'' . $employee->id . '\',\'' . $survey_id . '\')" class="btn btn-warning btn-xs"><i class="fa fa-paper-plane"></i></a>' : '<span class="badge bg-danger">' . __('Not Added') . '</span>';
+                })
+                ->rawColumns(['action', 'hr', 'SendSurvey', 'SendReminder', 'raters', 'result'])
+                ->make(true);
+        }
+        return view('dashboard.client.CustomizedsurveyRespondents')->with($data);
     }
 }

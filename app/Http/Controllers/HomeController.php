@@ -111,11 +111,12 @@ class HomeController extends Controller
     }
     public function SetupNameRev()
     {
+        $service_type = 5; //HR Diagnosis =4, 360 reviwe =5 , 360 reviwe name =6
         ini_set('max_execution_time', 420);
         //find service of type 6
-        $service = Services::where('service_type', 5)->first();
+        $service = Services::where('service_type',  $service_type)->first();
         //read functions from https://hrtools.hrfactoryapp.com/GetFunctions
-        $urlf = "https://hrtools.hrfactoryapp.com/GetFunctions";
+        $urlf = $service_type == 4 ? "https://diagnosis.hrfactoryapp.com/function/getf" : "https://hrtools.hrfactoryapp.com/GetFunctions";
         $jsonf = file_get_contents($urlf);
         $dataf = json_decode($jsonf, true);
         //loop through functions
@@ -126,7 +127,7 @@ class HomeController extends Controller
                     ->from('services')
                     ->where('service_type', 5);
             })->get();
-            if ($function1->count() < 0) {
+            if ($function1->count() <= 0) {
                 //create function
                 Log::info($function);
                 $f = new Functions();
@@ -136,10 +137,10 @@ class HomeController extends Controller
                 $f->service_id = $service->id;
                 $f->status = 1;
                 $f->IsDefault =  $function['IsDefault'] == 1 ? true : false;
-                $f->IsDriver =  $function['IsDriver'] == 1 ? true : false;
+                $f->IsDriver =  array_key_exists('IsDriver', $function) ? ($function['IsDriver'] == 1 ? true : false) : false;
                 $f->save();
                 //read practices from https://hrtools.hrfactoryapp.com/GetPractices/
-                $urlp = "https://hrtools.hrfactoryapp.com/GetPractices/" . $function['id'];
+                $urlp = $service_type == 4 ? "https://diagnosis.hrfactoryapp.com/practice/getp/" . $function['id'] : "https://hrtools.hrfactoryapp.com/GetPractices/" . $function['id'];
                 $jsonp = file_get_contents($urlp);
                 $datap = json_decode($jsonp, true);
                 //loop through practices
@@ -153,7 +154,7 @@ class HomeController extends Controller
                         $p->function_id = $f->id;
                         $p->save();
                         //read surveys from https://hrtools.hrfactoryapp.com/GetQuestion/
-                        $urls = "https://hrtools.hrfactoryapp.com/GetQuestion/" . $practice['id'];
+                        $urls = $service_type == 4 ? "https://diagnosis.hrfactoryapp.com/question/getq/" . $practice['id'] : "https://hrtools.hrfactoryapp.com/GetQuestion/" . $practice['id'];
                         $jsons = file_get_contents($urls);
                         $datas = json_decode($jsons, true);
                         //loop through surveys
@@ -164,7 +165,7 @@ class HomeController extends Controller
                                 $s->question = $question['Question'];
                                 $s->question_ar = $question['QuestionAr'];
                                 $s->respondent = $question['Respondent'];
-                                $s->IsENPS = $question['IsENPS'];
+                                $s->IsENPS = array_key_exists('IsENPS', $question) ? $question['IsENPS'] : false;
                                 $s->practice_id = $p->id;
                                 $s->status = true;
                                 $s->save();
@@ -175,7 +176,7 @@ class HomeController extends Controller
             } else {
                 Log::info($function);
                 //read practices from https://hrtools.hrfactoryapp.com/GetPractices/
-                $urlp = "https://hrtools.hrfactoryapp.com/GetPractices/" . $function['id'];
+                $urlp = $service_type == 4 ? "https://diagnosis.hrfactoryapp.com/practice/getp/" . $function['id'] : "https://hrtools.hrfactoryapp.com/GetPractices/" . $function['id'];
                 $jsonp = file_get_contents($urlp);
                 $datap = json_decode($jsonp, true);
                 //loop through practices
@@ -189,7 +190,7 @@ class HomeController extends Controller
                         $p->function_id = $function1->first()->id;
                         $p->save();
                         //read surveys from https://hrtools.hrfactoryapp.com/GetQuestion/
-                        $urls = "https://hrtools.hrfactoryapp.com/GetQuestion/" . $practice['id'];
+                        $urls = $service_type == 4 ? "https://diagnosis.hrfactoryapp.com/question/getq/" . $practice['id'] : "https://hrtools.hrfactoryapp.com/GetQuestion/" . $practice['id'];
                         $jsons = file_get_contents($urls);
                         $datas = json_decode($jsons, true);
                         //loop through surveys
@@ -200,7 +201,7 @@ class HomeController extends Controller
                                 $s->question = $question['Question'];
                                 $s->question_ar = $question['QuestionAr'];
                                 $s->respondent = $question['Respondent'];
-                                $s->IsENPS = $question['IsENPS'];
+                                $s->IsENPS = array_key_exists('IsENPS', $question) ? $question['IsENPS'] : false;
                                 $s->practice_id = $p->id;
                                 $s->status = true;
                                 $s->save();

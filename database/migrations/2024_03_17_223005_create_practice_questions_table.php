@@ -24,6 +24,8 @@ return new class extends Migration
             $table->string('question_bngla')->nullable();
             $table->string('question_tr')->nullable();
             $table->string('question_pr')->nullable();
+            $table->string('question_ru')->nullable();
+            $table->string('question_ch')->nullable();
             $table->integer('respondent');
             //description
             $table->text('description')->nullable();

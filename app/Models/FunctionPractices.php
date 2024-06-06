@@ -20,4 +20,9 @@ class FunctionPractices extends Model
     {
         return $this->hasMany(PracticeQuestions::class, 'practice_id');
     }
+    //attribute tarnslated title
+    public function getTranslatedTitleAttribute($value)
+    {
+        return app()->getLocale() == 'en' ? $this->title : $this->{'title_' . app()->getLocale()};
+    }
 }

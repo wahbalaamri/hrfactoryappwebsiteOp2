@@ -239,7 +239,6 @@ class ClientsController extends Controller
     //getRaters function
     public function getRaters(Request $request, SurveysPrepration $surveysPrepration, $id, $survey, $type = null)
     {
-
         return $surveysPrepration->getRaters($request, $id, $survey, $type, true);
     }
     //SaveRaters function
@@ -250,12 +249,12 @@ class ClientsController extends Controller
     //candidates function
     public function candidates(Request $request, SurveysPrepration $surveysPrepration)
     {
-        return $surveysPrepration->candidates($request,  true);
+        return $surveysPrepration->candidates($request, true);
     }
     //schedule360 function
     public function schedule360(Request $request, SurveysPrepration $surveysPrepration)
     {
-        return $surveysPrepration->schedule360($request,  true);
+        return $surveysPrepration->schedule360($request, true);
     }
     //ShowCustomizedSurveys function
     public function ShowCustomizedSurveys(SurveysPrepration $surveysPrepration, $id, $type)
@@ -266,5 +265,50 @@ class ClientsController extends Controller
     public function createCustomizedSurvey(SurveysPrepration $surveysPrepration, $id, $type, $survey = null)
     {
         return $surveysPrepration->editCustomizedSurvey($id, $type, $survey, true);
+    }
+    //storeCustomizedSurvey function
+    public function storeCustomizedSurvey(Request $request, SurveysPrepration $surveysPrepration, $id, $type, $survey_id = null)
+    {
+        return $surveysPrepration->storeCustomizedSurvey($request, $id, $type, $survey_id, true);
+    }
+    //surveyCustomizedDetails function
+    public function surveyCustomizedDetails(SurveysPrepration $surveysPrepration, $id, $type, $survey_id)
+    {
+        return $surveysPrepration->surveyCustomizedDetails($id, $type, $survey_id, true);
+    }
+    //CustomizedsurveyQuestions function
+    public function CustomizedsurveyQuestions(SurveysPrepration $surveysPrepration, $id, $type, $survey_id)
+    {
+        return $surveysPrepration->CustomizedsurveyQuestions($id, $type, $survey_id, true);
+    }
+    //GetOtherSurveysQuestions function
+    public function GetOtherSurveysQuestions(Request $request, SurveysPrepration $surveysPrepration, $s_type, $fid = null, $pid = null)
+    {
+        return $surveysPrepration->GetOtherSurveysQuestions($request, $s_type, $fid, $pid, true);
+    }
+    //GetFunctions function
+    public function GetFunctions(SurveysPrepration $surveysPrepration, $servic_type)
+    {
+        return $surveysPrepration->GetFunctions($servic_type, true);
+    }
+    //GetPractices function
+    public function GetPractices(SurveysPrepration $surveysPrepration, $fid)
+    {
+        return $surveysPrepration->GetPractices($fid, true);
+    }
+    //SubmitCustomizedQuestions function
+    public function SubmitCustomizedQuestions(Request $request, SurveysPrepration $surveysPrepration, $id, $type)
+    {
+        return $surveysPrepration->SubmitCustomizedQuestions($request, $id, $type, true);
+    }
+    //CreateCustomizedsurveyQuestions function
+    public function CreateCustomizedsurveyQuestions(SurveysPrepration $surveysPrepration, $id, $type, $survey_id)
+    {
+        return $surveysPrepration->CreateCustomizedsurveyQuestions($id, $type, $survey_id, true);
+    }
+    //CustomizedsurveyRespondents function
+    public function CustomizedsurveyRespondents(Request $request, SurveysPrepration $surveysPrepration, $id, $type, $survey_id)
+    {
+        return $surveysPrepration->CustomizedsurveyRespondents($request, $id, $type, $survey_id, true);
     }
 }

@@ -323,8 +323,16 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
     Route::post('clients/storeCustomizedSurvey/{id}/{type}/{survey?}', [ClientsController::class, 'storeCustomizedSurvey'])->name('clients.storeCustomizedSurvey');
     Route::delete('clients/destroySurvey/{id}/{type}/{survey}', [ClientsController::class, 'destroySurvey'])->name('clients.destroySurvey');
     Route::post('clients/changeSurveyStat/{id}/{type}/{survey}', [ClientsController::class, 'changeSurveyStat'])->name('clients.changeSurveyStat');
+    Route::post('clients/SubmitCustomizedQuestions/{id}/{type}', [ClientsController::class, 'SubmitCustomizedQuestions'])->name('clients.SubmitCustomizedQuestions');
     Route::get('clients/surveyDetails/{id}/{type}/{survey}', [ClientsController::class, 'surveyDetails'])->name('clients.surveyDetails');
+    Route::get('clients/surveyCustomizedDetails/{id}/{type}/{survey}', [ClientsController::class, 'surveyCustomizedDetails'])->name('clients.surveyCustomizedDetails');
+    Route::get('clients/CustomizedsurveyQuestions/{id}/{type}/{survey}', [ClientsController::class, 'CustomizedsurveyQuestions'])->name('clients.CustomizedsurveyQuestions');
+    Route::get('clients/CreateCustomizedsurveyQuestions/{id}/{type}/{survey}', [ClientsController::class, 'CreateCustomizedsurveyQuestions'])->name('clients.CreateCustomizedsurveyQuestions');
+    Route::get('clients/GetOtherSurveysQuestions/{sid}/{fid?}/{pid?}', [ClientsController::class, 'GetOtherSurveysQuestions'])->name('clients.GetOtherSurveysQuestions');
+    Route::get('clients/GetFunctions/{sid}', [ClientsController::class, 'GetFunctions'])->name('clients.GetFunctions');
+    Route::get('clients/GetPractices/{fid}', [ClientsController::class, 'GetPractices'])->name('clients.GetPractices');
     Route::get('clients/respondents/{id}/{type}/{survey}', [ClientsController::class, 'Respondents'])->name('clients.Respondents');
+    Route::get('clients/CustomizedsurveyRespondents/{id}/{type}/{survey}', [ClientsController::class, 'CustomizedsurveyRespondents'])->name('clients.CustomizedsurveyRespondents');
     Route::get('clients/orgChart/{id}', [ClientsController::class, 'orgChart'])->name('clients.orgChart');
     Route::get('clients/Employees/{id}', [ClientsController::class, 'Employees'])->name('clients.Employees');
     Route::get('clients/ShowCreateEmail/{id}/{type}/{survey}', [ClientsController::class, 'ShowCreateEmail'])->name('clients.ShowCreateEmail');

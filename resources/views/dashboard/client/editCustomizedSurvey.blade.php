@@ -36,14 +36,14 @@
                             {{-- tool --}}
                             <div class="card-tools">
                                 {{-- back --}}
-                                <a href="{{ route('clients.ShowSurveys',[$id,$type]) }}"
+                                <a href="{{ route('clients.ShowCustomizedSurveys',[$id,$type]) }}"
                                     class="btn btn-sm btn-primary {{ App()->getLocale()=='ar'? 'float-start':'float-end' }}">{{
                                     __('Back') }}</a>
                                 {{-- create new survey --}}
                             </div>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('clients.storeSurvey',[$id,$type]) }}" method="POST"
+                            <form action="{{ route('clients.storeCustomizedSurvey',[$id,$type]) }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
@@ -51,6 +51,8 @@
                                     <div class="form-group col-md-6 col-sm-12">
                                         <input type="hidden" name="h_plan_id"
                                             value="{{ $client_subscription->plan_id }}">
+                                        <input type="hidden" name="h_splan_id"
+                                            value="{{ $client_subscription->id }}">
                                         <label for="plan_id">{{ __('Select Plan') }}</label>
                                         <select name="plan_id" id="plan_id" class="form-control" disabled>
                                             <option value="">{{ __('Select Plan') }}</option>
@@ -63,7 +65,7 @@
                                     <div class="form-group col-md-6 col-sm-12">
                                         <label for="survey_title">{{ __('Survey Title') }}</label>
                                         <input type="text" name="survey_title" id="survey_title" class="form-control"
-                                            placeholder="{{ __('Survey Title') }}" required>
+                                            placeholder="{{ __('Survey Title') }}">
                                         @error('survey_title')
                                         <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -147,7 +149,7 @@
                                     </div>
                                     {{-- cycle end_date --}}
                                     <div class="form-group col-md-6 col-sm-12">
-                                        <label for="end_date">{{ __('Cycle Start Date & Time') }}</label>
+                                        <label for="end_date">{{ __('Cycle Start Date') }}</label>
                                             <input type="date" name="end_date" id="end_date"
                                                 class="form-control col-4" placeholder="{{ __('Cycle End Date') }}">
                                         @error('end_date')
@@ -195,7 +197,7 @@
                                     <div class="form-group col-md-6 col-sm-12">
                                         <label for="survey_des">{{ __('Survey Description') }}</label>
                                         <textarea name="survey_des" id="survey_des" class="form-control summernote"
-                                            placeholder="{{ __('Survey Description') }}" required></textarea>
+                                            placeholder="{{ __('Survey Description') }}"></textarea>
                                         @error('survey_des')
                                         <span class="text-danger">{{ $message }}</span>
                                         @enderror

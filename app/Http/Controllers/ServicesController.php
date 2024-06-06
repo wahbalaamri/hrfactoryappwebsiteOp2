@@ -307,6 +307,8 @@ class ServicesController extends Controller
         $service->objective_ar = $request->objectives_ar;
         $service->service_user = 0;
         $service->is_active = true;
+        $service->candidate_raters_model = $request->candidate_raters_model != null ? true : false;
+        $service->public_availability = $request->public_availability != null ? true : false;
         $service->save();
         return redirect()->route('services.index');
     }

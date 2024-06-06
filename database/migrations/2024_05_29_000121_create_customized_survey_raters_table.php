@@ -11,19 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customized_survey_respondents', function (Blueprint $table) {
+        Schema::create('customized_survey_raters', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->integer('survey_id')->references('id')->on('surveys')->onDelete('cascade');
-            $table->integer('client_id')->references('id')->on('clients')->onDelete('cascade');
-            $table->uuid('employee_id');
-            $table->integer('survey_type')->nullable();
-            $table->integer('survey_cycle')->nullable();
+            $table->integer('survey_id')->references('id')->on('customized_surveys')->onDelete('cascade');
+            //candidate uuid
+            $table->uuid('candidate_id');
+            $table->uuid('rater_id');
+
+            //type of rater
+            $table->string('type');
             $table->boolean('send_status')->default(false);
             $table->dateTime('sent_date')->nullable();
             $table->boolean('reminder_status')->default(false);
             $table->dateTime('reminder_date')->nullable();
+            $table->softDeletes();
             $table->timestamps();
-            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
+            $table->foreign('candidate_id')->references('id')->on('employees');//Employee id ();
+            //rater uuid
+            $table->foreign('rater_id')->references('id')->on('employees');
         });
     }
 
@@ -32,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customized_survey_respondents');
+        Schema::dropIfExists('customized_survey_raters');
     }
 };

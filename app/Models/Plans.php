@@ -37,7 +37,7 @@ class Plans extends Model
     //belongs to many relationship with features
     public function features_obj()
     {
-        return $this->hasMany(PlanFeatures::class,'plan');
+        return $this->hasMany(PlanFeatures::class, 'plan');
     }
     //belongs to relationship with surveys
     public function surveys()
@@ -53,5 +53,10 @@ class Plans extends Model
     public function clientSubscriptions()
     {
         return $this->hasMany(ClientSubscriptions::class, 'plan_id');
+    }
+    //belongs to relationship with customized surveys
+    public function customizedSurveys()
+    {
+        return $this->hasMany(CustomizedSurvey::class, 'plan_id');
     }
 }
