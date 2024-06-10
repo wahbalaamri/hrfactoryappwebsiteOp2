@@ -24,6 +24,7 @@ return new class extends Migration
             $table->longText('english_title');
             $table->boolean('is_active')->default(0);
             $table->string('for')->nullable();
+            $table->integer('created_by');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\TermsConditions;
 use App\Http\Requests\StoreTermsConditionsRequest;
 use App\Http\Requests\UpdateTermsConditionsRequest;
+use App\Models\Countries;
 
 class TermsConditionsController extends Controller
 {
@@ -13,7 +14,25 @@ class TermsConditionsController extends Controller
      */
     public function index()
     {
-        //
+        //get current user id
+        $user_id = auth()->user()->id;
+        //get current user type
+        $user_type = auth()->user()->user_type;
+        //check if current user is admin
+        if (auth()->user()->isAdmin) {
+            //get all terms
+            $terms = TermsConditions::all();
+        } elseif($user_type=="partner") {
+            //get all terms where plan is null
+            $terms = TermsConditions::where('plan', null)->get();
+        }
+        else
+        {
+            //abort not autherized
+            abort(403);
+        }
+        //get all terms where plan is null
+
     }
 
     /**
