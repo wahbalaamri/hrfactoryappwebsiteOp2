@@ -33,11 +33,16 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">{{ __('Surveys') }}</h3>
-                            {{-- tool --}}
                             <div class="card-tools">
+                                <a href="{{ route('clients.manage',$client->id) }}"
+                                    class="btn btn-tool">
+                                    <i class="fa fa-arrow-left"></i>
+                                </a>
+                            {{-- tool --}}
                                 <a href="{{ route('clients.createCustomizedSurvey',[$client->id,$type]) }}"
-                                    class="btn btn-sm btn-primary {{ App()->getLocale()=='ar'? 'float-start':'float-end' }}">{{
-                                    __('Create New Survey') }}</a>
+                                    class="btn btn-tool">
+                                <i class="fa fa-plus"></i>
+                                </a>
                             </div>
                         </div>
                         <div class="card-body">

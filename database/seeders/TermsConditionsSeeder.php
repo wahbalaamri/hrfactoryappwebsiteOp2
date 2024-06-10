@@ -21,7 +21,6 @@ class TermsConditionsSeeder extends Seeder
         // insert content to database
         foreach ($contents['termsConditions'] as  $termsCondition) {
             $new_termsCondition = new TermsConditions();
-            $new_termsCondition->period=$termsCondition['TermsConditionType'];
             $new_termsCondition->country_id=$termsCondition['CountryId'];
             $new_termsCondition->arabic_text = $termsCondition['ArabicText'];
             $new_termsCondition->english_text = $termsCondition['EnglishText'];

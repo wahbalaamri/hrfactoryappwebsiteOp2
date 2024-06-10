@@ -263,6 +263,15 @@
                         </li> --}}
                         @if(auth()->user()->isAdmin || Auth()->user()->user_type == 'partner')
                         <li class="nav-item">
+                            <a href="{{ route('Emails.AutomatedEmails') }}" class="nav-link">
+                                <i class="nav-icon fa fa-mail-bulk"></i>
+                                <p>
+                                    {{ __('Emails') }}
+                                    {{-- <span class="right badge badge-danger">New</span> --}}
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{ route('services.index') }}" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>

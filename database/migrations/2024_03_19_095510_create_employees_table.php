@@ -25,8 +25,9 @@ return new class extends Migration
             $table->string('age_generation')->nullable();
             $table->string('position')->nullable();
             $table->integer('employee_type');
-            $table->string('isCandidate')->nullable()->default(false);
-            $table->string('isBoard')->nullable()->default(false);
+            $table->boolean('isCandidate')->default(false);
+            $table->boolean('isBoard')->default(false);
+            $table->string('lang')->default('en');
             $table->json('acting_for')->nullable();
             $table->boolean('is_hr_manager')->default(false);
             $table->boolean('active')->default(true);

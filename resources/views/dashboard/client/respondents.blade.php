@@ -264,7 +264,8 @@
                             "ids": ids,
                             "survey": "{{ $survey_id }}",
                             "type": "{{ $type }}",
-                            "client": "{{ $id }}"
+                            "client": "{{ $id }}",
+                            "tool_type":"normal"
                         },
                         success: function(data) {
                             if (data.status) {
@@ -296,7 +297,8 @@
                         "ids": ids,
                         "survey": "{{ $survey_id }}",
                         "type": "{{ $type }}",
-                        "client": "{{ $id }}"
+                        "client": "{{ $id }}",
+                        "tool_type":"normal"
                     },
                     success: function(data) {
                         if (data.status) {

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             //string for email type
             $table->string('email_type');
+            $table->integer('country')->nullable();
             $table->integer('client_id')->nullable();
             $table->integer('survey_id')->nullable();
             $table->text('subject');
@@ -25,6 +26,9 @@ return new class extends Migration
             $table->longText('body_footer_ar')->nullable();
             $table->boolean('status')->default(1);
             $table->boolean('use_client_logo')->default(0);
+            $table->integer('created_by')->nullable();
+            $table->string('created_by_type')->nullable();
+            $table->string('email_for')->nullable();
             //logo
             $table->string('logo')->nullable();
             //soft delete

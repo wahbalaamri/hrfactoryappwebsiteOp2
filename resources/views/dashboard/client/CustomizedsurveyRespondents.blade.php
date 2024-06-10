@@ -264,7 +264,8 @@
                             "ids": ids,
                             "survey": "{{ $survey_id }}",
                             "type": "{{ $type }}",
-                            "client": "{{ $id }}"
+                            "client": "{{ $id }}",
+                            "tool_type":"customized"
                         },
                         success: function(data) {
                             if (data.status) {
@@ -296,7 +297,8 @@
                         "ids": ids,
                         "survey": "{{ $survey_id }}",
                         "type": "{{ $type }}",
-                        "client": "{{ $id }}"
+                        "client": "{{ $id }}",
+                        "tool_type":"customized"
                     },
                     success: function(data) {
                         if (data.status) {
@@ -321,7 +323,7 @@
                 processing: true,
                 serverSide: true,
                 destroy: true,
-                ajax: "{{ route('sector.getRaters', [':id', ':survey']) }}".replace(':id', id).replace(
+                ajax: "{{ route('sector.getRaters', [':id', ':survey','customized']) }}".replace(':id', id).replace(
                     ':survey', "{{ $survey->id }}"),
                 columns: [{
                         data: 'DT_RowIndex',
@@ -455,6 +457,7 @@
                     "survey": survey,
                     "action": action,
                     "client_id":"{{ $id }}",
+                    "tool_type":"customized"
 
                 },
                 success: function(data) {

@@ -8,7 +8,7 @@ use App\Models\CustomizedSurveyPractices;
 use App\Models\PlansPrices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Models\{Clients, ClientSubscriptions, Functions, Services, FunctionPractices, Industry, Plans, PracticeQuestions, Sectors, Surveys, Companies, CustomizedSurvey, CustomizedSurveyQuestions, CustomizedSurveyRaters, CustomizedSurveyRespondents, Departments, EmailContents, Employees, PrioritiesAnswers, Respondents, SurveyAnswers, Raters};
+use App\Models\{Clients, ClientSubscriptions, Functions, Services, FunctionPractices, Industry, Plans, PracticeQuestions, Sectors, Surveys, Companies, CustomizedSurvey, CustomizedSurveyAnswers, CustomizedSurveyQuestions, CustomizedSurveyRaters, CustomizedSurveyRespondents, Departments, EmailContents, Employees, PrioritiesAnswers, Respondents, SurveyAnswers, Raters};
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -917,55 +917,102 @@ class SurveysPrepration
     function saveSurveyRespondents(Request $request, $by_admin)
     {
         try {
-            //check if ID from IDs is not added
-            foreach ($request->ids as $idr) {
-                $respondent = Respondents::where('employee_id', $idr)
-                    ->where([['survey_id', $request->survey], ['client_id', $request->client], ['survey_type', $request->type]])
-                    ->first();
-                if ($respondent == null) {
-                    $respondent1 = new Respondents();
-                    $respondent1->employee_id = str($idr);
-                    $respondent1->survey_id = $request->survey;
-                    $respondent1->client_id = $request->client;
-                    $respondent1->survey_type = $request->type;
-                    $respondent1->save();
+
+            if ($request->tool_type != 'customized') { //check if ID from IDs is not added
+                foreach ($request->ids as $idr) {
+                    $respondent = Respondents::where('employee_id', $idr)
+                        ->where([['survey_id', $request->survey], ['client_id', $request->client], ['survey_type', $request->type]])
+                        ->first();
+                    if ($respondent == null) {
+                        $respondent1 = new Respondents();
+                        $respondent1->employee_id = str($idr);
+                        $respondent1->survey_id = $request->survey;
+                        $respondent1->client_id = $request->client;
+                        $respondent1->survey_type = $request->type;
+                        $respondent1->save();
+                    }
                 }
-            }
-            //get all respondents of the survey and client and type not in IDs
-            $respondents = Respondents::where('survey_id', $request->survey)
-                ->where('client_id', $request->client)
-                ->where('survey_type', $request->type)
-                ->whereNotIn('employee_id', $request->ids)
-                ->get();
-            $ready_to_delete = false;
-            //delete all answers of each respondent in respondents
-            if ($respondents->count() > 0 && $ready_to_delete) {
-                foreach ($respondents as $respondent) {
-                    //delete all answers of the respondent
-                    if ($request->type == 3 || $request->type == 4) {
-                        $answers = SurveyAnswers::where('answered_by', $respondent->id)->get();
-                        foreach ($answers as $answer) {
-                            $answer->delete();
+                //get all respondents of the survey and client and type not in IDs
+                $respondents = Respondents::where('survey_id', $request->survey)
+                    ->where('client_id', $request->client)
+                    ->where('survey_type', $request->type)
+                    ->whereNotIn('employee_id', $request->ids)
+                    ->get();
+                $ready_to_delete = false;
+                //delete all answers of each respondent in respondents
+                if ($respondents->count() > 0 && $ready_to_delete) {
+                    foreach ($respondents as $respondent) {
+                        //delete all answers of the respondent
+                        if ($request->type == 3 || $request->type == 4) {
+                            $answers = SurveyAnswers::where('answered_by', $respondent->id)->get();
+                            foreach ($answers as $answer) {
+                                $answer->delete();
+                            }
+                            if ($request->type == 4) {
+                                $Panswers = PrioritiesAnswers::where('answered_by', $respondent->id)->get();
+                                foreach ($Panswers as $answer) {
+                                    $answer->delete();
+                                }
+                            }
                         }
-                        if ($request->type == 4) {
-                            $Panswers = PrioritiesAnswers::where('answered_by', $respondent->id)->get();
-                            foreach ($Panswers as $answer) {
+                        if ($request->type == 5) {
+                            $answers = SurveyAnswers::where('candidate', $respondent->id)
+                                ->where('survey_id', $request->survey)
+                                ->where('client_id', $request->client)
+                                ->where('survey_type', $request->type)
+                                ->get();
+                            foreach ($answers as $answer) {
                                 $answer->delete();
                             }
                         }
+                        //delete the respondent
+                        $respondent->delete();
                     }
-                    if ($request->type == 5) {
-                        $answers = SurveyAnswers::where('candidate', $respondent->id)
-                            ->where('survey_id', $request->survey)
-                            ->where('client_id', $request->client)
-                            ->where('survey_type', $request->type)
-                            ->get();
-                        foreach ($answers as $answer) {
-                            $answer->delete();
+                }
+            } else {
+                foreach ($request->ids as $idr) {
+                    $respondent = CustomizedSurveyRespondents::where('employee_id', $idr)
+                        ->where([['survey_id', $request->survey], ['client_id', $request->client], ['survey_type', $request->type]])
+                        ->first();
+                    if ($respondent == null) {
+                        $respondent1 = new CustomizedSurveyRespondents();
+                        $respondent1->employee_id = str($idr);
+                        $respondent1->survey_id = $request->survey;
+                        $respondent1->client_id = $request->client;
+                        $respondent1->survey_type = $request->type;
+                        $respondent1->save();
+                    }
+                }
+                //get all respondents of the survey and client and type not in IDs
+                $respondents = CustomizedSurveyRespondents::where('survey_id', $request->survey)
+                    ->where('client_id', $request->client)
+                    ->where('survey_type', $request->type)
+                    ->whereNotIn('employee_id', $request->ids)
+                    ->get();
+                $ready_to_delete = false;
+                //delete all answers of each respondent in respondents
+                if ($respondents->count() > 0 && $ready_to_delete) {
+                    foreach ($respondents as $respondent) {
+                        //delete all answers of the respondent
+                        if ($request->type == 3 || $request->type == 4) {
+                            $answers = CustomizedSurveyAnswers::where('answered_by', $respondent->id)->get();
+                            foreach ($answers as $answer) {
+                                $answer->delete();
+                            }
                         }
+                        if ($request->type == 5) {
+                            $answers = CustomizedSurveyAnswers::where('candidate', $respondent->id)
+                                ->where('survey_id', $request->survey)
+                                ->where('client_id', $request->client)
+                                ->where('survey_type', $request->type)
+                                ->get();
+                            foreach ($answers as $answer) {
+                                $answer->delete();
+                            }
+                        }
+                        //delete the respondent
+                        $respondent->delete();
                     }
-                    //delete the respondent
-                    $respondent->delete();
                 }
             }
             //json response with status
@@ -2488,23 +2535,44 @@ class SurveysPrepration
     public function saveSurveyCandidates(Request $request, $by_admin = false)
     {
         try {
-            //type
-            foreach ($request->ids as $candidate) {
-                $rater = new Raters();
-                $rater->candidate_id = $candidate;
-                $rater->rater_id = $candidate;
-                $rater->survey_id = $request->survey;
-                $rater->type = 'Self';
-                $rater->save();
-                //add new respondent
-                $respondent = new Respondents();
-                $respondent->survey_id = $request->survey;
-                $respondent->employee_id = $candidate;
-                $respondent->client_id = $request->client;
-                $respondent->survey_type = $request->type;
-                $respondent->rater_id = $rater->id;
-                $respondent->candidate_id = $candidate;
-                $respondent->save();
+            if ($request->tool_type != 'customized') {
+                //type
+                foreach ($request->ids as $candidate) {
+                    $rater = new Raters();
+                    $rater->candidate_id = $candidate;
+                    $rater->rater_id = $candidate;
+                    $rater->survey_id = $request->survey;
+                    $rater->type = 'Self';
+                    $rater->save();
+                    //add new respondent
+                    $respondent = new Respondents();
+                    $respondent->survey_id = $request->survey;
+                    $respondent->employee_id = $candidate;
+                    $respondent->client_id = $request->client;
+                    $respondent->survey_type = $request->type;
+                    $respondent->rater_id = $rater->id;
+                    $respondent->candidate_id = $candidate;
+                    $respondent->save();
+                }
+            } else {
+                //type
+                foreach ($request->ids as $candidate) {
+                    $rater = new CustomizedSurveyRaters();
+                    $rater->candidate_id = $candidate;
+                    $rater->rater_id = $candidate;
+                    $rater->survey_id = $request->survey;
+                    $rater->type = 'Self';
+                    $rater->save();
+                    //add new respondent
+                    $respondent = new CustomizedSurveyRespondents();
+                    $respondent->survey_id = $request->survey;
+                    $respondent->employee_id = $candidate;
+                    $respondent->client_id = $request->client;
+                    $respondent->survey_type = $request->type;
+                    $respondent->rater_id = $rater->id;
+                    $respondent->candidate_id = $candidate;
+                    $respondent->save();
+                }
             }
             return response()->json(['message' => 'Candidates saved successfully'], 200);
         } catch (\Exception $e) {
@@ -2609,7 +2677,9 @@ class SurveysPrepration
             ->addColumn('Cid', function ($row) use ($id) {
                 return $id;
             })
-            ->addColumn('isAdded', function ($emp) use ($survey, $id) {
+            ->addColumn('isAdded', function ($emp) use ($survey, $id, $type) {
+                if ($type == 'customized')
+                    return CustomizedSurveyRaters::where('candidate_id', $id)->where('rater_id', $emp['id'])->where('survey_id', $survey)->exists();
                 return Raters::where('candidate_id', $id)->where('rater_id', $emp['id'])->where('survey_id', $survey)->exists();
             })
             ->rawColumns(['action'])
@@ -2619,28 +2689,53 @@ class SurveysPrepration
     public function SaveRaters(Request $request, $by_admin = false)
     {
         try {
-            //action
-            if ($request->action == "add") {
-                $rater = new Raters();
-                $rater->candidate_id = $request->cid;
-                $rater->rater_id = $request->id;
-                $rater->survey_id = $request->survey;
-                $rater->type = $request->type;
-                $rater->save();
-                //add new respondent
-                $respondent = new Respondents();
-                $respondent->survey_id = $request->survey;
-                $respondent->employee_id = $request->id;
-                $respondent->client_id = $request->client_id;
-                $respondent->survey_type = $request->stype;
-                $respondent->rater_id = $rater->id;
-                $respondent->candidate_id = $request->cid;
-                $respondent->save();
-            } else {
-                $rater = Raters::where('candidate_id', $request->cid)->where('rater_id', $request->id)->where('survey_id', $request->survey)->first();
-                //completelly destroy
-                Respondents::where('survey_id', $request->survey)->where('rater_id', $rater->id)->first()->delete();
-                $rater->delete();
+            if ($request->tool_type != "customized") { //action
+                if ($request->action == "add") {
+                    $rater = new Raters();
+                    $rater->candidate_id = $request->cid;
+                    $rater->rater_id = $request->id;
+                    $rater->survey_id = $request->survey;
+                    $rater->type = $request->type;
+                    $rater->save();
+                    //add new respondent
+                    $respondent = new Respondents();
+                    $respondent->survey_id = $request->survey;
+                    $respondent->employee_id = $request->id;
+                    $respondent->client_id = $request->client_id;
+                    $respondent->survey_type = $request->stype;
+                    $respondent->rater_id = $rater->id;
+                    $respondent->candidate_id = $request->cid;
+                    $respondent->save();
+                } else {
+                    $rater = Raters::where('candidate_id', $request->cid)->where('rater_id', $request->id)->where('survey_id', $request->survey)->first();
+                    //completelly destroy
+                    Respondents::where('survey_id', $request->survey)->where('rater_id', $rater->id)->first()->delete();
+                    $rater->delete();
+                }
+            }
+            else{
+                if ($request->action == "add") {
+                    $rater = new CustomizedSurveyRaters();
+                    $rater->candidate_id = $request->cid;
+                    $rater->rater_id = $request->id;
+                    $rater->survey_id = $request->survey;
+                    $rater->type = $request->type;
+                    $rater->save();
+                    //add new respondent
+                    $respondent = new CustomizedSurveyRespondents();
+                    $respondent->survey_id = $request->survey;
+                    $respondent->employee_id = $request->id;
+                    $respondent->client_id = $request->client_id;
+                    $respondent->survey_type = $request->stype;
+                    $respondent->rater_id = $rater->id;
+                    $respondent->candidate_id = $request->cid;
+                    $respondent->save();
+                } else {
+                    $rater = CustomizedSurveyRaters::where('candidate_id', $request->cid)->where('rater_id', $request->id)->where('survey_id', $request->survey)->first();
+                    //completelly destroy
+                    CustomizedSurveyRespondents::where('survey_id', $request->survey)->where('rater_id', $rater->id)->first()->delete();
+                    $rater->delete();
+                }
             }
             return response()->json(['message' => 'Raters saved successfully', 'stat' => true], 200);
         } catch (\Exception $e) {
@@ -3155,14 +3250,14 @@ class SurveysPrepration
         ];
         //if request is ajax
         if ($request->ajax()) {
-            $respondents_ids = CustomizedSurveyRespondents::where('survey_id',$survey_id)->get()->pluck('employee_id')->toArray();
-            $candidate = /* CustomizedSurvey */Raters::where('survey_id', $survey_id)->get()->pluck('candidate_id')->toArray();
+            $respondents_ids = CustomizedSurveyRespondents::where('survey_id', $survey_id)->get()->pluck('employee_id')->toArray();
+            $candidate = /* CustomizedSurvey */ Raters::where('survey_id', $survey_id)->get()->pluck('candidate_id')->toArray();
 
             //setup yajra datatable
             if ($is_candidate_raters) {
-                $employees = Employees::where('client_id',$id)->where('employee_type', 1)->get();
+                $employees = Employees::where('client_id', $id)->where('employee_type', 1)->get();
             } else {
-                $employees = Employees::where('client_id',$id)->get();
+                $employees = Employees::where('client_id', $id)->get();
             }
             // $employees = Employees::where('client_id', $id)->get();
             //log employees as an array

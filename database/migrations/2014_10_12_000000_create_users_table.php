@@ -25,7 +25,7 @@ return new class extends Migration
             $table->boolean('is_main')->default(false);
             $table->boolean('isAdmin')->default(false);
             $table->string('password');
-            $table->integer('lang')->default(1);
+            $table->string('lang')->default('en');
             $table->boolean('hide_my_result')->default(false);
             //is_active
             $table->boolean('is_active')->default(0);

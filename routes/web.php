@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\ClientSubscriptionsController;
 use App\Http\Controllers\CouponsController;
+use App\Http\Controllers\EmailContentsController;
 use App\Http\Controllers\FunctionPracticesController;
 use App\Http\Controllers\FunctionsController;
 use App\Http\Controllers\HomeController;
@@ -380,6 +381,30 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
       =                                                                                                                =
       =                                                                                                                =
       =                                        Partners ROUTES End                                                     =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
+    /*==================================================================================================================
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                        Emails Setup ROUTES START                                               =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
+    Route::get('Emails/AutomatedEmails/{country?}/{type?}',[EmailContentsController::class,'AutomatedEmails'])->name('Emails.AutomatedEmails');
+    Route::get('Emails/CreateAutmoatedEmails',[EmailContentsController::class,'CreateAutmoatedEmails'])->name('Emails.CreateAutmoatedEmails');
+    Route::get('Emails/EditAutmoatedEmails/{id}',[EmailContentsController::class,'EditAutmoatedEmails'])->name('Emails.EditAutmoatedEmails');
+    Route::post('Emails/SaveAutomatedEmails',[EmailContentsController::class,'SaveAutomatedEmails'])->name('Emails.SaveAutomatedEmails');
+    Route::get('Emails/CreateInstantEmail',[EmailContentsController::class,'CreateInstantEmail'])->name('Emails.CreateInstantEmail');
+    Route::post('Emails/SendInstantEmail',[EmailContentsController::class,'SendInstantEmail'])->name('Emails.SendInstantEmail');
+      /*==================================================================================================================
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                        Emails Setup ROUTES END                                                 =
       =                                                                                                                =
       =                                                                                                                =
       =                                                                                                                =
