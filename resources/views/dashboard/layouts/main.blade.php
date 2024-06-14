@@ -50,7 +50,8 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
+                            class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="index3.html" class="nav-link">Home</a>
@@ -180,12 +181,12 @@
                     </a>
                 </li>
                 @if (Auth()->user()->isAdmin)
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#"
-                        role="button">
-                        <i class="fas fa-th-large"></i>
-                    </a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true"
+                            href="#" role="button">
+                            <i class="fas fa-th-large"></i>
+                        </a>
+                    </li>
                 @endif
             </ul>
         </nav>
@@ -261,62 +262,62 @@
                                 </li>
                             </ul>
                         </li> --}}
-                        @if(auth()->user()->isAdmin || Auth()->user()->user_type == 'partner')
-                        <li class="nav-item">
-                            <a href="{{ route('Emails.AutomatedEmails') }}" class="nav-link">
-                                <i class="nav-icon fa fa-mail-bulk"></i>
-                                <p>
-                                    {{ __('Emails') }}
-                                    {{-- <span class="right badge badge-danger">New</span> --}}
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('services.index') }}" class="nav-link">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    {{ __('Services') }}
-                                    {{-- <span class="right badge badge-danger">New</span> --}}
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('clients.index') }}" class="nav-link">
-                                <i class="nav-icon fas fa-users"></i>
-                                <p>
-                                    {{ __('Clients') }}
-                                    {{-- <span class="right badge badge-danger">New</span> --}}
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('ManageHrDiagnosis.index') }}" class="nav-link">
-                                <i class="nav-icon fas fa-user-md"></i>
-                                <p>
-                                    {{ __('Manager Hr Diagnosis') }}
-                                    {{-- <span class="right badge badge-danger">New</span> --}}
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('Leader360Review.index') }}" class="nav-link">
-                                <i class="nav-icon fas fa-compress-arrows-alt"></i>
-                                <p>
-                                    {{ __('360 Review') }}
-                                    {{-- <span class="right badge badge-danger">New</span> --}}
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('EmployeeEngagment.index') }}" class="nav-link">
-                                <i class="nav-icon fas fa-laugh-beam"></i>
-                                <p>
-                                    {{ __('Employee Engagment') }}
-                                    {{-- <span class="right badge badge-danger">New</span> --}}
-                                </p>
-                            </a>
-                        </li>
-                        {{-- <li class="nav-item">
+                        @if (auth()->user()->isAdmin || Auth()->user()->user_type == 'partner')
+                            <li class="nav-item">
+                                <a href="{{ route('Emails.AutomatedEmails') }}" class="nav-link">
+                                    <i class="nav-icon fa fa-mail-bulk"></i>
+                                    <p>
+                                        {{ __('Emails') }}
+                                        {{-- <span class="right badge badge-danger">New</span> --}}
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('services.index') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-th"></i>
+                                    <p>
+                                        {{ __('Services') }}
+                                        {{-- <span class="right badge badge-danger">New</span> --}}
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('clients.index') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-users"></i>
+                                    <p>
+                                        {{ __('Clients') }}
+                                        {{-- <span class="right badge badge-danger">New</span> --}}
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('ManageHrDiagnosis.index') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-user-md"></i>
+                                    <p>
+                                        {{ __('Manager Hr Diagnosis') }}
+                                        {{-- <span class="right badge badge-danger">New</span> --}}
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('Leader360Review.index') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-compress-arrows-alt"></i>
+                                    <p>
+                                        {{ __('360 Review') }}
+                                        {{-- <span class="right badge badge-danger">New</span> --}}
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('EmployeeEngagment.index') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-laugh-beam"></i>
+                                    <p>
+                                        {{ __('Employee Engagment') }}
+                                        {{-- <span class="right badge badge-danger">New</span> --}}
+                                    </p>
+                                </a>
+                            </li>
+                            {{-- <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-copy"></i>
                                 <p>
@@ -909,17 +910,28 @@
                                 <p>Informational</p>
                             </a>
                         </li> --}}
+                            @if (auth()->user()->isAdmin)
+                                <li class="nav-item">
+                                    <a href="{{ route('partners.index') }}" class="nav-link">
+                                        <i class="nav-icon fa fa-business-time"></i>
+                                        <p>
+                                            {{ __('Partners') }}
+                                            {{-- <span class="right badge badge-danger">New</span> --}}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endif
                         @else
-                        <li class="nav-item">
-                            <a href="{{ route('client.manage') }}" class="nav-link">
-                                <i class="nav-icon fa fa-business-time"></i>
-                                <p>
-                                    {{ __('Manage') }}
-                                    {{-- <span class="right badge badge-danger">New</span> --}}
-                                </p>
-                            </a>
-                        </li>
-                        {{-- <li class="nav-item"><a href="{{ route('Client.startup') }}" class="nav-link">
+                            <li class="nav-item">
+                                <a href="{{ route('client.manage') }}" class="nav-link">
+                                    <i class="nav-icon fa fa-business-time"></i>
+                                    <p>
+                                        {{ __('Manage') }}
+                                        {{-- <span class="right badge badge-danger">New</span> --}}
+                                    </p>
+                                </a>
+                            </li>
+                            {{-- <li class="nav-item"><a href="{{ route('Client.startup') }}" class="nav-link">
                                 <i class="fa fa-folder"></i>
                                 <p>StartUp</p>
                             </a>
@@ -978,8 +990,7 @@
     <script src="{{ asset('dashboard/plugins/moment/moment.min.js') }}"></script>
     <script src="{{ asset('dashboard/plugins/daterangepicker/daterangepicker.js') }}"></script>
     <!-- Tempusdominus Bootstrap 4 -->
-    <script src="{{ asset('dashboard/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}">
-    </script>
+    <script src="{{ asset('dashboard/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
     <script src="{{ asset('dashboard/plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"></script>
     <script src="{{ asset('dashboard/plugins/bs-stepper/js/bs-stepper.min.js') }}"></script>
     <!-- Summernote -->

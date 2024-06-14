@@ -208,10 +208,23 @@
         <div class="header-output">
             <div class="container header-in">
                 <div class="row">
-                    <div class="col-xl-2 col-lg-2"> <a id="logo" href="/" class="d-inline-block margin-tb-10px"><img
-                                src="{{ asset('assets/img/logo-1.png')}}" alt=""></a> <a
-                            class="mobile-toggle padding-15px background-main-color" href="#"><i
-                                class="fas fa-bars"></i></a> </div>
+                    <div class="col-xl-2 col-lg-2">
+                        <a id="logo" href="/" class="d-inline-block margin-tb-10px">
+                            <img src="{{ asset('assets/img/logo-1.png')}}" alt="">
+                        </a>
+                        <a class="mobile-toggle padding-15px background-main-color" href="#">
+                            <i class="fas fa-bars"></i>
+                        </a>
+                        @php
+                        $partner=\App\Http\Facades\Landing::getPartner();
+                        @endphp
+                        @if ($partner)
+                        <div class="">
+                            powered by:
+                            <img src="{{ asset('uploads/companies/logos/'.$partner->logo_path) }}" alt="" style="width: 100px">
+                        </div>
+                        @endif
+                    </div>
                     <div class="col-xl-3 col-lg-3 margin-tb-25px">
                         <div class="text-center">
 
@@ -230,7 +243,7 @@
                     <div class="col-xl-5 col-lg-5 margin-tb-25px">
                         <div class="float-end">
                             <ul id="menu-main" class="float-end nav-menu dropdown-dark">
-                                <li><a href="#">{{ __('Home') }}</a></li>
+                                <li><a href="{{ route('Home') }}">{{ __('Home') }}</a></li>
 
                                 <li><a href="{{ route('Home') }}#subscriptionPlans">{{ __('Solutions') }}</a></li>
                                 <li><a href="{{ route('Training') }}">{{ __('Learn') }}</a></li>
@@ -274,7 +287,14 @@
         <div class="container">
             <div class="row">
                 <div class="col-8 col-lg-10 col-md-10 margin-tb-20px wow fadeInUp">
-                    <div class="logo margin-bottom-10px"><img src="{{ asset('assets/img/logo.png')}}" alt=""></div>
+                    <div class="logo margin-bottom-10px"><img src="{{ asset('assets/img/logo.png')}}" alt="">
+                        @if ($partner)
+                        <div class="text-white">
+                            powered by:
+                            <img src="{{ asset('uploads/companies/logos/'.$partner->logo_path) }}" alt="" style="width: 100px">
+                        </div>
+                        @endif
+                    </div>
                     <div class="text-grey-2 font-weight-300"></div>
 
                     <!-- // Social -->
@@ -288,10 +308,10 @@
                         <li class="list-inline-item"><a class="linkedin cms" data-contentId="107" href="#"><i
                                     class="fab fa-linkedin"></i></a></li>
                     </ul>
-                    <a class="text-white" href="tel:+96879178007" dir=""><i class="fas fa-phone"></i>&nbsp;
-                        +968 7917 8007</a><br />
-                    <a class="text-white" href="mailto:care@hrfactoryapp.com" dir=""><i
-                            class="fas fa-envelope"></i>&nbsp; care@hrfactoryapp.com</a>
+                    <a class="text-white" href="{{ $partner? 'tel:'.$partner->focalPoints[0]->phone:'tel:+96879178007' }}" dir=""><i class="fas fa-phone"></i>&nbsp;
+                        {{ $partner? $partner->focalPoints[0]->phone:'+96879178007' }}</a><br />
+                    <a class="text-white" href="{{ $partner? 'mailto:'.$partner->focalPoints[0]->Email:'mailto:care@hrfactoryapp.com' }}" dir=""><i
+                            class="fas fa-envelope"></i>&nbsp; {{ $partner? $partner->focalPoints[0]->Email:'care@hrfactoryapp.com' }}</a>
                 </div>
             </div>
         </div>

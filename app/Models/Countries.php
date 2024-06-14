@@ -55,4 +55,9 @@ class Countries extends Model
     {
         return $this->hasMany(Partnerships::class, 'country_id');
     }
+    //hasMany terms
+    public function terms()
+    {
+        return $this->hasMany(TermsConditions::class, 'country_id');
+    }
 }

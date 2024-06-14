@@ -147,5 +147,6 @@
 </script>
 <script src="{{ asset('assets/js/Partnerships.js') }}"></script>
 <script src="{{ asset('assets/js/PartnerFocalPoint.js') }}"></script>
-@vite('resources/js/partner.js')
+<script src="{{ asset('assets/js/partner.js') }}"></script>
+
 @endsection

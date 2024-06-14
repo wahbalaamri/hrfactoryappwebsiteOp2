@@ -26,4 +26,8 @@ class TermsConditions extends Model
     {
         return $this->belongsTo(Plans::class);
     }
+    public function country()
+    {
+        return $this->belongsTo(Countries::class);
+    }
 }

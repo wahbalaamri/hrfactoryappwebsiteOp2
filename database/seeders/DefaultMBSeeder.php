@@ -18,7 +18,7 @@ class DefaultMBSeeder extends Seeder
         // if (DefaultMB::count() > 0) {
         //     return;
         // }
-        $contents = json_decode(file_get_contents('https://www.hrfactoryapp.com/Home/shipDef?email=Admin@hrfactoryapp.com&country=158&companysize=1&lang=1'), true);
+        $contents = json_decode(file_get_contents('https://www.hrfactoryapp.com/Home/shipDef?email=Admin@hrfactoryapp.com&country=158&companysize=1&lang=2'), true);
         // insert content to database
         foreach ($contents['defaultMBs'] as  $defaultMB) {
             $new_defaultMB = new DefaultMB();
@@ -32,7 +32,7 @@ class DefaultMBSeeder extends Seeder
             $new_defaultMB->IsActive = $defaultMB['IsActive'] == 1 ? true : false;
             $new_defaultMB->language = $defaultMB['LanguageId'] == 1 ? 'en' : 'ar';
             $new_defaultMB->IsHaveLineBefore = $defaultMB['IsHaveLineBefore'] == 1 ? true : false;
-            $new_defaultMB->country_id = $defaultMB['CountryID'];
+            $new_defaultMB->country_id = 155;
             $new_defaultMB->default_MB_id = $defaultMB['DefaultMBId'];
             $new_defaultMB->company_size = $defaultMB['CompanySize'];
             $new_defaultMB->company_industry = $defaultMB['CompanyIndustry'];

@@ -8,10 +8,12 @@ use App\Models\Plans;
 use App\Models\ServiceApproaches;
 use App\Models\ServiceFeatures;
 use App\Models\Services;
+use App\Models\TermsConditions;
 use App\Policies\PlansPolicy;
 use App\Policies\ServiceApproachesPolicy;
 use App\Policies\ServiceFeaturesPolicy;
 use App\Policies\ServicesPolicy;
+use App\Policies\TermsConditionsPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -23,10 +25,11 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         //
-        Services::class=>ServicesPolicy::class,
-        ServiceFeatures::class=>ServiceFeaturesPolicy::class,
-        ServiceApproaches::class=>ServiceApproachesPolicy::class,
-        Plans::class=>PlansPolicy::class,
+        Services::class => ServicesPolicy::class,
+        ServiceFeatures::class => ServiceFeaturesPolicy::class,
+        ServiceApproaches::class => ServiceApproachesPolicy::class,
+        Plans::class => PlansPolicy::class,
+        TermsConditions::class => TermsConditionsPolicy::class,
     ];
 
     /**

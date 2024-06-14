@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\ClientSubscriptionsController;
 use App\Http\Controllers\CouponsController;
+use App\Http\Controllers\DefaultMBController;
 use App\Http\Controllers\EmailContentsController;
 use App\Http\Controllers\FunctionPracticesController;
 use App\Http\Controllers\FunctionsController;
@@ -394,13 +395,13 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
       =                                                                                                                =
       =                                                                                                                =
       ==================================================================================================================*/
-    Route::get('Emails/AutomatedEmails/{country?}/{type?}',[EmailContentsController::class,'AutomatedEmails'])->name('Emails.AutomatedEmails');
-    Route::get('Emails/CreateAutmoatedEmails',[EmailContentsController::class,'CreateAutmoatedEmails'])->name('Emails.CreateAutmoatedEmails');
-    Route::get('Emails/EditAutmoatedEmails/{id}',[EmailContentsController::class,'EditAutmoatedEmails'])->name('Emails.EditAutmoatedEmails');
-    Route::post('Emails/SaveAutomatedEmails',[EmailContentsController::class,'SaveAutomatedEmails'])->name('Emails.SaveAutomatedEmails');
-    Route::get('Emails/CreateInstantEmail',[EmailContentsController::class,'CreateInstantEmail'])->name('Emails.CreateInstantEmail');
-    Route::post('Emails/SendInstantEmail',[EmailContentsController::class,'SendInstantEmail'])->name('Emails.SendInstantEmail');
-      /*==================================================================================================================
+    Route::get('Emails/AutomatedEmails/{country?}/{type?}', [EmailContentsController::class, 'AutomatedEmails'])->name('Emails.AutomatedEmails');
+    Route::get('Emails/CreateAutmoatedEmails', [EmailContentsController::class, 'CreateAutmoatedEmails'])->name('Emails.CreateAutmoatedEmails');
+    Route::get('Emails/EditAutmoatedEmails/{id}', [EmailContentsController::class, 'EditAutmoatedEmails'])->name('Emails.EditAutmoatedEmails');
+    Route::post('Emails/SaveAutomatedEmails', [EmailContentsController::class, 'SaveAutomatedEmails'])->name('Emails.SaveAutomatedEmails');
+    Route::get('Emails/CreateInstantEmail', [EmailContentsController::class, 'CreateInstantEmail'])->name('Emails.CreateInstantEmail');
+    Route::post('Emails/SendInstantEmail', [EmailContentsController::class, 'SendInstantEmail'])->name('Emails.SendInstantEmail');
+    /*==================================================================================================================
       =                                                                                                                =
       =                                                                                                                =
       =                                                                                                                =
@@ -418,12 +419,37 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
       =                                                                                                                =
       =                                                                                                                =
       ==================================================================================================================*/
-    Route::get('termsCondition/{country?}/{type?}',[TermsConditionsController::class,'index'])->name('termsCondition.index');
-      /*==================================================================================================================
+      Route::get('termsCondition/listall/{country?}/{type?}/', [TermsConditionsController::class, 'index'])->name('termsCondition.index');
+      Route::get('/termsCondition/create', [TermsConditionsController::class, 'create'])->name('termsCondition.create');
+      Route::post('/termsCondition/store', [TermsConditionsController::class, 'store'])->name('termsCondition.store');
+      Route::get('/termsCondition/edit', [TermsConditionsController::class, 'edit'])->name('termsCondition.edit');
+      Route::post('/termsCondition/update', [TermsConditionsController::class, 'update'])->name('termsCondition.update');
+    /*==================================================================================================================
       =                                                                                                                =
       =                                                                                                                =
       =                                                                                                                =
       =                                        Terms Conditions ROUTES END                                             =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
+          /*==================================================================================================================
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                        Manual Builder ROUTES START                                           =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      ==================================================================================================================*/
+      Route::get('manualBuilder/Default/{country?}', [DefaultMBController::class, 'index'])->name('manualBuilder.index');
+      Route::post('manualBuilder/reorder/', [DefaultMBController::class, 'reorder'])->name('manualBuilder.reorder');
+
+    /*==================================================================================================================
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                                                                                                =
+      =                                        Manual Builder ROUTES END                                             =
       =                                                                                                                =
       =                                                                                                                =
       =                                                                                                                =

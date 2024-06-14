@@ -29,6 +29,7 @@ class TermsConditionsPolicy
      */
     public function create(User $user): bool
     {
+        return auth()->user()->isAdmin || auth()->user()->user_type;
         //
     }
 
