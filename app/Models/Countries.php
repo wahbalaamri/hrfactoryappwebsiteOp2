@@ -59,5 +59,9 @@ class Countries extends Model
     public function terms()
     {
         return $this->hasMany(TermsConditions::class, 'country_id');
+    }// hasmany DefaultMB
+    public function defaultMB()
+    {
+        return $this->hasMany(DefaultMB::class, 'country_id');
     }
 }

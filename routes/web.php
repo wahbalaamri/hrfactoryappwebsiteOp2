@@ -443,7 +443,13 @@ Route::group(['middleware' => ['auth:web'], 'prefix' => 'admin'], function () {
       =                                                                                                                =
       ==================================================================================================================*/
       Route::get('manualBuilder/Default/{country?}', [DefaultMBController::class, 'index'])->name('manualBuilder.index');
+      Route::get('manualBuilder/ClientSections/{id}', [DefaultMBController::class, 'ClientSections'])->name('manualBuilder.ClientSections');
       Route::post('manualBuilder/reorder/', [DefaultMBController::class, 'reorder'])->name('manualBuilder.reorder');
+      Route::post('manualBuilder/update/', [DefaultMBController::class, 'updateSection'])->name('manualBuilder.update');
+      Route::post('manualBuilder/store/', [DefaultMBController::class, 'storeSection'])->name('manualBuilder.store');
+      Route::post('manualBuilder/newCountry/', [DefaultMBController::class, 'newCountry'])->name('manualBuilder.newCountry');
+      Route::post('manualBuilder/updateSectionAvailablity/', [DefaultMBController::class, 'updateSectionAvailablity'])->name('manualBuilder.updateSectionAvailablity');
+      Route::post('manualBuilder/deleteSection/', [DefaultMBController::class, 'deleteSection'])->name('manualBuilder.deleteSection');
 
     /*==================================================================================================================
       =                                                                                                                =

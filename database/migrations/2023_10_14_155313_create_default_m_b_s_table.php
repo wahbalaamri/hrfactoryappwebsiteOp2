@@ -21,9 +21,9 @@ return new class extends Migration
             $table->longText('content')->nullable();
             $table->integer('user_id')->nullable();
             $table->string('language');
-            $table->integer('default_MB_id');
-            $table->integer('company_size');
-            $table->integer('company_industry');
+            $table->integer('default_MB_id')->nullable();
+            $table->integer('company_size')->nullable();
+            $table->integer('company_industry')->nullable();
             $table->boolean('IsHaveLineBefore')->default(false);
             $table->boolean('IsActive');
             //softdelete

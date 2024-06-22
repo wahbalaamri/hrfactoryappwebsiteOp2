@@ -220,7 +220,7 @@
                         @endphp
                         @if ($partner)
                         <div class="">
-                            powered by:
+                            Managed by:
                             <img src="{{ asset('uploads/companies/logos/'.$partner->logo_path) }}" alt="" style="width: 100px">
                         </div>
                         @endif
@@ -290,7 +290,7 @@
                     <div class="logo margin-bottom-10px"><img src="{{ asset('assets/img/logo.png')}}" alt="">
                         @if ($partner)
                         <div class="text-white">
-                            powered by:
+                            Managed by:
                             <img src="{{ asset('uploads/companies/logos/'.$partner->logo_path) }}" alt="" style="width: 100px">
                         </div>
                         @endif

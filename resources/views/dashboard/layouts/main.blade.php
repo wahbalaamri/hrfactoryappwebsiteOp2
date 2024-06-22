@@ -317,6 +317,15 @@
                                     </p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('manualBuilder.index') }}" class="nav-link">
+                                    <i class="nav-icon fa fa-file-alt"></i>
+                                    <p>
+                                        {{ __('Manual Builder') }}
+                                        {{-- <span class="right badge badge-danger">New</span> --}}
+                                    </p>
+                                </a>
+                            </li>
                             {{-- <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-copy"></i>

@@ -14,4 +14,9 @@ class DefaultMB extends Model
     {
         return $this->hasMany(DefaultMB::class, 'paren_id')->orderBy('Ordering');
     }
+    //belongs to Countries
+    public function country()
+    {
+        return $this->belongsTo(Countries::class);
+    }
 }
